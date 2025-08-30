@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import animatePlugin from "tailwindcss-animate";
 
 export default {
 	darkMode: ["class"],
@@ -81,20 +82,20 @@ export default {
 			},
 			keyframes: {
 				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
+				},
+				fadeIn: {
+					'0%': { opacity: '0', transform: 'translateY(10px)' },
+					'100%': { opacity: '1', transform: 'translateY(0)' }
+				},
+				slideUp: {
+					'0%': { opacity: '0', transform: 'translateY(20px)' },
+					'100%': { opacity: '1', transform: 'translateY(0)' }
 				}
 			},
 			backgroundImage: {
@@ -115,18 +116,9 @@ export default {
 				'slide-up': 'slideUp 0.4s ease-out',
 				'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
 			},
-			keyframes: {
-				fadeIn: {
-					'0%': { opacity: '0', transform: 'translateY(10px)' },
-					'100%': { opacity: '1', transform: 'translateY(0)' },
-				},
-				slideUp: {
-					'0%': { opacity: '0', transform: 'translateY(20px)' },
-					'100%': { opacity: '1', transform: 'translateY(0)' },
-				},
-			}
+			// keyframes consolidated above
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [animatePlugin],
 } satisfies Config;
 

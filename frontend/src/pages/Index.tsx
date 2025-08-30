@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, Suspense, lazy } from "react";
 import { NavigationTabs } from "@/components/ui/navigation-tabs";
 import { MainDashboard } from "@/components/dashboard/main-dashboard";
 import { MyCards } from "@/components/cards/my-cards";
-import { AIChat } from "@/components/chat/ai-chat";
+const AIChat = lazy(() => import("@/components/chat/ai-chat").then((mod) => ({ default: mod.AIChat })));
 import { CardRecommendations } from "@/components/recommendations/card-recommendations";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { LayoutDashboard, CreditCard, Bot, Star } from "lucide-react";
@@ -87,7 +87,9 @@ const Index = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        {renderContent()}
+        <Suspense fallback={<div className="py-10 text-center text-muted-foreground">Loading...</div>}>
+          {renderContent()}
+        </Suspense>
       </main>
 
       {/* Footer */}

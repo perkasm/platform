@@ -118,9 +118,7 @@ All colors MUST be HSL.
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
+  /* Avoid applying borders to every element globally; apply borders on specific components as needed. */
 
   body {
     @apply bg-background text-foreground;
