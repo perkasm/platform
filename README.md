@@ -71,11 +71,29 @@ cp .env.example .env
 uv run uvicorn app.main:app --reload
 ```
 
-The backend API will be available at `http://localhost:8000`.
+The backend API will be available at `http://localhost:8001`.
 
 API documentation is available at:
-- Swagger UI: `http://localhost:8000/docs`
-- ReDoc: `http://localhost:8000/redoc`
+- Swagger UI: `http://localhost:8001/docs`
+- ReDoc: `http://localhost:8001/redoc`
+
+### Database Setup
+
+For local development with PostgreSQL:
+
+```bash
+# Start PostgreSQL database (from project root)
+./run-postgres.sh
+```
+
+This script will start only the PostgreSQL service and wait until it's ready to accept connections.
+
+Database connection details:
+* Host: localhost
+* Port: 5432
+* Database: perkasm
+* Username: perkasm
+* Password: password
 
 ## Project Structure
 
@@ -102,8 +120,8 @@ platform/
 ### Backend Development
 1. Work in the `backend/` directory
 2. Use `uv run uvicorn app.main:app --reload` to start the development server
-3. Access the API at `http://localhost:8000`
-4. View API documentation at `http://localhost:8000/docs`
+3. Access the API at `http://localhost:8001`
+4. View API documentation at `http://localhost:8001/docs`
 
 ### Code Quality
 - **Frontend**: ESLint is configured for code linting (`npm run lint`)
