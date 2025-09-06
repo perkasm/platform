@@ -1,74 +1,126 @@
-# Welcome to your Lovable project
+# PerkAsm Frontend
 
-## Project info
+AI-powered credit card rewards optimization platform - Frontend Component
 
-**URL**: https://lovable.dev/projects/e62f796d-8605-4086-8f68-a5a7d933b8af
+## Project Overview
 
-## How can I edit this code?
+This is the frontend component of the PerkAsm platform, a web application designed to help users maximize their credit card rewards by providing personalized recommendations and insights. This React-based frontend provides a dashboard interface where users can manage their credit cards, get recommendations, and chat with an AI assistant.
 
-There are several ways of editing your application.
+The project was initially created with Lovable but has been migrated to this repository for independent development and deployment.
 
-**Use Lovable**
+## Technologies Used
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/e62f796d-8605-4086-8f68-a5a7d933b8af) and start prompting.
+- **Framework**: React
+- **Build Tool**: Vite
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **UI Components**: shadcn/ui
+- **Routing**: React Router
+- **Data Fetching**: React Query
 
-Changes made via Lovable will be committed automatically to this repo.
+## Getting Started
 
-**Use your preferred IDE**
+### Prerequisites
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- Node.js (version 16 or higher)
+- npm (comes with Node.js) or yarn
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Installation
 
-Follow these steps:
+```bash
+# Clone the repository
+git clone <repository-url>
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Navigate to the frontend directory
+cd frontend
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Install dependencies
+npm install
+```
 
-# Step 3: Install the necessary dependencies.
-npm i
+### Development
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
+# Start the development server with hot reloading
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The application will be available at `http://localhost:8080`.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Building for Production
 
-**Use GitHub Codespaces**
+```bash
+# Create a production build
+npm run build
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+The build files will be output to the `dist` directory.
 
-## What technologies are used for this project?
+### Linting
 
-This project is built with:
+```bash
+# Run ESLint to check for code issues
+npm run lint
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Project Structure
 
-## How can I deploy this project?
+```
+frontend/
+├── src/                    # Source code
+│   ├── components/         # Reusable UI components
+│   ├── hooks/              # Custom React hooks
+│   ├── lib/                # Utility functions and libraries
+│   ├── pages/              # Page components
+│   ├── App.tsx             # Main application component
+│   └── main.tsx            # Entry point
+├── public/                 # Static assets
+├── index.html              # HTML template
+├── package.json            # Dependencies and scripts
+└── ...                     # Configuration files
+```
 
-Simply open [Lovable](https://lovable.dev/projects/e62f796d-8605-4086-8f68-a5a7d933b8af) and click on Share -> Publish.
+## Development Workflow
 
-## Can I connect a custom domain to my Lovable project?
+1. Work in the `src/` directory
+2. Use `npm run dev` to start the development server with hot reloading
+3. Create components in the `src/components/` directory
+4. Add pages to the `src/pages/` directory
+5. Use `npm run lint` to check for code issues
 
-Yes, you can!
+## Architecture
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+The application is a single-page application (SPA) with a client-side routing system. The main entry point is `src/main.tsx`, which renders the `App` component. The `App` component sets up the routing and global providers.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+The main page, `src/pages/Index.tsx`, contains the primary UI, which is a tabbed interface with the following sections:
 
+- **Dashboard**: Displays an overview of the user's rewards and metrics.
+- **My Cards**: Allows users to manage their credit cards.
+- **AI Chat**: Provides an interface to chat with an AI assistant.
+- **Recommendations**: Offers recommendations for optimizing credit card rewards.
+
+The UI is built using components from `shadcn/ui`, and the application state is managed using React hooks and `react-query`.
+
+## Deployment
+
+To deploy the frontend:
+
+1. Build the project:
+   ```bash
+   npm run build
+   ```
+
+2. Deploy the contents of the `dist/` directory to your preferred hosting platform (Netlify, Vercel, GitHub Pages, etc.)
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Commit your changes
+5. Push to the branch
+6. Create a pull request
+
+## Support
+
+For support, please open an issue on the GitHub repository or contact the development team.

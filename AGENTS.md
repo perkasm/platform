@@ -1,9 +1,8 @@
 # Project Overview
 
-This project is a web application with frontend and backend components for an App called "PerkAsm", designed for AI-powered credit card rewards optimization. It provides a dashboard interface where users can manage their credit cards, get recommendations, and chat with an AI assistant.
+The PerkAsm platform is a web application designed for AI-powered credit card rewards optimization. It consists of a frontend and a backend, with this directory containing the frontend component. The frontend provides a dashboard interface where users can manage their credit cards, get recommendations, and chat with an AI assistant.
 
 ## Frontend
-
 ### Key Technologies
 
 *   **Framework:** React
