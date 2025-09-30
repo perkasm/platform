@@ -1,8 +1,7 @@
-version: '3.8'
 
 services:
   postgres:
-    image: postgres:latest
+    image: pgvector/pgvector:pg17-trixie
     container_name: perkasm-postgres
     environment:
       POSTGRES_DB: perkasm
@@ -13,10 +12,11 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U perkasm -d perkasm"]
-      interval: 10s
+      test: ["CMD-SHELL", "pg_isready -U perkasm -d perkasm -h localhost"]
+      interval: 60s
       timeout: 5s
       retries: 5
 
