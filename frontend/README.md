@@ -432,6 +432,84 @@ The application is designed to be deployed to static hosting platforms:
 
 See `/docs/deployment-guide.md` for detailed deployment instructions.
 
+### 🐳 Docker Deployment
+
+#### Building the Docker Image
+
+```bash
+# Build with default settings
+docker build -t perkasm-frontend:latest ./frontend
+
+# Build with custom API URL
+docker build \
+  --build-arg VITE_API_URL=https://api.perkasm.com \
+  --build-arg VITE_ENVIRONMENT=production \
+  -t perkasm-frontend:latest \
+  ./frontend
+```
+
+#### Running the Container
+
+```bash
+# Run the container
+docker run -d \
+  --name perkasm-frontend \
+  -p 8080:8080 \
+  perkasm-frontend:latest
+
+# Access the application at http://localhost:8080
+```
+
+#### Using Docker Compose
+
+```bash
+# Start all services (frontend + backend + database)
+docker-compose up -d
+
+# Start only the frontend
+docker-compose up -d frontend
+
+# View logs
+docker-compose logs -f frontend
+
+# Stop services
+docker-compose down
+
+# Rebuild and restart
+docker-compose up -d --build frontend
+```
+
+#### Environment Variables for Docker
+
+Create a `.env` file in the project root:
+
+```env
+VITE_API_URL=http://localhost:8001
+VITE_ENVIRONMENT=production
+```
+
+#### Health Checks
+
+The Docker container includes built-in health checks:
+
+- **Health endpoint**: `http://localhost:8080/health`
+- **Readiness endpoint**: `http://localhost:8080/ready`
+
+```bash
+# Check container health
+docker inspect --format='{{json .State.Health}}' perkasm-frontend
+```
+
+#### Docker Best Practices Implemented
+
+- ✅ Multi-stage build for optimized image size
+- ✅ Non-root user for enhanced security
+- ✅ Proper layer caching for faster builds
+- ✅ Health checks for container monitoring
+- ✅ Security headers configured in nginx
+- ✅ Gzip compression enabled
+- ✅ Static asset caching optimized
+
 ---
 
 ## 🎨 Code Quality

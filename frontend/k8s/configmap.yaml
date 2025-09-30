@@ -1,0 +1,45 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: perkasm-frontend-config
+  namespace: perkasm
+  labels:
+    app: perkasm-frontend
+    component: frontend
+    environment: production
+data:
+  # API Configuration
+  VITE_API_URL: "https://api.perkasm.com"
+  VITE_ENVIRONMENT: "production"
+  
+  # Feature Flags
+  ENABLE_ANALYTICS: "true"
+  ENABLE_ERROR_TRACKING: "true"
+  
+  # Nginx Configuration (optional overrides)
+  CLIENT_MAX_BODY_SIZE: "10m"
+  KEEPALIVE_TIMEOUT: "65"
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: perkasm-frontend-config-staging
+  namespace: perkasm
+  labels:
+    app: perkasm-frontend
+    component: frontend
+    environment: staging
+data:
+  # API Configuration
+  VITE_API_URL: "https://api-staging.perkasm.com"
+  VITE_ENVIRONMENT: "staging"
+  
+  # Feature Flags
+  ENABLE_ANALYTICS: "false"
+  ENABLE_ERROR_TRACKING: "true"
+  
+  # Nginx Configuration
+  CLIENT_MAX_BODY_SIZE: "10m"
+  KEEPALIVE_TIMEOUT: "65"
