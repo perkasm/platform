@@ -169,22 +169,22 @@ describe('RateLimiter', () => {
   describe('Pre-configured rate limiters', () => {
     it('should have apiRateLimiter configured correctly', () => {
       expect(apiRateLimiter).toBeInstanceOf(RateLimiter);
-      expect(apiRateLimiter.getRemaining('test')).toBe(10);
+      expect(apiRateLimiter.getRemaining('test')).toBe(100); // Updated to match RATE_LIMITS.API.MAX_REQUESTS
     });
 
     it('should have chatRateLimiter configured correctly', () => {
       expect(chatRateLimiter).toBeInstanceOf(RateLimiter);
-      expect(chatRateLimiter.getRemaining('test')).toBe(5);
+      expect(chatRateLimiter.getRemaining('test')).toBe(10); // Updated to match RATE_LIMITS.CHAT.MAX_REQUESTS
     });
 
     it('should have formRateLimiter configured correctly', () => {
       expect(formRateLimiter).toBeInstanceOf(RateLimiter);
-      expect(formRateLimiter.getRemaining('test')).toBe(3);
+      expect(formRateLimiter.getRemaining('test')).toBe(5); // Updated to match RATE_LIMITS.FORM.MAX_REQUESTS
     });
 
     it('should have authRateLimiter configured correctly', () => {
       expect(authRateLimiter).toBeInstanceOf(RateLimiter);
-      expect(authRateLimiter.getRemaining('test')).toBe(5);
+      expect(authRateLimiter.getRemaining('test')).toBe(3); // Updated to match RATE_LIMITS.AUTH.MAX_REQUESTS
     });
   });
 });

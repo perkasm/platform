@@ -1,7 +1,14 @@
 /**
- * Client-side rate limiting utility
- * Prevents excessive API calls and protects against abuse
+ * Client-side Rate Limiting Utility Module
+ * 
+ * Provides rate limiting functionality to prevent excessive API calls
+ * and protect against abuse. Implements a sliding window algorithm
+ * for accurate rate limit enforcement.
+ * 
+ * @module utils/rate-limiter
  */
+
+import { RATE_LIMITS, ERROR_MESSAGES } from '@/constants';
 
 interface RateLimitConfig {
   maxRequests: number;
@@ -14,13 +21,32 @@ interface RequestRecord {
   resetTime: number;
 }
 
+/**
+ * RateLimiter class implementing sliding window rate limiting
+ * 
+ * @example
+ * ```typescript
+ * const limiter = new RateLimiter({
+ *   maxRequests: 10,
+ *   windowMs: 60000, // 1 minute
+ *   errorMessage: 'Too many requests'
+ * });
+ * 
+ * if (limiter.isAllowed('user-123')) {
+ *   // Proceed with request
+ * } else {
+ *   // Show error
+ *   console.error(limiter.getErrorMessage());
+ * }
+ * ```
+ */
 class RateLimiter {
   private requests: Map<string, RequestRecord> = new Map();
   private config: RateLimitConfig;
 
   constructor(config: RateLimitConfig) {
     this.config = {
-      errorMessage: 'Too many requests. Please try again later.',
+      errorMessage: ERROR_MESSAGES.RATE_LIMIT_EXCEEDED,
       ...config,
     };
   }
@@ -112,38 +138,42 @@ class RateLimiter {
 // Pre-configured rate limiters for different scenarios
 
 /**
- * Rate limiter for API requests (10 requests per minute)
+ * Rate limiter for general API requests
+ * Limits: 100 requests per minute
  */
 export const apiRateLimiter = new RateLimiter({
-  maxRequests: 10,
-  windowMs: 60 * 1000, // 1 minute
+  maxRequests: RATE_LIMITS.API.MAX_REQUESTS,
+  windowMs: RATE_LIMITS.API.WINDOW_MS,
   errorMessage: 'Too many API requests. Please wait a moment before trying again.',
 });
 
 /**
- * Rate limiter for chat messages (5 messages per 10 seconds)
+ * Rate limiter for chat messages
+ * Limits: 10 messages per minute
  */
 export const chatRateLimiter = new RateLimiter({
-  maxRequests: 5,
-  windowMs: 10 * 1000, // 10 seconds
+  maxRequests: RATE_LIMITS.CHAT.MAX_REQUESTS,
+  windowMs: RATE_LIMITS.CHAT.WINDOW_MS,
   errorMessage: 'You are sending messages too quickly. Please slow down.',
 });
 
 /**
- * Rate limiter for form submissions (3 submissions per minute)
+ * Rate limiter for form submissions
+ * Limits: 5 submissions per minute
  */
 export const formRateLimiter = new RateLimiter({
-  maxRequests: 3,
-  windowMs: 60 * 1000, // 1 minute
+  maxRequests: RATE_LIMITS.FORM.MAX_REQUESTS,
+  windowMs: RATE_LIMITS.FORM.WINDOW_MS,
   errorMessage: 'Too many form submissions. Please wait before submitting again.',
 });
 
 /**
- * Rate limiter for authentication attempts (5 attempts per 5 minutes)
+ * Rate limiter for authentication attempts
+ * Limits: 3 attempts per 5 minutes
  */
 export const authRateLimiter = new RateLimiter({
-  maxRequests: 5,
-  windowMs: 5 * 60 * 1000, // 5 minutes
+  maxRequests: RATE_LIMITS.AUTH.MAX_REQUESTS,
+  windowMs: RATE_LIMITS.AUTH.WINDOW_MS,
   errorMessage: 'Too many login attempts. Please wait 5 minutes before trying again.',
 });
 

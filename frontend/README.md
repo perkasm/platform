@@ -542,23 +542,37 @@ Strict mode enabled with:
 
 ## 📚 Documentation
 
-### Available Documentation
+### Core Documentation
+
+- **[Development Guide](./DEVELOPMENT.md)** - Complete development workflow, patterns, and best practices
+- **[API Documentation](./docs/API.md)** - Comprehensive API integration guide with examples
+- **[Component Library](./docs/COMPONENTS.md)** - Documentation for all React components
+- **[Troubleshooting Guide](./docs/TROUBLESHOOTING.md)** - Common issues and solutions
+
+### Sprint Documentation
 
 - **[Architecture Overview](./docs/frontend-architecture.md)** - System design and patterns
 - **[Sprint Planning](./docs/quick-action-checklist.md)** - Development roadmap
 - **[Sprint 1 Summary](./docs/sprint-1-completion-summary.md)** - Testing & auth implementation
 - **[Sprint 2 Summary](./docs/sprint-2-completion-summary.md)** - API integration & validation
+- **[Sprint 3 Summary](./docs/sprint-3-completion-summary.md)** - DevOps & monitoring setup
+- **[Sprint 4 Summary](./docs/sprint-4-completion-summary.md)** - Security & performance optimization
+
+### Specialized Guides
+
+- **[Security Hardening](./docs/security-hardening.md)** - Security implementation details
+- **[Performance Optimization](./docs/performance-optimization.md)** - Performance tuning guide
+- **[Accessibility Guide](./docs/accessibility-guide.md)** - WCAG compliance documentation
+- **[Monitoring Guide](./docs/monitoring-guide.md)** - Observability and error tracking
 - **[Code Review Report](./docs/code-review-report.md)** - Quality assessment
-
-### API Documentation
-
-API endpoints are documented in the backend repository. Frontend service layer provides TypeScript types for all API responses.
 
 ---
 
 ## 🐛 Troubleshooting
 
-### Common Issues
+### Quick Solutions
+
+For detailed troubleshooting, see the **[Troubleshooting Guide](./docs/TROUBLESHOOTING.md)**.
 
 **Issue**: `Module not found` errors
 ```bash
