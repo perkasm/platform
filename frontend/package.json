@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "build:dev": "vite build --mode development",
+    "build:analyze": "vite build --mode production && open dist/stats.html",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
@@ -70,6 +71,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@axe-core/react": "^4.10.2",
     "@eslint/js": "^9.32.0",
     "@tailwindcss/typography": "^0.5.16",
     "@testing-library/jest-dom": "^6.9.0",
@@ -84,16 +86,20 @@
     "autoprefixer": "^10.4.21",
     "axios-mock-adapter": "^2.1.0",
     "eslint": "^9.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^15.15.0",
     "jsdom": "^27.0.0",
     "lovable-tagger": "^1.1.9",
     "postcss": "^8.5.6",
+    "rollup-plugin-visualizer": "^6.0.3",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.38.0",
     "vite": "^5.4.19",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "vitest-axe": "^0.1.0",
+    "workbox-webpack-plugin": "^7.3.0"
   }
 }

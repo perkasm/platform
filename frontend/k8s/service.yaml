@@ -23,7 +23,7 @@ spec:
   - name: https
     protocol: TCP
     port: 443
-    targetPort: http
+    targetPort: https
 
 ---
 apiVersion: v1
@@ -46,3 +46,7 @@ spec:
     protocol: TCP
     port: 8080
     targetPort: http
+  - name: https
+    protocol: TCP
+    port: 8443
+    targetPort: https

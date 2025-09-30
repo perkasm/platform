@@ -2,12 +2,16 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import MockAdapter from 'axios-mock-adapter';
 import { apiClient } from '@/services/api';
 import { ChatService, ChatResponse } from '@/services/chat.service';
+import { chatRateLimiter, apiRateLimiter } from '@/utils/rate-limiter';
 
 describe('ChatService', () => {
   let mock: MockAdapter;
 
   beforeEach(() => {
     mock = new MockAdapter(apiClient);
+    // Reset rate limiters before each test
+    chatRateLimiter.resetAll();
+    apiRateLimiter.resetAll();
   });
 
   afterEach(() => {
@@ -69,18 +73,11 @@ describe('ChatService', () => {
 
     it('should handle special characters in message', async () => {
       const message = 'Test <script>alert("xss")</script> & symbols!';
-      const mockResponse: ChatResponse = {
-        id: '999',
-        role: 'assistant',
-        content: 'Message received safely.',
-        timestamp: '2025-09-30T10:00:00Z',
-        conversation_id: 'conv-999',
-      };
-
-      mock.onPost('/chat').reply(200, mockResponse);
-
-      const result = await ChatService.sendMessage(message);
-      expect(result).toEqual(mockResponse);
+      
+      // This message contains XSS patterns, so it should be rejected
+      await expect(ChatService.sendMessage(message)).rejects.toThrow(
+        'Input contains potentially dangerous content'
+      );
     });
 
     it('should handle 400 Bad Request error', async () => {

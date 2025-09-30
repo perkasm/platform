@@ -31,14 +31,22 @@ RUN npm run build
 # Stage 2: Production Stage
 FROM nginx:1.27-alpine AS production
 
-# Install curl for health checks
-RUN apk add --no-cache curl
+# Install curl and openssl for health checks and SSL certificate generation
+RUN apk add --no-cache curl openssl
 
 # Copy custom nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy built assets from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Create SSL directory and generate self-signed certificate
+RUN mkdir -p /etc/nginx/ssl && \
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    -keyout /etc/nginx/ssl/nginx.key \
+    -out /etc/nginx/ssl/nginx.crt \
+    -subj "/C=US/ST=State/L=City/O=PerkAsm/OU=Development/CN=localhost" \
+    -addext "subjectAltName=DNS:localhost,DNS:*.localhost,IP:127.0.0.1"
 
 # Create non-root user for security
 RUN addgroup -g 1001 -S appuser && \
@@ -47,18 +55,19 @@ RUN addgroup -g 1001 -S appuser && \
     chown -R appuser:appuser /var/cache/nginx && \
     chown -R appuser:appuser /var/log/nginx && \
     chown -R appuser:appuser /etc/nginx/conf.d && \
+    chown -R appuser:appuser /etc/nginx/ssl && \
     touch /var/run/nginx.pid && \
     chown -R appuser:appuser /var/run/nginx.pid
 
 # Switch to non-root user
 USER appuser
 
-# Expose port 8080 (non-privileged port)
-EXPOSE 8080
+# Expose ports 8080 (HTTP redirect) and 8443 (HTTPS)
+EXPOSE 8080 8443
 
-# Health check
+# Health check (using HTTPS)
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:8080/health || exit 1
+  CMD curl -k -f https://localhost:8443/health || exit 1
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]

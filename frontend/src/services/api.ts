@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, InternalAxiosRequestConfig, AxiosResponse } from "axios";
 import { env } from "@/config/env";
 import * as Sentry from "@sentry/react";
+import { apiRateLimiter } from "@/utils/rate-limiter";
 
 class ApiError extends Error {
   status?: number;
@@ -133,18 +134,34 @@ export function setAuthToken(token: string | null) {
 }
 
 export async function get<T = any>(url: string, config?: AxiosRequestConfig) {
+  // Rate limiting check
+  if (!apiRateLimiter.isAllowed(`GET:${url}`)) {
+    throw new ApiError(apiRateLimiter.getErrorMessage(), 429);
+  }
   const res = await client.get<T>(url, config);
   return res.data;
 }
 export async function post<T = any>(url: string, data?: any, config?: AxiosRequestConfig) {
+  // Rate limiting check
+  if (!apiRateLimiter.isAllowed(`POST:${url}`)) {
+    throw new ApiError(apiRateLimiter.getErrorMessage(), 429);
+  }
   const res = await client.post<T>(url, data, config);
   return res.data;
 }
 export async function put<T = any>(url: string, data?: any, config?: AxiosRequestConfig) {
+  // Rate limiting check
+  if (!apiRateLimiter.isAllowed(`PUT:${url}`)) {
+    throw new ApiError(apiRateLimiter.getErrorMessage(), 429);
+  }
   const res = await client.put<T>(url, data, config);
   return res.data;
 }
 export async function del<T = any>(url: string, config?: AxiosRequestConfig) {
+  // Rate limiting check
+  if (!apiRateLimiter.isAllowed(`DELETE:${url}`)) {
+    throw new ApiError(apiRateLimiter.getErrorMessage(), 429);
+  }
   const res = await client.delete<T>(url, config);
   return res.data;
 }

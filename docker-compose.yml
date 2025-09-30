@@ -19,6 +19,37 @@ services:
       interval: 60s
       timeout: 5s
       retries: 5
+    networks:
+      - perkasm-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8001}
+        VITE_ENVIRONMENT: ${VITE_ENVIRONMENT:-production}
+    container_name: perkasm-frontend
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    networks:
+      - perkasm-network
 
 volumes:
   postgres_data:
+
+networks:
+  perkasm-network:
+    driver: bridge
