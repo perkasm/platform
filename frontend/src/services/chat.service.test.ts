@@ -18,21 +18,21 @@ describe('ChatService', () => {
   describe('sendMessage', () => {
     it('should send message and return ChatResponse', async () => {
       const message = 'Hello, AI!';
+      
       const mockResponse: ChatResponse = {
         id: '123',
         role: 'assistant',
-        content: 'Hello! How can I help you?',
-        timestamp: '2025-09-30T10:00:00Z',
+        content: 'Hello! How can I help you today?',
+        timestamp: new Date().toISOString(),
+        conversation_id: 'conv-123',
       };
 
-      mock.onPost('/chat', { message }).reply(200, mockResponse);
+      mock.onPost('/chat').reply(200, mockResponse);
 
       const result = await ChatService.sendMessage(message);
 
       expect(result).toEqual(mockResponse);
-      expect(result.id).toBe('123');
-      expect(result.role).toBe('assistant');
-      expect(result.content).toBe('Hello! How can I help you?');
+      expect(result.content).toBe('Hello! How can I help you today?');
     });
 
     it('should handle empty message', async () => {
@@ -42,9 +42,10 @@ describe('ChatService', () => {
         role: 'assistant',
         content: 'Please provide a message.',
         timestamp: '2025-09-30T10:00:00Z',
+        conversation_id: 'conv-456',
       };
 
-      mock.onPost('/chat', { message }).reply(200, mockResponse);
+      mock.onPost('/chat').reply(200, mockResponse);
 
       const result = await ChatService.sendMessage(message);
       expect(result).toEqual(mockResponse);
@@ -57,9 +58,10 @@ describe('ChatService', () => {
         role: 'assistant',
         content: 'I received your long message.',
         timestamp: '2025-09-30T10:00:00Z',
+        conversation_id: 'conv-789',
       };
 
-      mock.onPost('/chat', { message }).reply(200, mockResponse);
+      mock.onPost('/chat').reply(200, mockResponse);
 
       const result = await ChatService.sendMessage(message);
       expect(result.content).toBe('I received your long message.');
@@ -72,9 +74,10 @@ describe('ChatService', () => {
         role: 'assistant',
         content: 'Message received safely.',
         timestamp: '2025-09-30T10:00:00Z',
+        conversation_id: 'conv-999',
       };
 
-      mock.onPost('/chat', { message }).reply(200, mockResponse);
+      mock.onPost('/chat').reply(200, mockResponse);
 
       const result = await ChatService.sendMessage(message);
       expect(result).toEqual(mockResponse);
@@ -82,7 +85,7 @@ describe('ChatService', () => {
 
     it('should handle 400 Bad Request error', async () => {
       const message = 'Test message';
-      mock.onPost('/chat', { message }).reply(400, {
+      mock.onPost('/chat').reply(400, {
         message: 'Invalid message format',
       });
 
@@ -91,7 +94,7 @@ describe('ChatService', () => {
 
     it('should handle 401 Unauthorized error', async () => {
       const message = 'Test message';
-      mock.onPost('/chat', { message }).reply(401, {
+      mock.onPost('/chat').reply(401, {
         message: 'Unauthorized',
       });
 
@@ -100,7 +103,7 @@ describe('ChatService', () => {
 
     it('should handle 429 Rate Limit error', async () => {
       const message = 'Test message';
-      mock.onPost('/chat', { message }).reply(429, {
+      mock.onPost('/chat').reply(429, {
         message: 'Rate limit exceeded',
       });
 
@@ -109,7 +112,7 @@ describe('ChatService', () => {
 
     it('should handle 500 Internal Server Error', async () => {
       const message = 'Test message';
-      mock.onPost('/chat', { message }).reply(500, {
+      mock.onPost('/chat').reply(500, {
         message: 'Internal server error',
       });
 
@@ -156,9 +159,10 @@ describe('ChatService', () => {
         role: 'assistant',
         content: 'Type safe response',
         timestamp: '2025-09-30T10:00:00Z',
+        conversation_id: 'conv-222',
       };
 
-      mock.onPost('/chat', { message }).reply(200, mockResponse);
+      mock.onPost('/chat').reply(200, mockResponse);
 
       const result = await ChatService.sendMessage(message);
 

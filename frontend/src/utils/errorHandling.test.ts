@@ -115,16 +115,19 @@ describe('errorHandling', () => {
       const fn = vi.fn().mockRejectedValue(error);
       const onRetry = vi.fn();
 
-      const promise = retryWithBackoff(fn, { maxRetries: 2, initialDelay: 100, onRetry });
+      const promiseUnderTest = retryWithBackoff(fn, { maxRetries: 2, initialDelay: 100, onRetry });
 
-      // Run all timers and catch the error
+      // Create a promise that will resolve when the test completes
+      const testPromise = (async () => {
+        await expect(promiseUnderTest).rejects.toThrow();
+        return true;
+      })();
+
+      // Run all timers
       await vi.runAllTimersAsync();
 
-      try {
-        await promise;
-      } catch (e) {
-        // Expected to throw
-      }
+      // Wait for the test to complete
+      await testPromise;
 
       expect(onRetry).toHaveBeenCalledTimes(2);
       expect(onRetry).toHaveBeenNthCalledWith(1, 1, error);
@@ -135,20 +138,23 @@ describe('errorHandling', () => {
       const error = new ApiError('Custom Error', 418); // Teapot status
       const fn = vi.fn().mockRejectedValue(error);
 
-      const promise = retryWithBackoff(fn, {
+      const promiseUnderTest = retryWithBackoff(fn, {
         retryableStatuses: [418],
         maxRetries: 1,
         initialDelay: 100,
       });
 
+      // Create a promise that will resolve when the test completes
+      const testPromise = (async () => {
+        await expect(promiseUnderTest).rejects.toThrow();
+        return true;
+      })();
+
       // Advance timers
       await vi.runAllTimersAsync();
 
-      try {
-        await promise;
-      } catch (e) {
-        // Expected to fail after retries
-      }
+      // Wait for the test to complete
+      await testPromise;
 
       // Should have retried once (initial + 1 retry = 2 calls)
       expect(fn).toHaveBeenCalledTimes(2);

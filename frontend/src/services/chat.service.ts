@@ -1,17 +1,34 @@
-import { post } from "@/services/api";
+/**
+ * Chat Service
+ * 
+ * API service for AI chat operations.
+ */
 
-export type ChatResponse = {
-  id: string;
-  role: "assistant" | "user";
-  content: string;
-  timestamp: string;
+import { post } from './api';
+import type { ChatRequest, ChatResponse } from '@/types/api';
+
+export const chatService = {
+  /**
+   * Send a message to the AI assistant and get a response
+   */
+  async sendMessage(
+    message: string,
+    conversationId?: string,
+    includeContext: boolean = true
+  ): Promise<ChatResponse> {
+    const request: ChatRequest = {
+      message,
+      conversation_id: conversationId,
+      include_context: includeContext,
+    };
+    
+    return post<ChatResponse>('/chat', request);
+  },
 };
 
+// Export legacy ChatService for backward compatibility
 export const ChatService = {
   sendMessage: async (message: string): Promise<ChatResponse> => {
-    // POST /chat -> { id, role, content, timestamp }
-    return await post<ChatResponse>("/chat", { message });
+    return chatService.sendMessage(message);
   },
-
-  // add other chat-related endpoints here
 };

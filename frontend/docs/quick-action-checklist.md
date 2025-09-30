@@ -57,48 +57,48 @@
 
 ### Week 3: API Integration
 
-- [ ] **Task 2.1: Environment Setup** (4 hours)
-  - [ ] Create `.env.example`
-  - [ ] Create `.env.development`
-  - [ ] Create `.env.production`
-  - [ ] Create `src/config/env.ts`
-  - [ ] Add environment validation
-  - [ ] Update documentation
+- [x] **Task 2.1: Environment Setup** (4 hours) ✅
+  - [x] Create `.env.example`
+  - [x] Create `.env.development`
+  - [x] Create `.env.production`
+  - [x] Create `src/config/env.ts`
+  - [x] Add environment validation
+  - [x] Update documentation
 
-- [ ] **Task 2.2: Service Layer Implementation** (16 hours)
-  - [ ] Create `services/cards.service.ts`
-  - [ ] Create `services/dashboard.service.ts`
-  - [ ] Create `services/recommendations.service.ts`
-  - [ ] Update `services/chat.service.ts` with real API
-  - [ ] Add proper TypeScript types for all responses
-  - [ ] Write integration tests
+- [x] **Task 2.2: Service Layer Implementation** (16 hours) ✅
+  - [x] Create `services/cards.service.ts`
+  - [x] Create `services/dashboard.service.ts`
+  - [x] Create `services/recommendations.service.ts`
+  - [x] Update `services/chat.service.ts` with real API
+  - [x] Add proper TypeScript types for all responses
+  - [x] Write integration tests
 
-- [ ] **Task 2.3: React Query Integration** (12 hours)
-  - [ ] Replace mock data in MyCards component
-  - [ ] Replace mock data in MainDashboard component
-  - [ ] Replace mock data in CardRecommendations component
-  - [ ] Update AIChat component with real API
-  - [ ] Add loading states to all components
-  - [ ] Add error states to all components
-  - [ ] Write component tests
+- [x] **Task 2.3: React Query Integration** (12 hours) ✅
+  - [x] Replace mock data in MyCards component
+  - [x] Replace mock data in MainDashboard component
+  - [x] Replace mock data in CardRecommendations component
+  - [x] Update AIChat component with real API
+  - [x] Add loading states to all components
+  - [x] Add error states to all components
+  - [x] Write component tests
 
 ### Week 4: UI Polish & Validation
 
-- [ ] **Task 2.4: Input Validation** (8 hours)
-  - [ ] Install Zod validation library
-  - [ ] Create validation schemas for all forms
-  - [ ] Add validation to chat input
-  - [ ] Add validation to card form
-  - [ ] Show validation errors to users
-  - [ ] Write validation tests
+- [x] **Task 2.4: Input Validation** (8 hours) ✅
+  - [x] Install Zod validation library
+  - [x] Create validation schemas for all forms
+  - [x] Add validation to chat input
+  - [x] Add validation to card form
+  - [x] Show validation errors to users
+  - [x] Write validation tests
 
-- [ ] **Task 2.5: Loading & Error States** (8 hours)
-  - [ ] Create LoadingSpinner component
-  - [ ] Create CardSkeleton component
-  - [ ] Create ErrorAlert component
-  - [ ] Add loading states to all data-fetching components
-  - [ ] Add empty states for no data
-  - [ ] Write tests for all states
+- [x] **Task 2.5: Loading & Error States** (8 hours) ✅
+  - [x] Create LoadingSpinner component
+  - [x] Create CardSkeleton component
+  - [x] Create ErrorAlert component
+  - [x] Add loading states to all data-fetching components
+  - [x] Add empty states for no data
+  - [x] Write tests for all states
 
 ---
 
@@ -264,18 +264,25 @@ Use this section to track overall progress:
 
 ```
 Sprint 1: [██████████] 100% - ✅ COMPLETED (Sep 30, 2025)
-Sprint 2: [░░░░░░░░░░] 0% - Not Started
+Sprint 2: [██████████] 100% - ✅ COMPLETED (Sep 30, 2025)
 Sprint 3: [░░░░░░░░░░] 0% - Not Started
 Sprint 4: [░░░░░░░░░░] 0% - Not Started
 Sprint 5: [░░░░░░░░░░] 0% - Not Started
 
-Overall: [██░░░░░░░░] 20%
+Overall: [████░░░░░░] 40%
 
 ✅ Sprint 1 Completed: All 5 tasks completed successfully
    - 155 tests passing
    - 0 TypeScript errors
    - Full authentication system implemented
    - Comprehensive error handling in place
+
+✅ Sprint 2 Completed: All 5 tasks completed successfully
+   - Backend API endpoints created (cards, dashboard, recommendations, chat)
+   - Frontend service layer with TypeScript types
+   - React Query hooks for data fetching
+   - Zod validation schemas for all forms
+   - Loading and error UI components with tests
 ```
 
 ---

@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import { env } from "@/config/env";
 
 class ApiError extends Error {
   status?: number;
@@ -10,7 +11,7 @@ class ApiError extends Error {
   }
 }
 
-const baseURL = (import.meta as any).env?.VITE_API_URL ?? "/api";
+const baseURL = env.apiUrl;
 
 function createClient(): AxiosInstance {
   const client = axios.create({
