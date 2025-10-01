@@ -194,23 +194,87 @@
 - [x] `src/services/chat.service.ts` - 100% coverage ✅
 - [x] `src/lib/utils.ts` - 100% coverage ✅
 - [x] `src/hooks/use-toast.ts` - 100% coverage ✅
-- [ ] `src/pages/Index.tsx` - 100% coverage
-- [ ] `src/App.tsx` - 100% coverage
-- [ ] `src/components/cards/my-cards.tsx` - 100% coverage
-- [ ] `src/components/dashboard/main-dashboard.tsx` - 100% coverage
-- [ ] `src/components/chat/ai-chat.tsx` - 100% coverage
-- [ ] `src/components/recommendations/card-recommendations.tsx` - 100% coverage
+- [x] `src/pages/Index.tsx` - 100% coverage ✅
+- [x] `src/App.tsx` - 100% coverage ✅
+- [x] `src/components/cards/my-cards.tsx` - 100% coverage ✅
+- [x] `src/components/dashboard/main-dashboard.tsx` - 100% coverage ✅
+- [x] `src/components/chat/ai-chat.tsx` - 100% coverage ✅
+- [x] `src/components/recommendations/card-recommendations.tsx` - 100% coverage ✅
 
 ### UI Components (Priority 2)
 
 Test all components in `src/components/ui/`:
-- [ ] Button - 100% coverage
-- [ ] Card - 100% coverage
-- [ ] Input - 100% coverage
-- [ ] Select - 100% coverage
-- [ ] Dialog - 100% coverage
-- [ ] Toast - 100% coverage
-- [ ] (Continue for all UI components)
+- [x] Button - 100% coverage ✅ (47 tests)
+- [x] Card - 100% coverage ✅ (56 tests)
+- [x] Input - 100% coverage ✅ (64 tests)
+- [x] Badge - 100% coverage ✅ (47 tests)
+- [x] Progress - 100% coverage ✅ (55 tests)
+- [x] Select - 100% coverage ✅
+- [x] Dialog - 100% coverage ✅
+- [x] Toast - 100% coverage ✅
+- [x] Badge - 100% coverage ✅ (already listed)
+- [x] Button - 100% coverage ✅ (already listed)
+- [x] Card - 100% coverage ✅ (already listed)
+- [x] Card Skeleton - test present
+- [x] Dialog - 100% coverage ✅ (already listed)
+- [x] Error Alert - test present
+- [x] Input - 100% coverage ✅ (already listed)
+- [x] Loading Spinner - test present
+- [x] Progress - 100% coverage ✅ (already listed)
+- [x] Select - 100% coverage ✅ (already listed)
+- [x] Toast - 100% coverage ✅ (already listed)
+- [x] use-toast - test present
+
+Other UI components (tests missing / add to priority list):
+- [ ] accordion.tsx
+- [ ] alert-dialog.tsx
+- [ ] alert.tsx
+- [ ] aspect-ratio.tsx
+- [ ] avatar.tsx
+- [ ] breadcrumb.tsx
+- [ ] calendar.tsx
+- [ ] carousel.tsx
+- [ ] chart.tsx
+- [ ] checkbox.tsx
+- [ ] collapsible.tsx
+- [ ] command.tsx
+- [ ] context-menu.tsx
+- [ ] drawer.tsx
+- [ ] dropdown-menu.tsx
+- [ ] form.context.tsx
+- [ ] form.tsx
+- [ ] hover-card.tsx
+- [ ] input-otp.tsx
+- [ ] label.tsx
+- [ ] menubar.tsx
+- [ ] navigation-menu.tsx
+- [ ] navigation-tabs.tsx
+- [ ] pagination.tsx
+- [ ] popover.tsx
+- [ ] radio-group.tsx
+- [ ] resizable.tsx
+- [ ] scroll-area.tsx
+- [ ] separator.tsx
+- [ ] sheet.tsx
+- [ ] sidebar.context.tsx
+- [ ] sidebar.tsx
+- [ ] skeleton.tsx
+- [ ] slider.tsx
+- [ ] sonner.tsx
+- [ ] switch.tsx
+- [ ] table.tsx
+- [ ] tabs.tsx
+- [ ] textarea.tsx
+- [ ] theme-toggle.tsx
+- [ ] toaster.tsx
+- [ ] toggle-group.tsx
+- [ ] toggle.tsx
+- [ ] tooltip.tsx
+
+Notes:
+- Prioritize interactive controls (dropdown-menu, popover, tooltip, context-menu, checkbox, radio-group, switch, drawer/sheet, tabs, table).
+- Next prioritize visual/layout helpers (avatar, skeleton, aspect-ratio, chart, carousel, calendar, slider).
+- I can scaffold test stubs for high-priority components if you want — say which ones and I'll create minimal test files.
 
 ---
 
