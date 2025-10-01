@@ -226,50 +226,50 @@ Test all components in `src/components/ui/`:
 - [x] use-toast - test present
 
 Other UI components (tests missing / add to priority list):
-- [ ] accordion.tsx
-- [ ] alert-dialog.tsx
-- [ ] alert.tsx
-- [ ] aspect-ratio.tsx
-- [ ] avatar.tsx
-- [ ] breadcrumb.tsx
-- [ ] calendar.tsx
-- [ ] carousel.tsx
-- [ ] chart.tsx
-- [ ] checkbox.tsx
-- [ ] collapsible.tsx
-- [ ] command.tsx
-- [ ] context-menu.tsx
-- [ ] drawer.tsx
-- [ ] dropdown-menu.tsx
-- [ ] form.context.tsx
-- [ ] form.tsx
-- [ ] hover-card.tsx
-- [ ] input-otp.tsx
-- [ ] label.tsx
-- [ ] menubar.tsx
-- [ ] navigation-menu.tsx
-- [ ] navigation-tabs.tsx
-- [ ] pagination.tsx
-- [ ] popover.tsx
-- [ ] radio-group.tsx
-- [ ] resizable.tsx
-- [ ] scroll-area.tsx
-- [ ] separator.tsx
-- [ ] sheet.tsx
-- [ ] sidebar.context.tsx
-- [ ] sidebar.tsx
-- [ ] skeleton.tsx
-- [ ] slider.tsx
-- [ ] sonner.tsx
-- [ ] switch.tsx
-- [ ] table.tsx
-- [ ] tabs.tsx
-- [ ] textarea.tsx
-- [ ] theme-toggle.tsx
-- [ ] toaster.tsx
-- [ ] toggle-group.tsx
-- [ ] toggle.tsx
-- [ ] tooltip.tsx
+- [x] accordion.tsx ✅ (smoke test)
+- [x] alert-dialog.tsx ✅ (smoke test)
+- [x] alert.tsx ✅ (smoke test)
+- [x] aspect-ratio.tsx ✅ (smoke test)
+- [x] avatar.tsx ✅ (smoke test)
+- [x] breadcrumb.tsx ✅ (smoke test)
+- [x] calendar.tsx ✅ (smoke test)
+- [x] carousel.tsx ✅ (smoke test)
+- [x] chart.tsx ✅ (smoke test)
+- [x] checkbox.tsx ✅ (smoke test)
+- [x] collapsible.tsx ✅ (smoke test)
+- [x] command.tsx ✅ (smoke test)
+- [x] context-menu.tsx ✅ (smoke test)
+- [x] drawer.tsx ✅ (smoke test)
+- [x] dropdown-menu.tsx ✅ (smoke test)
+- [x] form.context.tsx ✅ (smoke test)
+- [x] form.tsx ✅ (smoke test)
+- [x] hover-card.tsx ✅ (smoke test)
+- [x] input-otp.tsx ✅ (smoke test)
+- [x] label.tsx ✅ (smoke test)
+- [x] menubar.tsx ✅ (smoke test)
+- [x] navigation-menu.tsx ✅ (smoke test)
+- [x] navigation-tabs.tsx ✅ (smoke test)
+- [x] pagination.tsx ✅ (smoke test)
+- [x] popover.tsx ✅ (smoke test)
+- [x] radio-group.tsx ✅ (smoke test)
+- [x] resizable.tsx ✅ (smoke test)
+- [x] scroll-area.tsx ✅ (smoke test)
+- [x] separator.tsx ✅ (smoke test)
+- [x] sheet.tsx ✅ (smoke test)
+- [x] sidebar.context.tsx ✅ (unit tests)
+- [x] sidebar.tsx ✅ (smoke test)
+- [x] skeleton.tsx ✅ (smoke test)
+- [x] slider.tsx ✅ (smoke test)
+- [x] sonner.tsx ✅ (smoke test)
+- [x] switch.tsx ✅ (smoke test)
+- [x] table.tsx ✅ (smoke test)
+- [x] tabs.tsx ✅ (smoke test)
+- [x] textarea.tsx ✅ (smoke test)
+- [x] theme-toggle.tsx ✅ (smoke test)
+- [x] toaster.tsx ✅ (smoke test)
+- [x] toggle-group.tsx ✅ (smoke test)
+- [x] toggle.tsx ✅ (smoke test)
+- [x] tooltip.tsx ✅ (smoke test)
 
 Notes:
 - Prioritize interactive controls (dropdown-menu, popover, tooltip, context-menu, checkbox, radio-group, switch, drawer/sheet, tabs, table).

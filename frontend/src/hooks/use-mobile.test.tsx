@@ -247,9 +247,12 @@ describe('useIsMobile', () => {
       value: 400,
     });
 
-    if (changeHandler) {
-      changeHandler();
-    }
+    const { act } = await import('react')
+    act(() => {
+      if (changeHandler) {
+        changeHandler()
+      }
+    })
 
     await waitFor(() => {
       expect(result.current).toBe(true);

@@ -32,10 +32,15 @@ const DrawerOverlay = React.forwardRef<
 ))
 DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName
 
+interface DrawerContentProps extends React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> {
+  fallbackTitle?: string
+  fallbackDescription?: string
+}
+
 const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+  DrawerContentProps
+>(({ className, children, fallbackTitle = 'Drawer', fallbackDescription = 'Drawer content', ...props }, ref) => (
   <DrawerPortal>
     <DrawerOverlay />
     <DrawerPrimitive.Content
@@ -46,6 +51,10 @@ const DrawerContent = React.forwardRef<
       )}
       {...props}
     >
+    {/* Provide hidden Title/Description for accessibility when not supplied by the
+      caller. This addresses Radix warnings while keeping visuals intact. */}
+    <DrawerPrimitive.Title className="sr-only">{fallbackTitle}</DrawerPrimitive.Title>
+    <DrawerPrimitive.Description className="sr-only">{fallbackDescription}</DrawerPrimitive.Description>
       <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
       {children}
     </DrawerPrimitive.Content>

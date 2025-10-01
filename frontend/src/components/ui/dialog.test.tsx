@@ -75,4 +75,24 @@ describe('Dialog Component', () => {
     // ref should point to content after opening
     expect(ref.current === null || ref.current instanceof HTMLDivElement).toBe(true)
   })
+
+  it('renders custom fallback title/description when provided on DialogContent', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <Dialog>
+        <DialogTrigger>Open</DialogTrigger>
+        <DialogContent fallbackTitle="CustomTitle" fallbackDescription="CustomDesc">
+          <DialogClose>Close</DialogClose>
+        </DialogContent>
+      </Dialog>
+    )
+
+    const trigger = screen.getByRole('button', { name: 'Open' })
+    await user.click(trigger)
+
+    // The sr-only fallbacks are present for screen readers; they exist in the DOM
+    expect(screen.getByText('CustomTitle')).toBeInTheDocument()
+    expect(screen.getByText('CustomDesc')).toBeInTheDocument()
+  })
 })

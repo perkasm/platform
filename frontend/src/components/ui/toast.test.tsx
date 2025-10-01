@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, vi } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
-import { act } from 'react-dom/test-utils'
+import { act } from 'react'
 import { userEvent } from '@testing-library/user-event'
 import {
   ToastProvider,
@@ -75,7 +75,9 @@ describe('Toast Component', () => {
 
     expect(screen.getByText('Auto')).toBeInTheDocument()
 
-    act(() => vi.advanceTimersByTime(500))
+    act(() => {
+      vi.advanceTimersByTime(500)
+    })
 
     // allow microtasks to flush
     await Promise.resolve()
