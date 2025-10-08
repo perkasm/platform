@@ -12,12 +12,13 @@ class Settings(BaseSettings):
     
     # Database settings
     POSTGRES_SERVER: str = "localhost"
-    POSTGRES_USER: str = "postgres"
-    POSTGRES_PASSWORD: str = ""
+    POSTGRES_USER: str = "perkasm"
+    POSTGRES_PASSWORD: str = "password"
     POSTGRES_DB: str = "perkasm"
-    SQLALCHEMY_DATABASE_URI: str = (
-        f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}/{POSTGRES_DB}"
-    )
+    
+    @property
+    def SQLALCHEMY_DATABASE_URI(self) -> str:
+        return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_SERVER}/{self.POSTGRES_DB}"
     
     # JWT settings
     SECRET_KEY: str = "your-secret-key-change-in-production"

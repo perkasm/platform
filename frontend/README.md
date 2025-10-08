@@ -131,7 +131,7 @@ The application will be available at **http://localhost:8080**
 Create a `.env.development` file in the frontend directory:
 
 ```bash
-VITE_API_BASE_URL=http://localhost:8000
+VITE_API_BASE_URL=http://localhost:8001
 VITE_GOOGLE_CLIENT_ID=your-google-client-id
 ```
 

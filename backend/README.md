@@ -48,8 +48,8 @@ app/
 2. Set up environment variables in a `.env` file:
    ```bash
    POSTGRES_SERVER=localhost
-   POSTGRES_USER=postgres
-   POSTGRES_PASSWORD=your_password
+   POSTGRES_USER=perkasm
+   POSTGRES_PASSWORD=password
    POSTGRES_DB=perkasm
    SECRET_KEY=your_secret_key
    GOOGLE_CLIENT_ID=your_google_client_id
