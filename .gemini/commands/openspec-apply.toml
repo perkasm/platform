@@ -1,0 +1,6 @@
+description = "Openspec Apply"
+prompt = """
+Implement an approved OpenSpec change and keep tasks in sync.
+Refer to the instructions located in this file:
+@.github/prompts/openspec-apply.prompt.md
+"""

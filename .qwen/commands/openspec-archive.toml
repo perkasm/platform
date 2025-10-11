@@ -1,0 +1,6 @@
+description = "Openspec Archive"
+prompt = """
+Archive a deployed OpenSpec change and update specs.
+Refer to the instructions located in this file:
+@.github/prompts/openspec-archive.prompt.md
+"""

@@ -1,0 +1,6 @@
+description = "Openspec Proposal"
+prompt = """
+Scaffold a new OpenSpec change and validate strictly.
+Refer to the instructions located in this file:
+@.github/prompts/openspec-proposal.prompt.md
+"""
