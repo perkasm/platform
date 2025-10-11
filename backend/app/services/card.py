@@ -90,8 +90,11 @@ class CreditCardService:
         return True
     
     @staticmethod
-    def to_response(card: CreditCard) -> CreditCardResponse:
+    def to_response(card: CreditCard) -> Optional[CreditCardResponse]:
         """Convert card model to response schema"""
+        if card is None:
+            return None
+            
         welcome_bonus = None
         if card.has_welcome_bonus and card.welcome_bonus_required > 0:
             welcome_bonus = WelcomeBonusProgress(

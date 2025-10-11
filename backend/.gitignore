@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+*.pyo
+*.pyd
+*.env
+.env
+.venv/
+venv/
+*.sqlite3
+
+# FastAPI/uv
+*.db
+*.log
+uv.lock
+.python-version
+
+# IDE/editor
+.vscode/
+.idea/
+*.swp
+*.sublime-workspace
+*.sublime-project
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test/coverage
+.coverage
+htmlcov/
+.tox/
+pytest_cache/
+.cache/
+.mypy_cache/
+.pytest_cache/
+
+# Docker
+*.pid
+
+# Misc
+*.bak
+*.tmp
