@@ -30,7 +30,25 @@ The platform follows a modern, scalable client-server architecture:
 - **Cloud-Ready**: Containerized services with health checks and monitoring
 - **Test-Driven**: 100% test coverage with comprehensive unit and integration tests
 
-## 🛠 Technologies Used
+## � OpenSpec Development
+
+This project uses [OpenSpec](https://github.com/Fission-AI/OpenSpec) for spec-driven development with AI coding assistants. OpenSpec provides a lightweight specification workflow that ensures human and AI stakeholders agree on requirements before implementation begins.
+
+**Key Benefits:**
+- **Deterministic Outputs**: Structured change proposals keep scope explicit and auditable
+- **AI Alignment**: Locks intent before coding to prevent scope creep and ensure predictable results
+- **Change Tracking**: Proposals, tasks, and spec deltas live together for complete feature traceability
+- **Multi-Tool Support**: Works with Claude Code, Cursor, GitHub Copilot, and other AI assistants
+
+**Workflow:**
+1. **Draft Change Proposal**: AI creates structured proposals with tasks and spec updates
+2. **Review & Align**: Human-AI collaboration refines requirements until agreement
+3. **Implement Tasks**: AI implements based on approved specifications
+4. **Archive Changes**: Completed work merges back into living specifications
+
+The `openspec/` directory contains all specifications and change proposals for the platform.
+
+## �🛠 Technologies Used
 
 ### Frontend
 - **Framework**: React 18.3 with TypeScript 5.8
@@ -59,47 +77,10 @@ The platform follows a modern, scalable client-server architecture:
 ## Getting Started
 
 ### Prerequisites
-- Node.js & npm (for frontend)
-- Python 3.11 (for backend)
-- uv (Python package manager)
-- PostgreSQL (optional, for database features)
-
-### Frontend Setup
-
-```bash
-# Navigate to frontend directory
-cd frontend
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-```
-
-The frontend will be available at `http://localhost:8080`.
-
-### Backend Setup
-
-```bash
-# Navigate to backend directory
-cd backend
-
-# Install dependencies
-uv sync
-
-# Set up environment variables (copy example file and modify)
-cp .env.example .env
-
-# Start development server
-uv run uvicorn app.main:app --reload
-```
-
-The backend API will be available at `http://localhost:8001`.
-
-API documentation is available at:
-- Swagger UI: `http://localhost:8001/docs`
-- ReDoc: `http://localhost:8001/redoc`
+- PostgreSQL (for database features)
+- Python 3.11+ (for backend)
+- uv (Python package manager for the backend)
+- Node.js 18.0.0+ & npm (for frontend)
 
 ### Database Setup
 
@@ -118,6 +99,48 @@ Database connection details:
 * Database: perkasm
 * Username: perkasm
 * Password: password
+
+### Backend Setup
+Full information about the backend is located at [backend/README.md](backend/README.md)
+
+```bash
+# Navigate to backend directory
+cd backend
+
+# Install dependencies
+uv sync
+
+# Set up environment variables (copy example file and modify)
+cp .env.example .env
+
+# One-time Alembic schema setup
+uv run alembic upgrade head
+
+# Start development server
+uv run uvicorn app.main:app --reload
+```
+
+The backend API will be available at `http://localhost:8001`.
+
+API documentation is available at:
+- Swagger UI: `http://localhost:8001/docs`
+- ReDoc: `http://localhost:8001/redoc`
+
+### Frontend Setup
+Full information about the frontend is located at [frontend/README.md](frontend/README.md)
+
+```bash
+# Navigate to frontend directory
+cd frontend
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+The frontend will be available at `http://localhost:8080`.
 
 ## Project Structure
 
@@ -152,6 +175,7 @@ platform/
 - **Backend**: Follow Python best practices and FastAPI conventions
 - **Testing**: Comprehensive test suites with 100% code coverage requirement
 - **Type Safety**: Strict TypeScript mode and Python type hints
+- **Specifications**: Use OpenSpec for managing change proposals and specifications (`openspec/` directory)
 
 ## 🧪 Testing
 
@@ -159,7 +183,7 @@ platform/
 ```bash
 cd frontend
 
-# Run tests in watch mode
+# Run tests once
 npm run test
 
 # Run tests with coverage report
@@ -177,13 +201,13 @@ npm run type-check
 cd backend
 
 # Run all tests
-uv run pytest
+uv run python -m pytest
 
 # Run tests with coverage
-uv run pytest --cov=app
+uv run python -m pytest --cov=app
 
 # Run specific test file
-uv run pytest tests/test_auth.py -v
+uv run python -m pytest tests/test_auth.py -v
 ```
 
 ## 📁 Enhanced Project Structure
@@ -220,12 +244,22 @@ platform/
 │   ├── tests/                 # Backend test suite
 │   ├── pyproject.toml         # Backend dependencies (uv)
 │   ├── .env.example           # Environment variables template
+│   ├── alembic/               # Database migration scripts
 │   └── Dockerfile             # Backend containerization
+│
+├── openspec/                   # OpenSpec specification management
+│   ├── AGENTS.md              # AI assistant development guidelines
+│   ├── project.md             # Project specification overview
+│   ├── specs/                 # Capability specifications
+│   └── changes/               # Change proposals and deltas
 │
 ├── docker-compose.yml          # Multi-service orchestration
 ├── run-postgres.sh            # Database setup script
 ├── init.sql                   # Database initialization
 ├── schema.sql                 # Database schema
+├── AGENTS.md                  # AI coding agent guidelines
+├── GEMINI.md                  # Gemini AI integration notes
+├── QWEN.md                    # QWEN AI integration notes
 └── README.md                  # This file
 ```
 
@@ -290,7 +324,7 @@ Please follow these guidelines:
    cd frontend && npm run lint && npm run type-check && npm run test:coverage
    
    # Backend  
-   cd backend && uv run pytest --cov=app && uv run mypy app
+   cd backend && uv run python -m pytest --cov=app
    ```
 5. **Update documentation** as needed
 6. **Submit a pull request** with a clear description
@@ -344,6 +378,7 @@ The platform includes comprehensive monitoring:
 ## 📚 Documentation
 
 - **[AGENTS.md](./AGENTS.md)**: AI coding agent guidelines and best practices
+- **[OpenSpec AGENTS.md](./openspec/AGENTS.md)**: OpenSpec development workflow and specification management
 - **[Frontend README](./frontend/README.md)**: Detailed frontend documentation
 - **[Frontend Development Guide](./frontend/DEVELOPMENT.md)**: Development workflow
 - **[Backend README](./backend/README.md)**: Backend API documentation
