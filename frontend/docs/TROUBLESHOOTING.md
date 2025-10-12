@@ -14,8 +14,13 @@ This guide helps developers quickly resolve common issues encountered during dev
 - [Testing Issues](#testing-issues)
 - [TypeScript Errors](#typescript-errors)
 - [API and Network](#api-and-network)
+- [Authentication Issues](#authentication-issues)
+- [Project-Specific Issues](#project-specific-issues)
+- [Deployment Issues](#deployment-issues)
 - [State Management](#state-management)
 - [Performance Issues](#performance-issues)
+- [Accessibility Testing Issues](#accessibility-testing-issues)
+- [Performance Monitoring Issues](#performance-monitoring-issues)
 - [Browser-Specific Issues](#browser-specific-issues)
 
 ---
@@ -30,8 +35,8 @@ This guide helps developers quickly resolve common issues encountered during dev
 
 1. **Check port availability**
    ```bash
-   # Kill process on port 5173 (Vite default)
-   lsof -ti:5173 | xargs kill -9
+   # Kill process on port 8080 (Vite configured port)
+   lsof -ti:8080 | xargs kill -9
    
    # Or use a different port
    VITE_PORT=3000 npm run dev
@@ -238,29 +243,42 @@ This guide helps developers quickly resolve common issues encountered during dev
 
 2. **Run tests in sequence**
    ```bash
-   npm run test -- --no-threads
+   npm run test -- --run  # Run once instead of watch mode
    ```
 
 3. **Check for test pollution**
    ```typescript
-   // Add cleanup in beforeEach/afterEach
+   // Add cleanup in test setup (src/test/setup.ts)
    afterEach(() => {
      vi.clearAllMocks();
      cleanup();
    });
    ```
 
+4. **Fix Vitest-specific issues**
+   ```typescript
+   // Ensure proper imports in tests
+   import { describe, it, expect, vi } from 'vitest';
+   
+   // Mock modules properly
+   vi.mock('@/services/api', () => ({
+     apiClient: vi.fn(),
+   }));
+   ```
+
 ---
 
 ### Mock Service Worker Issues
 
-**Problem**: MSW not intercepting requests
+**Problem**: MSW not intercepting requests in tests
 
 **Solutions**:
 
-1. **Ensure server is started**
+1. **Ensure MSW server is started**
    ```typescript
-   // In test/setup.ts
+   // In src/test/setup.ts or test file
+   import { server } from '@/test/mocks/server';
+   
    beforeAll(() => server.listen());
    afterEach(() => server.resetHandlers());
    afterAll(() => server.close());
@@ -268,18 +286,19 @@ This guide helps developers quickly resolve common issues encountered during dev
 
 2. **Check handler patterns**
    ```typescript
-   // Must match exact URL
-   rest.get('http://localhost/api/v1/cards', ...)
+   // Must match exact URL pattern
+   rest.get('http://localhost:8001/api/v1/cards', ...)
    
-   // Or use relative path
-   rest.get('/api/v1/cards', ...)
+   // Or use wildcard for flexibility
+   rest.get('*/api/v1/cards', ...)
    ```
 
-3. **Verify request is being made**
+3. **Verify request interception**
    ```typescript
+   // Add logging to debug
    server.use(
      rest.get('/api/v1/cards', (req, res, ctx) => {
-       console.log('Request intercepted');
+       console.log('MSW intercepted:', req.url);
        return res(ctx.json({ cards: [] }));
      })
    );
@@ -301,15 +320,77 @@ This guide helps developers quickly resolve common issues encountered during dev
 
 2. **Find untested code**
    ```bash
-   # View uncovered lines
-   cat coverage/lcov-report/index.html
+   # View uncovered lines in terminal
+   npm run test:coverage -- --reporter=text
    ```
 
-3. **Test all branches**
+3. **Test all branches and edge cases**
    ```typescript
-   // Test both true and false conditions
-   it('should render when isActive is true', ...);
-   it('should not render when isActive is false', ...);
+   // Test both success and error paths
+   it('should handle success', async () => {
+     mockApi.mockResolvedValue({ data: 'success' });
+     // ... test success case
+   });
+   
+   it('should handle errors', async () => {
+     mockApi.mockRejectedValue(new Error('API Error'));
+     // ... test error case
+   });
+   ```
+
+4. **Test React component interactions**
+   ```typescript
+   // Test user interactions
+   it('should submit form on button click', async () => {
+     const user = userEvent.setup();
+     render(<Form />);
+     
+     await user.type(screen.getByLabelText('Name'), 'John');
+     await user.click(screen.getByRole('button', { name: /submit/i }));
+     
+     expect(mockSubmit).toHaveBeenCalledWith({ name: 'John' });
+   });
+   ```
+
+---
+
+### Vitest Configuration Issues
+
+**Problem**: Tests not running or configuration problems
+
+**Solutions**:
+
+1. **Check Vitest config**
+   ```typescript
+   // vitest.config.ts
+   export default defineConfig({
+     test: {
+       globals: true,  // Enables describe/it/expect globally
+       environment: 'jsdom',  // For DOM testing
+       setupFiles: ['./src/test/setup.ts'],
+     },
+   });
+   ```
+
+2. **Fix import path issues**
+   ```json
+   // tsconfig.json - ensure paths are configured
+   {
+     "compilerOptions": {
+       "paths": {
+         "@/*": ["./src/*"]
+       }
+     }
+   }
+   ```
+
+3. **Resolve module mocking issues**
+   ```typescript
+   // Mock CSS imports
+   vi.mock('*.css', () => ({}));
+   
+   // Mock image imports
+   vi.mock('*.png', () => ({ default: 'mock-image-path' }));
    ```
 
 ---
@@ -428,12 +509,15 @@ This guide helps developers quickly resolve common issues encountered during dev
 
 1. **Configure Vite proxy** (development)
    ```typescript
-   // vite.config.ts
+   // Add to vite.config.ts server configuration
    server: {
+     host: "::",
+     port: 8080,
      proxy: {
        '/api': {
          target: 'http://localhost:8001',
          changeOrigin: true,
+         secure: false,
        },
      },
    }
@@ -442,11 +526,11 @@ This guide helps developers quickly resolve common issues encountered during dev
 2. **Check backend CORS configuration**
    ```python
    # Backend should allow frontend origin
-   app.add_middleware(
-       CORSMiddleware,
-       allow_origins=["http://localhost:5173"],
-       allow_credentials=True,
-   )
+   # In backend/.env
+   BACKEND_CORS_ORIGINS=["http://localhost:8080"]
+   
+   # Or for multiple origins
+   BACKEND_CORS_ORIGINS=["http://localhost:8080","http://localhost:3000","https://yourdomain.com"]
    ```
 
 3. **Use withCredentials**
@@ -523,190 +607,505 @@ This guide helps developers quickly resolve common issues encountered during dev
 
 ---
 
-## State Management
+## Authentication Issues
 
-### Infinite Re-renders
+### Google OAuth Login Fails
 
-**Problem**: Component keeps re-rendering
+**Problem**: Google login button doesn't work or redirects fail
 
 **Solutions**:
 
-1. **Memoize callbacks**
-   ```typescript
-   // Before - creates new function every render
-   <Child onClick={() => doSomething()} />
-   
-   // After - memoized
-   const handleClick = useCallback(() => doSomething(), []);
-   <Child onClick={handleClick} />
+1. **Check Google OAuth configuration**
+   ```env
+   # Ensure all required environment variables are set
+   VITE_GOOGLE_CLIENT_ID=your-actual-google-client-id
+   GOOGLE_CLIENT_ID=your-actual-google-client-id
+   GOOGLE_CLIENT_SECRET=your-actual-google-client-secret
+   GOOGLE_REDIRECT_URI=http://localhost:8001/api/v1/auth/google/callback
    ```
 
-2. **Memoize values**
+2. **Verify Google Cloud Console setup**
+   - Client ID matches exactly
+   - Authorized redirect URIs include backend callback URL
+   - OAuth consent screen is configured
+
+3. **Check backend OAuth service**
+   ```bash
+   # Test OAuth endpoint directly
+   curl -X GET "http://localhost:8001/api/v1/auth/google"
+   ```
+
+---
+
+### JWT Token Issues
+
+**Problem**: Authentication lost after page refresh or API calls fail with 401
+
+**Solutions**:
+
+1. **Check token storage**
    ```typescript
-   const expensiveValue = useMemo(() => 
-     calculateExpensive(data),
-     [data]
+   // Ensure tokens are stored securely
+   localStorage.setItem('access_token', token);
+   localStorage.setItem('refresh_token', refreshToken);
+   ```
+
+2. **Verify token expiration**
+   ```typescript
+   // Check if token is expired before using
+   const isExpired = Date.now() >= tokenExpiry * 1000;
+   ```
+
+3. **Implement token refresh**
+   ```typescript
+   // Automatic token refresh on 401 responses
+   axios.interceptors.response.use(
+     response => response,
+     async error => {
+       if (error.response?.status === 401) {
+         // Attempt token refresh
+         await refreshToken();
+         // Retry original request
+         return axios(error.config);
+       }
+       return Promise.reject(error);
+     }
    );
    ```
 
-3. **Check useEffect dependencies**
+---
+
+### Session Persistence Issues
+
+**Problem**: User logged out after browser refresh
+
+**Solutions**:
+
+1. **Check token persistence**
    ```typescript
-   // Avoid object/array literals in dependencies
+   // Load tokens on app initialization
    useEffect(() => {
-     // This runs every render!
-   }, [{ value }]); // ❌ New object each time
-   
-   useEffect(() => {
-     // This is better
-   }, [value]); // ✅ Primitive value
+     const token = localStorage.getItem('access_token');
+     if (token) {
+       // Validate and set user context
+       setAuthToken(token);
+     }
+   }, []);
+   ```
+
+2. **Verify token validation**
+   ```typescript
+   // Validate token with backend on app load
+   const validateToken = async () => {
+     try {
+       const response = await axios.get('/api/v1/auth/me');
+       setUser(response.data);
+     } catch (error) {
+       // Token invalid, redirect to login
+       logout();
+     }
+   };
    ```
 
 ---
 
-### Context Not Updating
+## Project-Specific Issues
 
-**Problem**: Context value changes don't trigger re-renders
+### Credit Card Management Problems
 
-**Solutions**:
-
-1. **Ensure provider wraps components**
-   ```tsx
-   <AuthProvider>
-     <App />  {/* Will receive updates */}
-   </AuthProvider>
-   ```
-
-2. **Split context by update frequency**
-   ```typescript
-   // Instead of one large context
-   <UserContext.Provider value={{ user, settings, preferences }}>
-   
-   // Split into multiple contexts
-   <UserContext.Provider value={user}>
-     <SettingsContext.Provider value={settings}>
-       <PreferencesContext.Provider value={preferences}>
-   ```
-
-3. **Memoize context value**
-   ```typescript
-   const value = useMemo(() => ({ user, updateUser }), [user]);
-   
-   <Context.Provider value={value}>
-   ```
-
----
-
-## Performance Issues
-
-### Slow Initial Load
-
-**Problem**: Application takes long to load
+**Problem**: Cards not loading or CRUD operations failing
 
 **Solutions**:
 
-1. **Analyze bundle**
+1. **Check API endpoints**
    ```bash
-   npm run build
-   npx vite-bundle-visualizer
+   # Test card endpoints
+   curl -H "Authorization: Bearer YOUR_TOKEN" \
+        http://localhost:8001/api/v1/cards
    ```
 
-2. **Code split routes**
+2. **Verify card data validation**
+   ```typescript
+   // Ensure required fields are present
+   const cardData = {
+     name: 'Card Name',
+     issuer: 'Bank Name',
+     network: 'Visa', // Visa, Mastercard, Amex
+     lastFour: '1234',
+     expiryMonth: 12,
+     expiryYear: 2025,
+     // ... other required fields
+   };
+   ```
+
+3. **Check database connectivity**
+   ```bash
+   # From backend directory
+   python -c "from app.core.database import engine; print('DB connected' if engine else 'DB failed')"
+   ```
+
+---
+
+### AI Chat Not Responding
+
+**Problem**: Chat interface not working or responses delayed
+
+**Solutions**:
+
+1. **Check chat service configuration**
+   ```typescript
+   // Verify chat API configuration
+   const chatConfig = {
+     apiUrl: import.meta.env.VITE_API_URL,
+     timeout: 30000, // 30 seconds
+   };
+   ```
+
+2. **Test chat endpoints**
+   ```bash
+   curl -X POST http://localhost:8001/api/v1/chat \
+        -H "Content-Type: application/json" \
+        -H "Authorization: Bearer YOUR_TOKEN" \
+        -d '{"message": "Hello"}'
+   ```
+
+3. **Check WebSocket connection** (if applicable)
+   ```typescript
+   // Verify WebSocket URL
+   const wsUrl = `ws://localhost:8001/api/v1/chat/ws`;
+   const socket = new WebSocket(wsUrl);
+   ```
+
+---
+
+### Recommendations Not Loading
+
+**Problem**: Card recommendations not appearing
+
+**Solutions**:
+
+1. **Verify user transaction data**
+   ```bash
+   # Check if user has transactions
+   curl -H "Authorization: Bearer YOUR_TOKEN" \
+        http://localhost:8001/api/v1/transactions
+   ```
+
+2. **Test recommendations endpoint**
+   ```bash
+   curl -H "Authorization: Bearer YOUR_TOKEN" \
+        http://localhost:8001/api/v1/recommendations
+   ```
+
+3. **Check recommendation algorithm**
+   ```typescript
+   // Ensure proper data is sent
+   const recommendationRequest = {
+     spendingCategories: ['groceries', 'dining'],
+     monthlySpend: 2000,
+     currentCards: userCards,
+   };
+   ```
+
+---
+
+## Deployment Issues
+
+### Docker Build Fails
+
+**Problem**: `docker build` fails in frontend
+
+**Solutions**:
+
+1. **Check Node version in Dockerfile**
+   ```dockerfile
+   # Ensure Node version matches local
+   FROM node:18-alpine AS base
+   ```
+
+2. **Clear Docker cache**
+   ```bash
+   docker system prune -a
+   docker build --no-cache -t perkasm-frontend .
+   ```
+
+3. **Check build arguments**
+   ```bash
+   # Build with environment variables
+   docker build \
+     --build-arg VITE_API_URL=https://api.yourdomain.com \
+     --build-arg VITE_SENTRY_DSN=your-sentry-dsn \
+     -t perkasm-frontend .
+   ```
+
+---
+
+### Kubernetes Deployment Issues
+
+**Problem**: Frontend pod crashes or doesn't start
+
+**Solutions**:
+
+1. **Check resource limits**
+   ```yaml
+   # k8s/deployment.yaml
+   resources:
+     requests:
+       memory: "128Mi"
+       cpu: "100m"
+     limits:
+       memory: "512Mi"
+       cpu: "500m"
+   ```
+
+2. **Verify environment variables**
+   ```yaml
+   # k8s/configmap.yaml
+   apiVersion: v1
+   kind: ConfigMap
+   metadata:
+     name: frontend-config
+   data:
+     VITE_API_URL: "https://api.yourdomain.com"
+     VITE_SENTRY_DSN: "your-sentry-dsn"
+   ```
+
+3. **Check ingress configuration**
+   ```yaml
+   # k8s/ingress.yaml
+   apiVersion: networking.k8s.io/v1
+   kind: Ingress
+   metadata:
+     name: frontend-ingress
+   spec:
+     rules:
+     - host: yourdomain.com
+       http:
+         paths:
+         - path: /
+           pathType: Prefix
+           backend:
+             service:
+               name: frontend-service
+               port:
+                 number: 80
+   ```
+
+---
+
+### SSL/HTTPS Issues
+
+**Problem**: HTTPS not working or certificate errors
+
+**Solutions**:
+
+1. **Generate SSL certificates**
+   ```bash
+   # Use the provided script
+   ./generate-ssl-cert.sh
+   ```
+
+2. **Configure Nginx for SSL**
+   ```nginx
+   # nginx.conf
+   server {
+     listen 443 ssl;
+     server_name yourdomain.com;
+     
+     ssl_certificate /etc/ssl/certs/cert.pem;
+     ssl_certificate_key /etc/ssl/private/key.pem;
+     
+     location / {
+       proxy_pass http://frontend:8080;
+       proxy_set_header Host $host;
+       proxy_set_header X-Real-IP $remote_addr;
+     }
+   }
+   ```
+
+3. **Check certificate validity**
+   ```bash
+   openssl x509 -in cert.pem -text -noout
+   ```
+
+---
+
+### Storybook Build Issues
+
+**Problem**: Storybook fails to build or run
+
+**Solutions**:
+
+1. **Clear Storybook cache**
+   ```bash
+   rm -rf node_modules/.cache/storybook
+   npm run storybook
+   ```
+
+2. **Check Storybook configuration**
+   ```typescript
+   // .storybook/main.ts
+   export default {
+     stories: ['../src/**/*.stories.@(js|jsx|ts|tsx|mdx)'],
+     addons: [
+       '@storybook/addon-essentials',
+       '@storybook/addon-a11y',
+     ],
+     framework: {
+       name: '@storybook/react-vite',
+       options: {},
+     },
+   };
+   ```
+
+3. **Fix import issues in stories**
+   ```typescript
+   // Ensure proper imports in stories
+   import { Button } from '@/components/ui/button';
+   ```
+
+---
+
+### Sentry Configuration Issues
+
+**Problem**: Error tracking not working
+
+**Solutions**:
+
+1. **Verify Sentry DSN**
+   ```env
+   VITE_SENTRY_DSN=https://your-dsn@sentry.io/project-id
+   SENTRY_ORG=your-org
+   SENTRY_PROJECT=your-project
+   SENTRY_AUTH_TOKEN=your-auth-token
+   ```
+
+2. **Check Sentry initialization**
+   ```typescript
+   // src/main.tsx
+   import * as Sentry from '@sentry/react';
+   
+   Sentry.init({
+     dsn: import.meta.env.VITE_SENTRY_DSN,
+     environment: import.meta.env.VITE_SENTRY_ENVIRONMENT,
+     integrations: [
+       Sentry.browserTracingIntegration(),
+       Sentry.replayIntegration(),
+     ],
+     tracesSampleRate: 1.0,
+   });
+   ```
+
+3. **Test error reporting**
+   ```typescript
+   // Trigger a test error
+   throw new Error('Test Sentry error');
+   ```
+
+---
+
+## Accessibility Testing Issues
+
+### Axe Tests Failing
+
+**Problem**: Accessibility tests fail with violations
+
+**Solutions**:
+
+1. **Run accessibility tests**
+   ```bash
+   npm run test:accessibility
+   ```
+
+2. **Fix common violations**
+   ```typescript
+   // Add proper ARIA labels
+   <button aria-label="Close dialog">×</button>
+   
+   // Ensure color contrast
+   <div className="text-gray-900 bg-white">High contrast text</div>
+   
+   // Add focus management
+   <input ref={inputRef} autoFocus />
+   ```
+
+3. **Check semantic HTML**
+   ```html
+   <!-- Use semantic elements -->
+   <header>
+   <nav>
+   <main>
+   <section>
+   ```
+
+---
+
+### Screen Reader Issues
+
+**Problem**: Screen readers can't navigate properly
+
+**Solutions**:
+
+1. **Test with screen readers**
+   - macOS: VoiceOver (Cmd + F5)
+   - Windows: NVDA or JAWS
+
+2. **Add proper headings**
+   ```html
+   <h1>Main Title</h1>
+   <h2>Section Title</h2>
+   <h3>Subsection</h3>
+   ```
+
+3. **Implement skip links**
+   ```html
+   <a href="#main-content" className="sr-only focus:not-sr-only">
+     Skip to main content
+   </a>
+   ```
+
+---
+
+## Performance Monitoring Issues
+
+### Core Web Vitals Poor Scores
+
+**Problem**: Lighthouse performance scores are low
+
+**Solutions**:
+
+1. **Analyze bundle size**
+   ```bash
+   npm run build:analyze
+   open dist/stats.html
+   ```
+
+2. **Optimize images**
+   ```typescript
+   // Use next-gen formats
+   import webpImage from './image.webp';
+   import { LazyImage } from '@/components/ui/lazy-image';
+   ```
+
+3. **Implement code splitting**
    ```typescript
    const Dashboard = lazy(() => import('./pages/Dashboard'));
-   const Cards = lazy(() => import('./pages/Cards'));
-   ```
-
-3. **Optimize images**
-   - Use WebP format
-   - Implement lazy loading
-   - Add proper sizing
-
-4. **Remove unused dependencies**
-   ```bash
-   npx depcheck
-   ```
-
----
-
-### Slow Re-renders
-
-**Problem**: Component updates are sluggish
-
-**Solutions**:
-
-1. **Use React DevTools Profiler**
-   - Record interaction
-   - Identify slow components
-   - Check why they're rendering
-
-2. **Memoize expensive components**
-   ```typescript
-   const ExpensiveComponent = memo(({ data }: Props) => {
-     // Expensive rendering
-   });
-   ```
-
-3. **Virtualize long lists**
-   ```typescript
-   import { useVirtual } from '@tanstack/react-virtual';
    
-   const rowVirtualizer = useVirtual({
-     size: items.length,
-     parentRef,
-   });
+   <Suspense fallback={<LoadingSpinner />}>
+     <Dashboard />
+   </Suspense>
    ```
 
----
-
-## Browser-Specific Issues
-
-### Safari Compatibility
-
-**Problem**: Works in Chrome but not Safari
-
-**Solutions**:
-
-1. **Check CSS Grid/Flexbox**
-   - Safari has different implementations
-   - Test in Safari early
-
-2. **Polyfills for modern features**
-   ```bash
-   npm install core-js
-   ```
-
-3. **Check date handling**
+4. **Add performance monitoring**
    ```typescript
-   // Safari doesn't support all date formats
-   new Date('2024-01-01') // ✅ Works
-   new Date('01-01-2024') // ❌ Might not work
-   ```
-
----
-
-### iOS Specific Issues
-
-**Problem**: Different behavior on iOS devices
-
-**Solutions**:
-
-1. **Viewport meta tag**
-   ```html
-   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-   ```
-
-2. **iOS input zoom**
-   ```css
-   input {
-     font-size: 16px; /* Prevents zoom on focus */
-   }
-   ```
-
-3. **Safe area insets**
-   ```css
-   .container {
-     padding-bottom: env(safe-area-inset-bottom);
-   }
+   // Monitor Core Web Vitals
+   import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals';
+   
+   getCLS(console.log);
+   getFID(console.log);
+   getFCP(console.log);
+   getLCP(console.log);
+   getTTFB(console.log);
    ```
 
 ---
@@ -716,47 +1115,96 @@ This guide helps developers quickly resolve common issues encountered during dev
 ### Before Asking for Help
 
 1. **Check this guide** - Common issues are documented here
-2. **Search GitHub issues** - Someone might have had the same problem
-3. **Check browser console** - Error messages are helpful
-4. **Read error messages carefully** - They often contain the solution
+2. **Check project documentation** - Review `docs/` folder for specific guides
+3. **Search GitHub issues** - Someone might have had the same problem
+4. **Check browser console** - Error messages are helpful
+5. **Read error messages carefully** - They often contain the solution
 
 ### How to Ask for Help
 
 When reporting an issue, include:
 
 1. **Environment details**
-   - OS and version
+   - OS and version: `uname -a` (macOS/Linux) or `systeminfo` (Windows)
    - Node version: `node --version`
    - npm version: `npm --version`
    - Browser and version
+   - Git commit: `git rev-parse HEAD`
 
-2. **Steps to reproduce**
+2. **Project-specific information**
+   - Backend running: `curl http://localhost:8001/health`
+   - Database status: Check if PostgreSQL is running
+   - Environment variables: Confirm `.env` files are configured
+
+3. **Steps to reproduce**
    ```
-   1. Run npm install
-   2. Run npm run dev
-   3. Navigate to /cards
-   4. Click "Add Card"
-   5. Error appears
+   1. Run ./run-postgres.sh (if using local DB)
+   2. Start backend: cd backend && uv run uvicorn app.main:app --reload
+   3. Start frontend: npm run dev
+   4. Navigate to /dashboard
+   5. Click "Add Card"
+   6. Error appears
    ```
 
-3. **Error messages**
+4. **Error messages**
    - Full error stack trace
-   - Console errors
-   - Network errors
+   - Console errors (F12 → Console)
+   - Network errors (F12 → Network)
+   - Terminal output from both frontend and backend
 
-4. **What you've tried**
+5. **What you've tried**
    - List solutions you've attempted
    - Results of each attempt
+   - Any workarounds that partially work
+
+### Project-Specific Debugging
+
+**Database Issues:**
+```bash
+# Check PostgreSQL connection
+psql -h localhost -U perkasm -d perkasm
+
+# View backend logs
+cd backend && uv run uvicorn app.main:app --reload --log-level debug
+```
+
+**API Debugging:**
+```bash
+# Test API endpoints
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+     http://localhost:8001/api/v1/cards
+
+# Check API documentation
+open http://localhost:8001/docs
+```
+
+**Environment Setup:**
+```bash
+# Verify all services are running
+lsof -i :8080  # Frontend
+lsof -i :8001  # Backend
+lsof -i :5432  # PostgreSQL
+```
 
 ---
 
 ## Additional Resources
 
-- [Vite Troubleshooting](https://vitejs.dev/guide/troubleshooting.html)
+- [Vite Documentation](https://vitejs.dev/)
 - [React Documentation](https://react.dev)
-- [TypeScript FAQ](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+- [TanStack Query](https://tanstack.com/query)
+- [shadcn/ui Components](https://ui.shadcn.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Vitest Testing](https://vitest.dev/)
+- [React Testing Library](https://testing-library.com/docs/react-testing-library/)
+- [MSW Mocking](https://mswjs.io/)
+- [Storybook](https://storybook.js.org/)
+- [Sentry Error Tracking](https://docs.sentry.io/)
+- [Docker Documentation](https://docs.docker.com/)
+- [Kubernetes Documentation](https://kubernetes.io/docs/)
 - [Stack Overflow](https://stackoverflow.com/questions/tagged/reactjs)
 
 ---
 
-*Last Updated: September 30, 2025*
+*Last Updated: October 11, 2025*

@@ -13,6 +13,9 @@ Comprehensive documentation for all React components used in the PerkAsm platfor
 - [Feature Components](#feature-components)
 - [Layout Components](#layout-components)
 - [Utility Components](#utility-components)
+- [Custom Hooks](#custom-hooks)
+- [Services](#services)
+- [Types](#types)
 - [Component Patterns](#component-patterns)
 
 ---
@@ -22,20 +25,36 @@ Comprehensive documentation for all React components used in the PerkAsm platfor
 ### Component Categories
 
 1. **Base UI Components** (`src/components/ui/`)
-   - Reusable, atomic UI elements from shadcn/ui
-   - Design system foundation
+   - Comprehensive set of reusable UI elements from shadcn/ui
+   - Design system foundation with 40+ components
+   - Includes form controls, navigation, feedback, and layout primitives
 
 2. **Feature Components** (`src/components/`)
-   - Business logic components
-   - Domain-specific functionality
+   - Business logic components for core application features
+   - Domain-specific functionality for cards, chat, dashboard, and recommendations
 
-3. **Layout Components** 
-   - Page structure and navigation
-   - App shell components
+3. **Layout Components**
+   - NavigationTabs for main application navigation
+   - Header and footer sections (inline in pages/Index.tsx)
+   - Responsive layout structure
 
 4. **Utility Components**
-   - Error boundaries, protected routes
-   - Non-visual functionality
+   - ErrorBoundary for error handling
+   - ProtectedRoute for authentication
+   - Loading states and error displays
+
+5. **Custom Hooks** (`src/hooks/`)
+   - React Query hooks for data fetching and mutations
+   - Business logic encapsulation
+   - Reusable state management
+
+6. **Services** (`src/services/`)
+   - API service modules for backend communication
+   - Centralized data access layer
+
+7. **Types** (`src/types/`)
+   - TypeScript type definitions
+   - API response interfaces and application types
 
 ---
 
@@ -281,6 +300,855 @@ import {
 
 ---
 
+### Accordion
+
+**Location**: `src/components/ui/accordion.tsx`
+
+**Description**: Collapsible content panels.
+
+**Usage**:
+```tsx
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
+
+<Accordion type="single" collapsible>
+  <AccordionItem value="item-1">
+    <AccordionTrigger>Item 1</AccordionTrigger>
+    <AccordionContent>Content for item 1</AccordionContent>
+  </AccordionItem>
+</Accordion>
+```
+
+---
+
+### Alert
+
+**Location**: `src/components/ui/alert.tsx`
+
+**Description**: Contextual feedback messages.
+
+**Usage**:
+```tsx
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+
+<Alert>
+  <AlertTitle>Success!</AlertTitle>
+  <AlertDescription>Your changes have been saved.</AlertDescription>
+</Alert>
+```
+
+---
+
+### Alert Dialog
+
+**Location**: `src/components/ui/alert-dialog.tsx`
+
+**Description**: Modal dialog for destructive actions requiring confirmation.
+
+**Usage**:
+```tsx
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+
+<AlertDialog>
+  <AlertDialogTrigger asChild>
+    <Button variant="destructive">Delete</Button>
+  </AlertDialogTrigger>
+  <AlertDialogContent>
+    <AlertDialogHeader>
+      <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+      <AlertDialogDescription>
+        This action cannot be undone.
+      </AlertDialogDescription>
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel>Cancel</AlertDialogCancel>
+      <AlertDialogAction>Delete</AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
+```
+
+---
+
+### Avatar
+
+**Location**: `src/components/ui/avatar.tsx`
+
+**Description**: User avatar component with fallback support.
+
+**Usage**:
+```tsx
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
+<Avatar>
+  <AvatarImage src="/avatar.jpg" alt="User" />
+  <AvatarFallback>JD</AvatarFallback>
+</Avatar>
+```
+
+---
+
+### Badge
+
+**Location**: `src/components/ui/badge.tsx`
+
+**Description**: Small status indicators and labels.
+
+**Usage**:
+```tsx
+import { Badge } from '@/components/ui/badge';
+
+<Badge variant="secondary">New</Badge>
+<Badge variant="destructive">Error</Badge>
+```
+
+---
+
+### Breadcrumb
+
+**Location**: `src/components/ui/breadcrumb.tsx`
+
+**Description**: Navigation breadcrumb component.
+
+**Usage**:
+```tsx
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+
+<Breadcrumb>
+  <BreadcrumbList>
+    <BreadcrumbItem>
+      <BreadcrumbLink href="/">Home</BreadcrumbLink>
+    </BreadcrumbItem>
+    <BreadcrumbSeparator />
+    <BreadcrumbItem>
+      <BreadcrumbPage>Current Page</BreadcrumbPage>
+    </BreadcrumbItem>
+  </BreadcrumbList>
+</Breadcrumb>
+```
+
+---
+
+### Calendar
+
+**Location**: `src/components/ui/calendar.tsx`
+
+**Description**: Date picker calendar component.
+
+**Usage**:
+```tsx
+import { Calendar } from '@/components/ui/calendar';
+
+<Calendar
+  mode="single"
+  selected={date}
+  onSelect={setDate}
+/>
+```
+
+---
+
+### Chart
+
+**Location**: `src/components/ui/chart.tsx`
+
+**Description**: Chart components using Recharts.
+
+**Usage**:
+```tsx
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+
+<ChartContainer config={chartConfig}>
+  <LineChart data={data}>
+    <ChartTooltip content={<ChartTooltipContent />} />
+    {/* Chart content */}
+  </LineChart>
+</ChartContainer>
+```
+
+---
+
+### Checkbox
+
+**Location**: `src/components/ui/checkbox.tsx`
+
+**Description**: Checkbox input component.
+
+**Usage**:
+```tsx
+import { Checkbox } from '@/components/ui/checkbox';
+
+<Checkbox
+  id="terms"
+  checked={checked}
+  onCheckedChange={setChecked}
+/>
+```
+
+---
+
+### Collapsible
+
+**Location**: `src/components/ui/collapsible.tsx`
+
+**Description**: Collapsible content container.
+
+**Usage**:
+```tsx
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+
+<Collapsible>
+  <CollapsibleTrigger>Toggle content</CollapsibleTrigger>
+  <CollapsibleContent>Hidden content</CollapsibleContent>
+</Collapsible>
+```
+
+---
+
+### Command
+
+**Location**: `src/components/ui/command.tsx`
+
+**Description**: Command palette component for search and actions.
+
+**Usage**:
+```tsx
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
+
+<Command>
+  <CommandInput placeholder="Search..." />
+  <CommandList>
+    <CommandEmpty>No results found.</CommandEmpty>
+    <CommandGroup heading="Actions">
+      <CommandItem>Action 1</CommandItem>
+      <CommandItem>Action 2</CommandItem>
+    </CommandGroup>
+  </CommandList>
+</Command>
+```
+
+---
+
+### Context Menu
+
+**Location**: `src/components/ui/context-menu.tsx`
+
+**Description**: Right-click context menu component.
+
+**Usage**:
+```tsx
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from '@/components/ui/context-menu';
+
+<ContextMenu>
+  <ContextMenuTrigger>Right click me</ContextMenuTrigger>
+  <ContextMenuContent>
+    <ContextMenuItem>Action 1</ContextMenuItem>
+    <ContextMenuItem>Action 2</ContextMenuItem>
+  </ContextMenuContent>
+</ContextMenu>
+```
+
+---
+
+### Drawer
+
+**Location**: `src/components/ui/drawer.tsx`
+
+**Description**: Slide-out drawer component.
+
+**Usage**:
+```tsx
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer';
+
+<Drawer>
+  <DrawerTrigger>Open Drawer</DrawerTrigger>
+  <DrawerContent>
+    <DrawerHeader>
+      <DrawerTitle>Drawer Title</DrawerTitle>
+      <DrawerDescription>Drawer description</DrawerDescription>
+    </DrawerHeader>
+    <DrawerFooter>
+      <DrawerClose>Close</DrawerClose>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+```
+
+---
+
+### Dropdown Menu
+
+**Location**: `src/components/ui/dropdown-menu.tsx`
+
+**Description**: Dropdown menu component.
+
+**Usage**:
+```tsx
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button>Open Menu</Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuItem>Action 1</DropdownMenuItem>
+    <DropdownMenuItem>Action 2</DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+---
+
+### Form
+
+**Location**: `src/components/ui/form.tsx`
+
+**Description**: Form components with validation using react-hook-form.
+
+**Usage**:
+```tsx
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+
+<Form {...form}>
+  <FormField
+    control={form.control}
+    name="email"
+    render={({ field }) => (
+      <FormItem>
+        <FormLabel>Email</FormLabel>
+        <FormControl>
+          <Input {...field} />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    )}
+  />
+</Form>
+```
+
+---
+
+### Hover Card
+
+**Location**: `src/components/ui/hover-card.tsx`
+
+**Description**: Hover-triggered card overlay.
+
+**Usage**:
+```tsx
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+
+<HoverCard>
+  <HoverCardTrigger>Hover me</HoverCardTrigger>
+  <HoverCardContent>Additional information</HoverCardContent>
+</HoverCard>
+```
+
+---
+
+### Input OTP
+
+**Location**: `src/components/ui/input-otp.tsx`
+
+**Description**: One-time password input component.
+
+**Usage**:
+```tsx
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
+
+<InputOTP maxLength={6}>
+  <InputOTPGroup>
+    <InputOTPSlot index={0} />
+    <InputOTPSlot index={1} />
+    <InputOTPSlot index={2} />
+    <InputOTPSlot index={3} />
+    <InputOTPSlot index={4} />
+    <InputOTPSlot index={5} />
+  </InputOTPGroup>
+</InputOTP>
+```
+
+---
+
+### Menubar
+
+**Location**: `src/components/ui/menubar.tsx`
+
+**Description**: Desktop-style menu bar component.
+
+**Usage**:
+```tsx
+import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarTrigger } from '@/components/ui/menubar';
+
+<Menubar>
+  <MenubarMenu>
+    <MenubarTrigger>File</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>New</MenubarItem>
+      <MenubarItem>Open</MenubarItem>
+    </MenubarContent>
+  </MenubarMenu>
+</Menubar>
+```
+
+---
+
+### Navigation Menu
+
+**Location**: `src/components/ui/navigation-menu.tsx`
+
+**Description**: Responsive navigation menu component.
+
+**Usage**:
+```tsx
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from '@/components/ui/navigation-menu';
+
+<NavigationMenu>
+  <NavigationMenuList>
+    <NavigationMenuItem>
+      <NavigationMenuTrigger>Menu</NavigationMenuTrigger>
+      <NavigationMenuContent>
+        <NavigationMenuLink>Link 1</NavigationMenuLink>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
+  </NavigationMenuList>
+</NavigationMenu>
+```
+
+---
+
+### Pagination
+
+**Location**: `src/components/ui/pagination.tsx`
+
+**Description**: Pagination controls for lists and tables.
+
+**Usage**:
+```tsx
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
+
+<Pagination>
+  <PaginationContent>
+    <PaginationItem>
+      <PaginationPrevious />
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationLink>1</PaginationLink>
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationNext />
+    </PaginationItem>
+  </PaginationContent>
+</Pagination>
+```
+
+---
+
+### Popover
+
+**Location**: `src/components/ui/popover.tsx`
+
+**Description**: Floating content popover.
+
+**Usage**:
+```tsx
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+
+<Popover>
+  <PopoverTrigger>Click me</PopoverTrigger>
+  <PopoverContent>Popover content</PopoverContent>
+</Popover>
+```
+
+---
+
+### Progress
+
+**Location**: `src/components/ui/progress.tsx`
+
+**Description**: Progress bar component.
+
+**Usage**:
+```tsx
+import { Progress } from '@/components/ui/progress';
+
+<Progress value={75} />
+```
+
+---
+
+### Radio Group
+
+**Location**: `src/components/ui/radio-group.tsx`
+
+**Description**: Radio button group component.
+
+**Usage**:
+```tsx
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+
+<RadioGroup value={value} onValueChange={setValue}>
+  <RadioGroupItem value="option1">Option 1</RadioGroupItem>
+  <RadioGroupItem value="option2">Option 2</RadioGroupItem>
+</RadioGroup>
+```
+
+---
+
+### Resizable
+
+**Location**: `src/components/ui/resizable.tsx`
+
+**Description**: Resizable panel components.
+
+**Usage**:
+```tsx
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
+
+<ResizablePanelGroup direction="horizontal">
+  <ResizablePanel>Panel 1</ResizablePanel>
+  <ResizableHandle />
+  <ResizablePanel>Panel 2</ResizablePanel>
+</ResizablePanelGroup>
+```
+
+---
+
+### Scroll Area
+
+**Location**: `src/components/ui/scroll-area.tsx`
+
+**Description**: Custom scrollbar component.
+
+**Usage**:
+```tsx
+import { ScrollArea } from '@/components/ui/scroll-area';
+
+<ScrollArea className="h-32">
+  <div>Scrollable content</div>
+</ScrollArea>
+```
+
+---
+
+### Separator
+
+**Location**: `src/components/ui/separator.tsx`
+
+**Description**: Visual separator component.
+
+**Usage**:
+```tsx
+import { Separator } from '@/components/ui/separator';
+
+<Separator />
+```
+
+---
+
+### Sheet
+
+**Location**: `src/components/ui/sheet.tsx`
+
+**Description**: Slide-out sheet component (mobile-friendly drawer).
+
+**Usage**:
+```tsx
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+
+<Sheet>
+  <SheetTrigger>Open Sheet</SheetTrigger>
+  <SheetContent>
+    <SheetHeader>
+      <SheetTitle>Sheet Title</SheetTitle>
+      <SheetDescription>Sheet description</SheetDescription>
+    </SheetHeader>
+  </SheetContent>
+</Sheet>
+```
+
+---
+
+### Sidebar
+
+**Location**: `src/components/ui/sidebar.tsx`
+
+**Description**: Collapsible sidebar component.
+
+**Usage**:
+```tsx
+import { Sidebar, SidebarContent, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+
+<SidebarProvider>
+  <Sidebar>
+    <SidebarContent>Sidebar content</SidebarContent>
+  </Sidebar>
+  <SidebarTrigger />
+</SidebarProvider>
+```
+
+---
+
+### Skeleton
+
+**Location**: `src/components/ui/skeleton.tsx`
+
+**Description**: Loading skeleton placeholder.
+
+**Usage**:
+```tsx
+import { Skeleton } from '@/components/ui/skeleton';
+
+<Skeleton className="h-4 w-32" />
+```
+
+---
+
+### Slider
+
+**Location**: `src/components/ui/slider.tsx`
+
+**Description**: Range slider component.
+
+**Usage**:
+```tsx
+import { Slider } from '@/components/ui/slider';
+
+<Slider
+  value={value}
+  onValueChange={setValue}
+  max={100}
+  step={1}
+/>
+```
+
+---
+
+### Sonner
+
+**Location**: `src/components/ui/sonner.tsx`
+
+**Description**: Toast notification system (alternative to shadcn toast).
+
+**Usage**:
+```tsx
+import { toast } from 'sonner';
+
+toast.success('Success message');
+toast.error('Error message');
+```
+
+---
+
+### Switch
+
+**Location**: `src/components/ui/switch.tsx`
+
+**Description**: Toggle switch component.
+
+**Usage**:
+```tsx
+import { Switch } from '@/components/ui/switch';
+
+<Switch
+  checked={checked}
+  onCheckedChange={setChecked}
+/>
+```
+
+---
+
+### Table
+
+**Location**: `src/components/ui/table.tsx`
+
+**Description**: Data table components.
+
+**Usage**:
+```tsx
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+
+<Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead>Column 1</TableHead>
+      <TableHead>Column 2</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell>Data 1</TableCell>
+      <TableCell>Data 2</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+---
+
+### Tabs
+
+**Location**: `src/components/ui/tabs.tsx`
+
+**Description**: Tab navigation component.
+
+**Usage**:
+```tsx
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
+<Tabs defaultValue="tab1">
+  <TabsList>
+    <TabsTrigger value="tab1">Tab 1</TabsTrigger>
+    <TabsTrigger value="tab2">Tab 2</TabsTrigger>
+  </TabsList>
+  <TabsContent value="tab1">Content 1</TabsContent>
+  <TabsContent value="tab2">Content 2</TabsContent>
+</Tabs>
+```
+
+---
+
+### Textarea
+
+**Location**: `src/components/ui/textarea.tsx`
+
+**Description**: Multi-line text input component.
+
+**Usage**:
+```tsx
+import { Textarea } from '@/components/ui/textarea';
+
+<Textarea
+  placeholder="Enter text..."
+  value={value}
+  onChange={(e) => setValue(e.target.value)}
+/>
+```
+
+---
+
+### Theme Toggle
+
+**Location**: `src/components/ui/theme-toggle.tsx`
+
+**Description**: Dark/light theme toggle button.
+
+**Usage**:
+```tsx
+import { ThemeToggle } from '@/components/ui/theme-toggle';
+
+<ThemeToggle />
+```
+
+---
+
+### Toggle
+
+**Location**: `src/components/ui/toggle.tsx`
+
+**Description**: Toggle button component.
+
+**Usage**:
+```tsx
+import { Toggle } from '@/components/ui/toggle';
+
+<Toggle pressed={pressed} onPressedChange={setPressed}>
+  Toggle me
+</Toggle>
+```
+
+---
+
+### Toggle Group
+
+**Location**: `src/components/ui/toggle-group.tsx`
+
+**Description**: Group of toggle buttons.
+
+**Usage**:
+```tsx
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+
+<ToggleGroup type="single" value={value} onValueChange={setValue}>
+  <ToggleGroupItem value="option1">Option 1</ToggleGroupItem>
+  <ToggleGroupItem value="option2">Option 2</ToggleGroupItem>
+</ToggleGroup>
+```
+
+---
+
+### Tooltip
+
+**Location**: `src/components/ui/tooltip.tsx`
+
+**Description**: Hover tooltip component.
+
+**Usage**:
+```tsx
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+
+<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger>Hover me</TooltipTrigger>
+    <TooltipContent>Tooltip content</TooltipContent>
+  </Tooltip>
+</TooltipProvider>
+```
+
 ## Feature Components
 
 ### MyCards
@@ -415,35 +1283,92 @@ function RecommendationsPage() {
 
 ---
 
+---
+
 ## Layout Components
 
-### Navigation
+### NavigationTabs
 
-**Description**: Main navigation component with responsive behavior.
+**Location**: `src/components/ui/navigation-tabs.tsx`
+
+**Description**: Main navigation component with tab-based routing for the application.
+
+**Props**:
+```typescript
+interface NavigationTabsProps {
+  tabs: Array<{
+    id: string;
+    label: string;
+    icon: React.ReactNode;
+  }>;
+  activeTab: string;
+  onTabChange: (tabId: string) => void;
+}
+```
 
 **Features**:
-- Desktop navigation bar
-- Mobile hamburger menu
-- Active route highlighting
-- User profile dropdown
+- Responsive design (icons only on mobile)
+- Active tab highlighting
+- Smooth transitions
+- Icon support for each tab
 
-**Routes**:
-- `/` - Dashboard
-- `/cards` - My Cards
-- `/chat` - AI Assistant
-- `/recommendations` - Card Recommendations
+**Usage**:
+```tsx
+import { NavigationTabs } from '@/components/ui/navigation-tabs';
+
+const tabs = [
+  {
+    id: "dashboard",
+    label: "Dashboard",
+    icon: <LayoutDashboard className="h-4 w-4" />
+  },
+  {
+    id: "cards",
+    label: "My Cards", 
+    icon: <CreditCard className="h-4 w-4" />
+  }
+];
+
+<NavigationTabs 
+  tabs={tabs}
+  activeTab={activeTab}
+  onTabChange={setActiveTab}
+/>
+```
 
 ---
 
-### Footer
+### Header and Footer
 
-**Description**: Site footer with links and information.
+**Location**: `src/pages/Index.tsx` (inline components)
 
-**Sections**:
+**Description**: Application header and footer sections.
+
+**Header Features**:
+- Logo and branding
+- NavigationTabs integration
+- Theme toggle
+- User profile display
+
+**Footer Features**:
+- Company information
 - Quick links
 - Legal links
-- Social media
-- Copyright
+- Social media links
+- Copyright notice
+
+**Structure**:
+```tsx
+// Header (inline in Index.tsx)
+<header className="bg-background/80 backdrop-blur-sm border-b sticky top-0 z-50">
+  {/* Header content */}
+</header>
+
+// Footer (inline in Index.tsx)
+<footer className="bg-background/50 border-t mt-16">
+  {/* Footer content */}
+</footer>
+```
 
 ---
 
@@ -595,7 +1520,296 @@ import { ErrorAlert } from '@/components/ui/error-alert';
 
 ---
 
-## Component Patterns
+## Custom Hooks
+
+### useCards
+
+**Location**: `src/hooks/use-cards.ts`
+
+**Description**: React Query hooks for credit card data management.
+
+**Available Hooks**:
+- `useCards(activeOnly?: boolean)` - Fetch all cards
+- `useCard(id: number)` - Fetch single card
+- `useCreateCard()` - Create new card mutation
+- `useUpdateCard()` - Update card mutation
+- `useDeleteCard()` - Delete card mutation
+
+**Usage**:
+```typescript
+import { useCards, useCreateCard } from '@/hooks/use-cards';
+
+function CardsList() {
+  const { data: cards, isLoading } = useCards();
+  const createCard = useCreateCard();
+
+  const handleCreate = async (cardData: CreditCardCreate) => {
+    await createCard.mutateAsync(cardData);
+  };
+
+  // Component logic...
+}
+```
+
+---
+
+### useChat
+
+**Location**: `src/hooks/use-chat.ts`
+
+**Description**: React Query hooks for AI chat functionality.
+
+**Available Hooks**:
+- `useChatMessages()` - Fetch chat messages
+- `useSendMessage()` - Send message mutation
+
+**Usage**:
+```typescript
+import { useChatMessages, useSendMessage } from '@/hooks/use-chat';
+
+function ChatInterface() {
+  const { data: messages } = useChatMessages();
+  const sendMessage = useSendMessage();
+
+  // Component logic...
+}
+```
+
+---
+
+### useDashboard
+
+**Location**: `src/hooks/use-dashboard.ts`
+
+**Description**: React Query hooks for dashboard data.
+
+**Available Hooks**:
+- `useDashboardMetrics()` - Fetch dashboard metrics
+- `useROIMetrics()` - Fetch ROI calculations
+
+**Usage**:
+```typescript
+import { useDashboardMetrics } from '@/hooks/use-dashboard';
+
+function Dashboard() {
+  const { data: metrics } = useDashboardMetrics();
+
+  // Component logic...
+}
+```
+
+---
+
+### useRecommendations
+
+**Location**: `src/hooks/use-recommendations.ts`
+
+**Description**: React Query hooks for card recommendations.
+
+**Available Hooks**:
+- `useCardRecommendations()` - Fetch card recommendations
+
+**Usage**:
+```typescript
+import { useCardRecommendations } from '@/hooks/use-recommendations';
+
+function Recommendations() {
+  const { data: recommendations } = useCardRecommendations();
+
+  // Component logic...
+}
+```
+
+---
+
+### useToast
+
+**Location**: `src/hooks/use-toast.ts`
+
+**Description**: Toast notification hook.
+
+**Usage**:
+```typescript
+import { useToast } from '@/hooks/use-toast';
+
+function MyComponent() {
+  const { toast } = useToast();
+
+  const showSuccess = () => {
+    toast({
+      title: 'Success!',
+      description: 'Operation completed successfully.',
+    });
+  };
+
+  // Component logic...
+}
+```
+
+---
+
+### useMobile
+
+**Location**: `src/hooks/use-mobile.tsx`
+
+**Description**: Hook for detecting mobile viewport.
+
+**Usage**:
+```typescript
+import { useMobile } from '@/hooks/use-mobile';
+
+function ResponsiveComponent() {
+  const isMobile = useMobile();
+
+  return (
+    <div className={isMobile ? 'mobile-layout' : 'desktop-layout'}>
+      {/* Component content */}
+    </div>
+  );
+}
+```
+
+---
+
+## Services
+
+### API Service
+
+**Location**: `src/services/api.ts`
+
+**Description**: Base API service with HTTP methods.
+
+**Methods**:
+- `get<T>(url: string)` - GET request
+- `post<T>(url: string, data?: any)` - POST request
+- `put<T>(url: string, data?: any)` - PUT request
+- `del<T>(url: string)` - DELETE request
+
+**Usage**:
+```typescript
+import { get, post } from '@/services/api';
+
+// GET request
+const data = await get('/api/cards');
+
+// POST request
+const result = await post('/api/cards', cardData);
+```
+
+---
+
+### Cards Service
+
+**Location**: `src/services/cards.service.ts`
+
+**Description**: Credit card API operations.
+
+**Methods**:
+- `getCards(activeOnly?: boolean)` - Get all cards
+- `getCard(id: number)` - Get single card
+- `createCard(data: CreditCardCreate)` - Create card
+- `updateCard(id: number, data: CreditCardUpdate)` - Update card
+- `deleteCard(id: number)` - Delete card
+
+**Usage**:
+```typescript
+import { cardsService } from '@/services/cards.service';
+
+const cards = await cardsService.getCards();
+const newCard = await cardsService.createCard(cardData);
+```
+
+---
+
+### Chat Service
+
+**Location**: `src/services/chat.service.ts`
+
+**Description**: AI chat API operations.
+
+**Methods**:
+- `getMessages()` - Get chat messages
+- `sendMessage(message: string)` - Send message
+
+---
+
+### Dashboard Service
+
+**Location**: `src/services/dashboard.service.ts`
+
+**Description**: Dashboard data API operations.
+
+**Methods**:
+- `getMetrics()` - Get dashboard metrics
+- `getROIMetrics()` - Get ROI calculations
+
+---
+
+### Recommendations Service
+
+**Location**: `src/services/recommendations.service.ts`
+
+**Description**: Card recommendations API operations.
+
+**Methods**:
+- `getRecommendations()` - Get card recommendations
+
+---
+
+## Types
+
+### API Types
+
+**Location**: `src/types/api.ts`
+
+**Description**: TypeScript interfaces for API data structures.
+
+**Key Interfaces**:
+```typescript
+interface CreditCard {
+  id: number;
+  user_id: number;
+  name: string;
+  card_type: string;
+  issuer: string;
+  // ... additional properties
+}
+
+interface CreditCardCreate {
+  name: string;
+  card_type: string;
+  issuer: string;
+  // ... create properties
+}
+
+interface WelcomeBonusProgress {
+  spent: number;
+  required: number;
+  deadline: string | null;
+  progress_percentage: number;
+}
+
+// Additional types for chat, dashboard, recommendations...
+```
+
+---
+
+### Image Types
+
+**Location**: `src/types/images.d.ts`
+
+**Description**: TypeScript declarations for image imports.
+
+**Usage**:
+```typescript
+declare module '*.png';
+declare module '*.jpg';
+declare module '*.jpeg';
+declare module '*.gif';
+declare module '*.svg';
+```
+
+---
 
 ### Container/Presentation Pattern
 
@@ -834,4 +2048,4 @@ describe('MyCards', () => {
 
 ---
 
-*Last Updated: September 30, 2025*
+*Last Updated: October 11, 2025*

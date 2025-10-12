@@ -16,6 +16,7 @@ This document describes all API endpoints used by the frontend application and h
   - [Dashboard Endpoints](#dashboard-endpoints)
   - [Recommendations Endpoints](#recommendations-endpoints)
   - [Chat Endpoints](#chat-endpoints)
+  - [User Endpoints](#user-endpoints)
 - [Error Handling](#error-handling)
 - [Rate Limiting](#rate-limiting)
 - [Type Definitions](#type-definitions)
@@ -105,40 +106,38 @@ setAuthToken(null);
 
 ### Auth Endpoints
 
-#### POST `/auth/login`
+#### GET `/auth/google/login`
 
-**Description**: Email/password login (if enabled)
+**Description**: Initiate Google OAuth2 login flow
 
-**Request**:
+**Request**: None (redirects to Google)
+
+**Response**: Redirect to Google OAuth authorization URL
+
+**Usage**:
 ```typescript
-{
-  email: string;
-  password: string;
-}
+// Redirect user to Google OAuth
+window.location.href = '/api/v1/auth/google/login';
 ```
+
+---
+
+#### GET `/auth/google/callback`
+
+**Description**: Handle Google OAuth2 callback and exchange code for access token
+
+**Query Parameters**:
+- `code` (string): Authorization code from Google
 
 **Response**:
 ```typescript
 {
   access_token: string;
-  user: {
-    id: number;
-    email: string;
-    full_name: string;
-    created_at: string;
-  };
+  token_type: "bearer";
 }
 ```
 
-**Usage**:
-```typescript
-import { post } from '@/services/api';
-
-const response = await post<LoginResponse>('/auth/login', {
-  email: 'user@example.com',
-  password: 'password123'
-});
-```
+**Usage**: This endpoint is called automatically by Google after user authorization.
 
 ---
 
@@ -153,34 +152,15 @@ const response = await post<LoginResponse>('/auth/login', {
 {
   id: number;
   email: string;
-  full_name: string;
+  full_name: string | null;
+  is_active: boolean;
+  is_superuser: boolean;
   created_at: string;
+  updated_at: string;
 }
 ```
 
-**Usage**:
-```typescript
-import { get } from '@/services/api';
-
-const user = await get<User>('/auth/me');
-```
-
----
-
-#### POST `/auth/logout`
-
-**Description**: Logout current user
-
-**Request**: None
-
-**Response**: `{ message: "Logged out successfully" }`
-
-**Usage**:
-```typescript
-import { post } from '@/services/api';
-
-await post('/auth/logout');
-```
+**Note**: Logout is handled client-side by clearing the stored token. No server endpoint is required for JWT-based authentication.
 
 ---
 
@@ -447,19 +427,20 @@ const alerts = await dashboardService.getAlerts();
 ```typescript
 {
   recommendations: Array<{
-    id: number;
-    card_name: string;
+    id: string;
+    name: string;
     issuer: string;
-    card_type: string;
-    reason: string;
-    estimated_value: number;
+    category: string;
+    welcome_bonus: string;
     annual_fee: number;
+    estimated_value: number;
+    key_benefits: string[];
+    match_reason: string;
     match_score: number;
+    affiliate_disclosure: boolean;
   }>;
-  analysis: {
-    spending_patterns: object;
-    optimization_opportunities: string[];
-  };
+  total: number;
+  generated_at: string;
 }
 ```
 
@@ -494,13 +475,12 @@ const moreRecs = await recommendationsService.getRecommendations(5);
 **Response**:
 ```typescript
 {
-  message: string;
+  id: string;
+  role: "assistant";
+  content: string;
+  timestamp: string;
   conversation_id: string;
-  suggestions?: string[];
-  metadata?: {
-    cards_referenced?: number[];
-    actions_suggested?: string[];
-  };
+  tokens_used?: number;
 }
 ```
 
@@ -514,6 +494,75 @@ const response = await chatService.sendMessage(
   true
 );
 ```
+
+---
+
+## User Endpoints
+
+**Note**: These endpoints are primarily for administrative purposes and may require superuser privileges.
+
+#### GET `/users`
+
+**Description**: Get a list of all users (admin only)
+
+**Query Parameters**:
+- `skip` (number, optional): Number of users to skip (default: 0)
+- `limit` (number, optional): Maximum number of users to return (default: 100)
+
+**Response**:
+```typescript
+Array<{
+  id: number;
+  email: string;
+  full_name: string | null;
+  is_active: boolean;
+  is_superuser: boolean;
+  created_at: string;
+  updated_at: string;
+}>;
+```
+
+#### POST `/users`
+
+**Description**: Create a new user
+
+**Request**:
+```typescript
+{
+  email: string;
+  password: string;
+  full_name?: string;
+}
+```
+
+**Response**: Created user object
+
+#### GET `/users/{user_id}`
+
+**Description**: Get a specific user by ID
+
+**URL Parameters**:
+- `user_id` (number): User ID
+
+**Response**: User object
+
+#### PUT `/users/{user_id}`
+
+**Description**: Update an existing user
+
+**URL Parameters**:
+- `user_id` (number): User ID
+
+**Request**:
+```typescript
+{
+  email?: string;
+  full_name?: string;
+  password?: string;
+}
+```
+
+**Response**: Updated user object
 
 ---
 
@@ -631,6 +680,7 @@ interface User {
 ```typescript
 interface CreditCard {
   id: number;
+  user_id: number;
   name: string;
   card_type: string;
   issuer: string;
@@ -639,11 +689,21 @@ interface CreditCard {
   available_credit: number;
   current_balance: number;
   current_points: number;
+  points_currency: string | null;
+  utilization_rate: number;
+  utilization_score: number;
   annual_fee: number;
   is_active: boolean;
   last_four: string | null;
   expiration_date: string | null;
   created_at: string;
+  updated_at: string;
+  welcome_bonus_progress?: {
+    spent: number;
+    required: number;
+    deadline: string | null;
+    progress_percentage: number;
+  };
 }
 
 interface CreditCardCreate {
@@ -663,10 +723,15 @@ interface CreditCardCreate {
 interface CreditCardUpdate {
   name?: string;
   card_type?: string;
+  issuer?: string;
+  network?: string;
+  credit_limit?: number;
+  available_credit?: number;
   current_balance?: number;
   current_points?: number;
+  annual_fee?: number;
   is_active?: boolean;
-  // ... any field can be optional
+  welcome_bonus_spent?: number;
 }
 ```
 
@@ -675,26 +740,35 @@ interface CreditCardUpdate {
 ```typescript
 interface DashboardMetrics {
   total_points: number;
-  total_rewards_value: number;
+  total_available_credit: number;
+  average_utilization: number;
+  cards_count: number;
   monthly_spending: number;
-  active_cards: number;
-  best_performing_card: string;
+  monthly_points_earned: number;
+  estimated_annual_value: number;
 }
 
 interface Alert {
-  id: number;
-  type: 'info' | 'warning' | 'error';
+  id: string;
+  type: string;
+  title: string;
   message: string;
-  action?: string;
+  card_id?: number;
   created_at: string;
 }
 
 interface RecommendedAction {
-  id: number;
+  id: string;
   title: string;
   description: string;
   impact: 'high' | 'medium' | 'low';
   effort: 'high' | 'medium' | 'low';
+}
+
+interface DashboardResponse {
+  metrics: DashboardMetrics;
+  alerts: Alert[];
+  upcoming_actions: any[];
 }
 ```
 
@@ -708,13 +782,12 @@ interface ChatRequest {
 }
 
 interface ChatResponse {
-  message: string;
+  id: string;
+  role: "assistant";
+  content: string;
+  timestamp: string;
   conversation_id: string;
-  suggestions?: string[];
-  metadata?: {
-    cards_referenced?: number[];
-    actions_suggested?: string[];
-  };
+  tokens_used?: number;
 }
 ```
 
@@ -774,4 +847,4 @@ it('should fetch cards', async () => {
 
 ---
 
-*Last Updated: September 30, 2025*
+*Last Updated: October 11, 2025*
