@@ -19,7 +19,7 @@ Keep this managed block so 'openspec update' can refresh the instructions.
 
 # IMPORTANT: AI Coding Agent Guidelines
 
-As an AI coding agent working on the PerkAsm platform, you are expected to follow industry best practices as a Senior Software Engineer / Architect with over 10 years of experience. These guidelines ensure high-quality, secure, and maintainable code that meets professional standards.
+As an AI coding agent on the PerkAsm platform, follow these senior-level engineering guidelines for high-quality, secure, maintainable code.
 
 ## Security Best Practices
 
@@ -93,7 +93,7 @@ As an AI coding agent working on the PerkAsm platform, you are expected to follo
 
 # Project Overview
 
-The PerkAsm platform is a web application designed for AI-powered credit card rewards optimization. It consists of a frontend and a backend, with this directory containing the frontend component. The frontend provides a dashboard interface where users can manage their credit cards, get recommendations, and chat with an AI assistant.
+PerkAsm is a web application for AI-powered credit card rewards optimization, with frontend and backend components. The frontend provides a dashboard for managing credit cards, recommendations, and AI chat.
 
 ## Frontend
 ### Key Technologies
@@ -140,6 +140,10 @@ To build and run the project, use the following commands:
     ```bash
     npm run lint
     ```
+*   **Testing the code:**
+    ```bash
+    npm run test
+    ```
 
 ### Database Setup for Development
 
@@ -178,22 +182,22 @@ For local development, you can run a PostgreSQL database using Docker Compose:
 
 ### Architecture
 
-The backend is a RESTful API built with FastAPI, featuring a modular structure that separates concerns across different directories:
+The backend is a RESTful API built with FastAPI, featuring a modular structure separating concerns:
 
-*   **API Layer** (`app/api/`): Contains API route definitions, currently at version 1
-*   **Authentication** (`app/auth/`): Implements JWT token management and OAuth2 providers
-*   **Core** (`app/core/`): Houses configuration settings and database connection logic
-*   **Models** (`app/models/`): Defines database models using SQLAlchemy
-*   **Schemas** (`app/schemas/`): Contains Pydantic models for request/response validation
-*   **Services** (`app/services/`): Implements business logic and data manipulation
+*   **API Layer** (`app/api/`): API route definitions (v1)
+*   **Authentication** (`app/auth/`): JWT and OAuth2 providers
+*   **Core** (`app/core/`): Configuration and database connection
+*   **Models** (`app/models/`): SQLAlchemy database models
+*   **Schemas** (`app/schemas/`): Pydantic request/response models
+*   **Services** (`app/services/`): Business logic
 
 ### Features
 
-*   **Modular OAuth2 System**: Easily extensible to support additional OAuth2 providers beyond Google
-*   **JWT-based Authentication**: Secure token management with configurable expiration
-*   **Database Abstraction**: SQLAlchemy ORM with graceful fallback to in-memory storage when PostgreSQL is unavailable
-*   **CORS Support**: Configurable Cross-Origin Resource Sharing for web client integration
-*   **MVC Pattern**: Clear separation between models, services, and API controllers
+*   **Modular OAuth2**: Extensible to additional providers (Google primary)
+*   **JWT Authentication**: Configurable token management
+*   **Database Abstraction**: SQLAlchemy ORM with in-memory fallback
+*   **CORS Support**: Configurable for web client integration
+*   **MVC Pattern**: Separation of models, services, and API controllers
 
 ### API Endpoints
 
@@ -230,8 +234,60 @@ To build and run the backend project, use the following commands:
 
 *   **Initialize database tables:**
     ```bash
-    uv run python app/init_db.py
+    cd backend
+    uv run alembic upgrade head
     ```
+    This applies all pending database migrations, including the initial migration that creates tables from SQLAlchemy models.
+
+### Database Migrations with Alembic
+
+The backend uses Alembic for version-controlled database schema migrations integrated with SQLAlchemy ORM.
+
+#### When to Use Migrations
+
+Use Alembic migrations for:
+- Adding new database tables or columns
+- Modifying existing table structures (changing column types, adding constraints)
+- Creating indexes, triggers, or other database objects
+- Any schema changes that need to be tracked and versioned
+- Deploying schema changes across environments (dev, staging, production)
+
+#### Migration Workflow
+
+1. **Modify Models**: Update your SQLAlchemy models in `app/models/`
+2. **Generate Migration**: `uv run alembic revision --autogenerate -m "Description"`
+3. **Review & Test**: Check the generated migration file and test locally
+4. **Apply Migration**: `uv run alembic upgrade head`
+5. **Commit**: Include migration files in version control
+
+#### Key Commands
+
+```bash
+# Generate migration from model changes
+cd backend
+uv run alembic revision --autogenerate -m "Add new feature"
+
+# Apply all pending migrations
+uv run alembic upgrade head
+
+# Check migration status
+uv run alembic current
+
+# Roll back one migration
+uv run alembic downgrade -1
+
+# View migration history
+uv run alembic history
+```
+
+#### Best Practices
+
+- Always review autogenerated migrations before applying
+- Test migrations in development before production deployment
+- Use descriptive commit messages for migration changes
+- Include both upgrade and downgrade paths in migrations
+- Run migrations during deployment, not at application startup
+- Coordinate schema changes with team members to avoid conflicts
 
 ### Extending OAuth2 Providers
 
