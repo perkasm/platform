@@ -118,7 +118,7 @@ export async function retryWithBackoff<T>(
 /**
  * Create a retry wrapper for API calls
  */
-export function createRetryableRequest<T extends (...args: any[]) => Promise<any>>(
+export function createRetryableRequest<T extends (...args: unknown[]) => Promise<unknown>>(
   fn: T,
   config?: RetryConfig
 ): T {

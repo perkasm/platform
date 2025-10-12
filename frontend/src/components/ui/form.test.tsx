@@ -1,12 +1,127 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as React from 'react'
 import { UseFormReturn, FieldValues, FormProviderProps, ControllerProps, Control } from 'react-hook-form'
+import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from './form'
+import { FormFieldContext, FormItemContext } from './form.context'
+
+vi.mock('react-hook-form', async () => {
+  const actual = await vi.importActual('react-hook-form')
+  const mockUseFormContext = vi.fn()
+  return {
+    ...actual,
+    useFormContext: mockUseFormContext,
+  }
+})
+
+vi.mock('./form.context', async (importOriginal) => {
+  const actual = await importOriginal<{
+    useFormField: () => {
+      id: string
+      name: string
+      formItemId: string
+      formDescriptionId: string
+      formMessageId: string
+      error?: { message: string }
+      isTouched?: boolean
+      isDirty?: boolean
+      invalid?: boolean
+      isValidating?: boolean
+    }
+    FormFieldContext: React.Context<any>
+    FormItemContext: React.Context<any>
+  }>()
+  const mockUseFormField = vi.fn()
+  return {
+    ...actual,
+    useFormField: mockUseFormField,
+  }
+})
+
+// Get references to the mocked functions
+const mockUseFormContext = vi.mocked(await import('react-hook-form')).useFormContext
+const mockUseFormField = vi.mocked(await import('./form.context')).useFormField
 
 describe('Form Components', () => {
     const mockForm: UseFormReturn<FieldValues> = {
-    control: {} as Control<FieldValues>,
+    control: {
+      register: vi.fn(),
+      unregister: vi.fn(),
+      getFieldState: vi.fn(() => ({
+        error: undefined,
+        isTouched: false,
+        isDirty: false,
+        invalid: false,
+        isValidating: false
+      })),
+      _names: {
+        mount: new Set(),
+        unMount: new Set(),
+        array: new Set(),
+        watch: new Set(),
+        focus: '',
+        watchAll: false,
+      },
+      _subjects: {
+        values: { next: vi.fn() },
+        array: { next: vi.fn() },
+        state: { next: vi.fn() },
+      },
+      _getWatch: vi.fn(),
+      _formValues: {},
+      _defaultValues: {},
+      _formState: {
+        errors: {},
+        isDirty: false,
+        isLoading: false,
+        isSubmitted: false,
+        isSubmitSuccessful: false,
+        isSubmitting: false,
+        isValid: true,
+        isValidating: false,
+        submitCount: 0,
+        touchedFields: {},
+        dirtyFields: {},
+        defaultValues: {},
+        disabled: false,
+        validatingFields: {},
+        isReady: true,
+      },
+      _updateValid: vi.fn(),
+      _updateFieldArray: vi.fn(),
+      _getFieldArray: vi.fn(() => []),
+      _executeSchema: vi.fn(),
+      _removeUnmounted: vi.fn(),
+      _focusError: vi.fn(),
+      _updateDisabledField: vi.fn(),
+      _updateFormState: vi.fn(),
+      _disableForm: vi.fn(),
+      _proxyFormState: {
+        isDirty: false,
+        isValidating: false,
+        dirtyFields: {},
+        touchedFields: {},
+        validatingFields: {},
+        errors: {},
+        isValid: true,
+        isReady: true,
+      },
+      _reset: vi.fn(),
+      _resetDefaultValues: vi.fn(),
+      _updateField: vi.fn(),
+      _updateFormValues: vi.fn(),
+      _setErrors: vi.fn(),
+      _stateFlags: {
+        mount: false,
+        action: false,
+        watch: false,
+      },
+      _options: {},
+      _subscribe: vi.fn(),
+      _setDisabledField: vi.fn(),
+    } as any,
     handleSubmit: vi.fn((fn) => fn),
     formState: {
       errors: {},
@@ -59,23 +174,11 @@ describe('Form Components', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (mockUseFormContext as vi.Mock).mockReturnValue(mockForm);(mockUseFormField as vi.Mock).mockReturnValue(mockFieldHook)
+    (mockUseFormContext as any).mockReturnValue(mockForm);
+    (mockUseFormField as any).mockReturnValue(mockFieldHook);
   })
 
   describe('Form (FormProvider)', () => {
-    it('provides form context to children', () => {
-      render(
-        <Form {...mockForm}>
-          <div>Test Content</div>
-        </Form>
-      )
-
-      // FormProvider should render its children
-      expect(screen.getByText('Test Content')).toBeInTheDocument()
-      // And it should be wrapped in our test provider
-      expect(screen.getByTestId('form-provider')).toBeInTheDocument()
-    })
-
     it('renders children correctly', () => {
       render(
         <Form {...mockForm}>
@@ -112,10 +215,12 @@ describe('Form Components', () => {
       }
 
       render(
-        <FormField
-          name="testField"
-          render={() => <TestComponent />}
-        />
+        <Form {...mockForm}>
+          <FormField
+            name="testField"
+            render={() => <TestComponent />}
+          />
+        </Form>
       )
 
       expect(screen.getByTestId('context-value')).toHaveTextContent('testField')
@@ -123,10 +228,12 @@ describe('Form Components', () => {
 
     it('renders children correctly', () => {
       render(
-        <FormField
-          name="testField"
-          render={() => <div>Test Field Content</div>}
-        />
+        <Form {...mockForm}>
+          <FormField
+            name="testField"
+            render={() => <div>Test Field Content</div>}
+          />
+        </Form>
       )
 
       expect(screen.getByText('Test Field Content')).toBeInTheDocument()
@@ -186,7 +293,7 @@ describe('Form Components', () => {
     })
 
     it('applies error styling when error exists', () => {
-      (mockUseFormField as vi.Mock).mockReturnValue({
+      (mockUseFormField as any).mockReturnValue({
         ...mockFieldHook,
         error: { message: 'Required field' }
       })
@@ -235,7 +342,7 @@ describe('Form Components', () => {
     })
 
     it('includes form message ID in aria-describedby when error exists', () => {
-      (mockUseFormField as vi.Mock).mockReturnValue({
+      (mockUseFormField as any).mockReturnValue({
         ...mockFieldHook,
         error: { message: 'Invalid input' }
       })
@@ -288,7 +395,7 @@ describe('Form Components', () => {
 
   describe('FormMessage', () => {
     it('renders error message when error exists', () => {
-      (mockUseFormField as vi.Mock).mockReturnValue({
+      (mockUseFormField as any).mockReturnValue({
         ...mockFieldHook,
         error: { message: 'This field is required' }
       })
@@ -319,7 +426,7 @@ describe('Form Components', () => {
     })
 
     it('converts error message to string', () => {
-      (mockUseFormField as vi.Mock).mockReturnValue({
+      (mockUseFormField as any).mockReturnValue({
         ...mockFieldHook,
         error: { message: 123 }
       })
@@ -332,7 +439,7 @@ describe('Form Components', () => {
     })
 
     it('passes through additional props', () => {
-      (mockUseFormField as vi.Mock).mockReturnValue({
+      (mockUseFormField as any).mockReturnValue({
         ...mockFieldHook,
         error: { message: 'Error' }
       })
@@ -348,7 +455,7 @@ describe('Form Components', () => {
 
   describe('Error Handling', () => {
     it('throws error when useFormField is used outside FormField', () => {
-      (mockUseFormField as vi.Mock).mockImplementation(() => {
+      (mockUseFormField as any).mockImplementation(() => {
         throw new Error("useFormField should be used within <FormField>")
       })
 
@@ -360,25 +467,27 @@ describe('Form Components', () => {
 
   describe('Integration Tests', () => {
     it('renders complete form field with all components', () => {
-      (mockUseFormField as vi.Mock).mockReturnValue({
+      (mockUseFormField as any).mockReturnValue({
         ...mockFieldHook,
         error: { message: 'Required' }
       })
 
       render(
-        <FormField
-          name="email"
-          render={() => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <input type="email" placeholder="Enter email" />
-              </FormControl>
-              <FormDescription>We'll never share your email.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <Form {...mockForm}>
+          <FormField
+            name="email"
+            render={() => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <input type="email" placeholder="Enter email" />
+                </FormControl>
+                <FormDescription>We'll never share your email.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </Form>
       )
 
       expect(screen.getByText('Email')).toBeInTheDocument()

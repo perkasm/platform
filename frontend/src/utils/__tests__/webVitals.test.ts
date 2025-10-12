@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach, type Mock } from 'vitest';
 import { initWebVitals, getWebVitalsSnapshot, reportPerformanceMetric } from '../webVitals';
 import { onCLS, onFCP, onINP, onLCP, onTTFB, type Metric } from 'web-vitals';

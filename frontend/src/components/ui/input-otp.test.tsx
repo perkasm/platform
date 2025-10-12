@@ -31,8 +31,8 @@ vi.mock('input-otp', () => ({
 }))
 
 // Create a mock provider for testing
-const OTPInputProvider = ({ children, value }: { children: React.ReactNode; value: { slots: { char: string; hasFakeCaret: boolean; isActive: boolean; }[] } }) => {
-  const { OTPInputContext } = vi.mocked(await import('input-otp'))
+const OTPInputProvider = ({ children, value }: { children: React.ReactNode; value: { slots: { char: string; hasFakeCaret: boolean; isActive: boolean; }[]; maxLength?: number } }) => {
+  const OTPInputContext = React.createContext(value)
   return (
     <OTPInputContext.Provider value={value}>
       {children}
@@ -219,7 +219,7 @@ describe('InputOTP Components', () => {
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
       expect(() => {
         render(
-          <OTPInputProvider value={{ maxLength: 4 }}>
+          <OTPInputProvider value={{ maxLength: 4, slots: [] }}>
             <InputOTPSlot index={10} />
           </OTPInputProvider>
         )

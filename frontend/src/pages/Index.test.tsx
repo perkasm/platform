@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
+import { AuthContext } from '../contexts/AuthContext';
 import Index from './Index';
 
 // Mock the child components
@@ -44,10 +45,27 @@ vi.mock('@/components/ui/theme-toggle', () => ({
 
 // Wrapper component with necessary providers
 const renderWithProviders = (component: React.ReactElement) => {
+  const mockAuthState = {
+    token: 'test-token',
+    user: {
+      id: 1,
+      email: 'john@example.com',
+      full_name: 'John Smith',
+      is_active: true,
+      is_superuser: false,
+      created_at: '2023-01-01T00:00:00Z',
+      updated_at: '2023-01-01T00:00:00Z',
+    },
+    login: vi.fn(),
+    logout: vi.fn(),
+  };
+
   return render(
-    <BrowserRouter>
-      {component}
-    </BrowserRouter>
+    <AuthContext.Provider value={mockAuthState}>
+      <BrowserRouter>
+        {component}
+      </BrowserRouter>
+    </AuthContext.Provider>
   );
 };
 
