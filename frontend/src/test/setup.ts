@@ -44,6 +44,23 @@ global.ResizeObserver = class ResizeObserver {
   unobserve() {}
 } as any;
 
+// Mock performance API globally
+let mockPerformanceNow: any;
+let mockGetEntriesByType: any;
+
+beforeAll(() => {
+  mockPerformanceNow = vi.fn();
+  mockGetEntriesByType = vi.fn();
+  
+  vi.stubGlobal('performance', {
+    now: mockPerformanceNow,
+    getEntriesByType: mockGetEntriesByType,
+  });
+});
+
+// Export mocks for use in tests
+export { mockPerformanceNow, mockGetEntriesByType };
+
 // Suppress console errors in tests (optional)
 const originalError = console.error;
 beforeAll(() => {

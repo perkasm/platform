@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import {
   generateAriaId,
   announceToScreenReader,
@@ -111,6 +111,23 @@ describe('Accessibility Utilities', () => {
       element.id = 'input-id';
       expect(getAccessibleName(element)).toBe('Name');
     });
+
+    it('should return placeholder when no other labels exist', () => {
+      const element = document.createElement('input');
+      element.setAttribute('placeholder', 'Enter your name');
+      expect(getAccessibleName(element)).toBe('Enter your name');
+    });
+
+    it('should return element text content when no other labels exist', () => {
+      const element = document.createElement('button');
+      element.textContent = 'Submit';
+      expect(getAccessibleName(element)).toBe('Submit');
+    });
+
+    it('should return empty string when no accessible name found', () => {
+      const element = document.createElement('div');
+      expect(getAccessibleName(element)).toBe('');
+    });
   });
 
   describe('colorContrast', () => {
@@ -214,6 +231,29 @@ describe('Accessibility Utilities', () => {
     it('should create skip link with custom label', () => {
       const skipLink = createSkipLink('nav', 'Skip to navigation');
       expect(skipLink.textContent).toBe('Skip to navigation');
+    });
+
+    it('should handle click to focus target element', () => {
+      const target = document.createElement('main');
+      target.id = 'main';
+      document.body.appendChild(target);
+
+      const skipLink = createSkipLink('main');
+      document.body.appendChild(skipLink);
+
+      const focusMock = vi.fn();
+      const setAttributeMock = vi.fn();
+      const removeAttributeMock = vi.fn();
+
+      target.focus = focusMock;
+      target.setAttribute = setAttributeMock;
+      target.removeAttribute = removeAttributeMock;
+
+      // Trigger click
+      skipLink.click();
+
+      expect(focusMock).toHaveBeenCalled();
+      expect(setAttributeMock).toHaveBeenCalledWith('tabindex', '-1');
     });
   });
 

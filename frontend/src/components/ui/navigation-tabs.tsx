@@ -13,7 +13,7 @@ interface NavigationTabsProps {
 
 export function NavigationTabs({ tabs, activeTab, onTabChange }: NavigationTabsProps) {
   return (
-    <div className="flex space-x-1 rounded-lg bg-muted p-1">
+    <div className="flex space-x-1 rounded-lg bg-muted p-1" data-testid="navigation-tabs-container">
       {tabs.map((tab) => (
         <Button
           key={tab.id}
@@ -25,6 +25,7 @@ export function NavigationTabs({ tabs, activeTab, onTabChange }: NavigationTabsP
               : "hover:bg-background/50 text-muted-foreground"
           )}
           onClick={() => onTabChange(tab.id)}
+          data-tab-id={tab.id}
         >
           {tab.icon}
           <span className="hidden sm:inline">{tab.label}</span>

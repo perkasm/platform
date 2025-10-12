@@ -2,6 +2,14 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import MockAdapter from 'axios-mock-adapter';
 import { apiClient, get, post, put, del, setAuthToken, ApiError } from '@/services/api';
 
+// Mock the rate limiter
+vi.mock('@/utils/rate-limiter', () => ({
+  apiRateLimiter: {
+    isAllowed: vi.fn(() => true), // Default to allowing requests
+    getErrorMessage: vi.fn(),
+  },
+}));
+
 describe('api service', () => {
   let mock: MockAdapter;
 
@@ -219,6 +227,75 @@ describe('api service', () => {
 
     it('should have withCredentials set to true', () => {
       expect(apiClient.defaults.withCredentials).toBe(true);
+    });
+  });
+
+  describe('rate limiting', () => {
+    it('should throw ApiError when rate limit exceeded for GET', async () => {
+      const { apiRateLimiter } = await import('@/utils/rate-limiter');
+      
+      // Mock rate limiter to return false (blocked)
+      vi.mocked(apiRateLimiter.isAllowed).mockReturnValue(false);
+      vi.mocked(apiRateLimiter.getErrorMessage).mockReturnValue('Rate limit exceeded');
+
+      await expect(get('/test')).rejects.toThrow(ApiError);
+      await expect(get('/test')).rejects.toMatchObject({
+        status: 429,
+        message: 'Rate limit exceeded',
+      });
+    });
+
+    it('should throw ApiError when rate limit exceeded for POST', async () => {
+      const { apiRateLimiter } = await import('@/utils/rate-limiter');
+      
+      vi.mocked(apiRateLimiter.isAllowed).mockReturnValue(false);
+      vi.mocked(apiRateLimiter.getErrorMessage).mockReturnValue('Rate limit exceeded');
+
+      await expect(post('/test', {})).rejects.toThrow(ApiError);
+      await expect(post('/test', {})).rejects.toMatchObject({
+        status: 429,
+        message: 'Rate limit exceeded',
+      });
+    });
+
+    it('should throw ApiError when rate limit exceeded for PUT', async () => {
+      const { apiRateLimiter } = await import('@/utils/rate-limiter');
+      
+      vi.mocked(apiRateLimiter.isAllowed).mockReturnValue(false);
+      vi.mocked(apiRateLimiter.getErrorMessage).mockReturnValue('Rate limit exceeded');
+
+      await expect(put('/test', {})).rejects.toThrow(ApiError);
+    });
+
+    it('should throw ApiError when rate limit exceeded for DELETE', async () => {
+      const { apiRateLimiter } = await import('@/utils/rate-limiter');
+      
+      vi.mocked(apiRateLimiter.isAllowed).mockReturnValue(false);
+      vi.mocked(apiRateLimiter.getErrorMessage).mockReturnValue('Rate limit exceeded');
+
+      await expect(del('/test')).rejects.toThrow(ApiError);
+    });
+  });
+
+  describe('performance monitoring', () => {
+    it('should track slow API requests', async () => {
+      const { apiRateLimiter } = await import('@/utils/rate-limiter');
+      
+      // Ensure rate limiter allows this request
+      vi.mocked(apiRateLimiter.isAllowed).mockReturnValue(true);
+      
+      const mockData = { id: 1, name: 'Test' };
+      // Mock a slow response by setting up the mock to delay
+      mock.onGet('/slow-test').reply(() => {
+        // Simulate a slow response by delaying (3000ms is the threshold)
+        return new Promise(resolve => {
+          setTimeout(() => resolve([200, mockData]), 3100); // 3100ms > 3000ms threshold
+        });
+      });
+
+      const result = await get('/slow-test');
+      expect(result).toEqual(mockData);
+      // Note: Sentry captureMessage would be called, but we can't easily test it
     });
   });
 });

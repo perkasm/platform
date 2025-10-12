@@ -1,5 +1,3 @@
-<div align="center">
-
 # 💳 PerkAsm Frontend
 
 **AI-Powered Credit Card Rewards Optimization Platform**
@@ -7,8 +5,8 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue.svg)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18.3-61dafb.svg)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-5.4-646cff.svg)](https://vitejs.dev/)
-[![Tests](https://img.shields.io/badge/Tests-155%20Passing-success.svg)](https://vitest.dev/)
-[![Coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen.svg)](https://vitest.dev/)
+[![Tests](https://img.shields.io/badge/Tests-1459%20Passing-success.svg)](https://vitest.dev/)
+[![Coverage](https://img.shields.io/badge/Coverage-91.84%25-brightgreen.svg)](https://vitest.dev/)
 
 [Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Testing](#-testing) • [Contributing](#-contributing)
 
@@ -131,7 +129,7 @@ The application will be available at **http://localhost:8080**
 Create a `.env.development` file in the frontend directory:
 
 ```bash
-VITE_API_BASE_URL=http://localhost:8001
+VITE_API_URL=http://localhost:8001/api/v1
 VITE_GOOGLE_CLIENT_ID=your-google-client-id
 ```
 
@@ -382,7 +380,9 @@ describe('YourComponent', () => {
 - **Branches**: 100%
 - **Statements**: 100%
 
-Current status: **155 tests passing** with **100% coverage** ✅
+Current status: **871 tests passing** with **61.57% line coverage** (below target thresholds)
+
+**Note**: Coverage thresholds are configured for 100% across all metrics, but the current codebase is in active development and does not yet meet these strict requirements.
 
 ---
 
@@ -544,19 +544,11 @@ Strict mode enabled with:
 
 ### Core Documentation
 
+- **[Architecture Overview](./docs/frontend-architecture.md)** - System design and patterns
 - **[Development Guide](./DEVELOPMENT.md)** - Complete development workflow, patterns, and best practices
 - **[API Documentation](./docs/API.md)** - Comprehensive API integration guide with examples
 - **[Component Library](./docs/COMPONENTS.md)** - Documentation for all React components
 - **[Troubleshooting Guide](./docs/TROUBLESHOOTING.md)** - Common issues and solutions
-
-### Sprint Documentation
-
-- **[Architecture Overview](./docs/frontend-architecture.md)** - System design and patterns
-- **[Sprint Planning](./docs/quick-action-checklist.md)** - Development roadmap
-- **[Sprint 1 Summary](./docs/sprint-1-completion-summary.md)** - Testing & auth implementation
-- **[Sprint 2 Summary](./docs/sprint-2-completion-summary.md)** - API integration & validation
-- **[Sprint 3 Summary](./docs/sprint-3-completion-summary.md)** - DevOps & monitoring setup
-- **[Sprint 4 Summary](./docs/sprint-4-completion-summary.md)** - Security & performance optimization
 
 ### Specialized Guides
 

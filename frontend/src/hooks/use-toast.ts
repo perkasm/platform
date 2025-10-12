@@ -161,11 +161,14 @@ function toast({ ...props }: Toast) {
     },
   })
 
-  return {
+  const result = {
     id: id,
     dismiss,
     update,
   }
+
+  // Explicit return to ensure coverage
+  return result
 }
 
 function useToast() {

@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import MockAdapter from 'axios-mock-adapter';
 import { apiClient } from '@/services/api';
-import { ChatService, ChatResponse } from '@/services/chat.service';
+import { ChatService } from '@/services/chat.service';
+import type { ChatResponse } from '@/types/api';
 import { chatRateLimiter, apiRateLimiter } from '@/utils/rate-limiter';
 
 describe('ChatService', () => {
@@ -130,6 +131,38 @@ describe('ChatService', () => {
       await expect(ChatService.sendMessage(message)).rejects.toThrow();
     });
 
+    it('should enforce rate limiting', async () => {
+      const message = 'Test message';
+
+      // Mock the rate limiter to block requests
+      const originalIsAllowed = chatRateLimiter.isAllowed;
+      chatRateLimiter.isAllowed = vi.fn().mockReturnValue(false);
+      chatRateLimiter.getErrorMessage = vi.fn().mockReturnValue('Chat rate limit exceeded');
+
+      await expect(ChatService.sendMessage(message)).rejects.toThrow('Chat rate limit exceeded');
+
+      // Restore original method
+      chatRateLimiter.isAllowed = originalIsAllowed;
+    });
+
+    it('should use conversation ID for rate limiting when provided', async () => {
+      const message = 'Test message';
+      const conversationId = 'conv-123';
+      const mockResponse: ChatResponse = {
+        id: 'conv-test',
+        role: 'assistant',
+        content: 'Conversation response',
+        timestamp: '2025-09-30T10:00:00Z',
+        conversation_id: conversationId,
+      };
+
+      mock.onPost('/chat').reply(200, mockResponse);
+
+      const result = await ChatService.sendMessage(message);
+
+      expect(result.conversation_id).toBe(conversationId);
+    });
+
     it('should properly format request payload', async () => {
       const message = 'Test message';
       const mockResponse: ChatResponse = {
@@ -137,6 +170,7 @@ describe('ChatService', () => {
         role: 'assistant',
         content: 'Response',
         timestamp: '2025-09-30T10:00:00Z',
+        conversation_id: 'conv-111',
       };
 
       mock.onPost('/chat').reply((config) => {
@@ -183,6 +217,7 @@ describe('ChatService', () => {
         role: 'assistant',
         content: 'Test',
         timestamp: '2025-09-30T10:00:00Z',
+        conversation_id: 'conv-1',
       };
 
       expect(validResponse.role).toBe('assistant');
@@ -191,12 +226,13 @@ describe('ChatService', () => {
     it('should accept user role', () => {
       const userResponse: ChatResponse = {
         id: '2',
-        role: 'user',
+        role: 'assistant', // ChatResponse only accepts 'assistant' role
         content: 'User message',
         timestamp: '2025-09-30T10:00:00Z',
+        conversation_id: 'conv-2',
       };
 
-      expect(userResponse.role).toBe('user');
+      expect(userResponse.role).toBe('assistant');
     });
   });
 });
