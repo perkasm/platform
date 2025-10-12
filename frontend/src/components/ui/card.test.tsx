@@ -410,7 +410,8 @@ describe('Card Component', () => {
     });
 
     it('should handle null className', () => {
-      render(<Card className={null as any}>Content</Card>);
+      // @ts-expect-error: Testing null className
+      render(<Card className={null}>Content</Card>);
       expect(screen.getByText('Content')).toBeInTheDocument();
     });
 

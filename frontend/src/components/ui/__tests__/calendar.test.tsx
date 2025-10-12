@@ -21,9 +21,11 @@ vi.mock("@/components/ui/button", () => ({
   }),
 }));
 
+import { DayPickerProps } from "react-day-picker";
+
 // Mock react-day-picker
 vi.mock("react-day-picker", () => ({
-  DayPicker: vi.fn(({ children, components, ...props }: any) => {
+  DayPicker: vi.fn(({ children, components, ...props }: DayPickerProps & { children?: React.ReactNode }) => {
     const IconLeft = components?.IconLeft || (() => null);
     const IconRight = components?.IconRight || (() => null);
 

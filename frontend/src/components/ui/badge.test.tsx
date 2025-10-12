@@ -301,7 +301,8 @@ describe('Badge Component', () => {
     });
 
     it('should handle null className', () => {
-      render(<Badge className={null as any}>Badge</Badge>);
+      // @ts-expect-error: Testing null className
+      render(<Badge className={null}>Badge</Badge>);
       expect(screen.getByText('Badge')).toBeInTheDocument();
     });
 

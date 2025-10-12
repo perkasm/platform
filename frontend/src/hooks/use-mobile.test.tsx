@@ -4,7 +4,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 
 describe('useIsMobile', () => {
   const MOBILE_BREAKPOINT = 768;
-  let matchMediaMock: any;
+  let matchMediaMock: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     // Create a mock matchMedia function

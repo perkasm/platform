@@ -197,7 +197,7 @@ export function setAuthToken(token: string | null) {
  * const user = await get<User>('/users/123');
  * ```
  */
-export async function get<T = any>(url: string, config?: AxiosRequestConfig) {
+export async function get<T = unknown>(url: string, config?: AxiosRequestConfig) {
   if (!apiRateLimiter.isAllowed(`GET:${url}`)) {
     throw new ApiError(apiRateLimiter.getErrorMessage(), API_CONFIG.STATUS_CODES.TOO_MANY_REQUESTS);
   }
@@ -219,7 +219,7 @@ export async function get<T = any>(url: string, config?: AxiosRequestConfig) {
  * const newUser = await post<User>('/users', { name: 'John', email: 'john@example.com' });
  * ```
  */
-export async function post<T = any>(url: string, data?: any, config?: AxiosRequestConfig) {
+export async function post<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig) {
   if (!apiRateLimiter.isAllowed(`POST:${url}`)) {
     throw new ApiError(apiRateLimiter.getErrorMessage(), API_CONFIG.STATUS_CODES.TOO_MANY_REQUESTS);
   }
@@ -241,7 +241,7 @@ export async function post<T = any>(url: string, data?: any, config?: AxiosReque
  * const updated = await put<User>('/users/123', { name: 'Jane Doe' });
  * ```
  */
-export async function put<T = any>(url: string, data?: any, config?: AxiosRequestConfig) {
+export async function put<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig) {
   if (!apiRateLimiter.isAllowed(`PUT:${url}`)) {
     throw new ApiError(apiRateLimiter.getErrorMessage(), API_CONFIG.STATUS_CODES.TOO_MANY_REQUESTS);
   }
@@ -262,7 +262,7 @@ export async function put<T = any>(url: string, data?: any, config?: AxiosReques
  * await del('/users/123');
  * ```
  */
-export async function del<T = any>(url: string, config?: AxiosRequestConfig) {
+export async function del<T = unknown>(url: string, config?: AxiosRequestConfig) {
   if (!apiRateLimiter.isAllowed(`DELETE:${url}`)) {
     throw new ApiError(apiRateLimiter.getErrorMessage(), API_CONFIG.STATUS_CODES.TOO_MANY_REQUESTS);
   }

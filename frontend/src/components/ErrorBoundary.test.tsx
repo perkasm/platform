@@ -283,8 +283,11 @@ describe('ErrorBoundary', () => {
     it('should log error in development mode', () => {
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-      // Mock DEV environment
-      (import.meta as any).env = { DEV: true };
+      vi.stubGlobal('import.meta', {
+        env: {
+          DEV: true,
+        },
+      });
 
       render(
         <ErrorBoundary>

@@ -83,7 +83,7 @@ vi.mock('./separator', () => ({
 
 // Mock the sheet components
 vi.mock('./sheet', () => ({
-  Sheet: ({ children, open, onOpenChange, ...props }: any) => (
+  Sheet: ({ children, open, onOpenChange, ...props }: { children: React.ReactNode; open?: boolean; onOpenChange?: (open: boolean) => void; }) => (
     <div data-testid="sheet" {...props}>
       {children}
     </div>
@@ -101,7 +101,7 @@ vi.mock('./sheet', () => ({
 // Mock the tooltip components
 vi.mock('./tooltip', () => ({
   Tooltip: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  TooltipContent: ({ children, hidden, ...props }: any) => {
+  TooltipContent: ({ children, hidden, ...props }: { children: React.ReactNode; hidden?: boolean; }) => {
     if (!hidden) {
       // Handle custom tooltip components - if props.type is 'span', create the span
       if (props.type === 'span' && props.props) {
@@ -143,7 +143,7 @@ const mockSidebarContext = {
 import { useIsMobile } from '@/hooks/use-mobile'
 
 describe('Sidebar Components', () => {
-  let mockUseIsMobile: any
+  let mockUseIsMobile: vi.Mock<[], boolean>
 
   beforeEach(() => {
     mockUseIsMobile = vi.mocked(useIsMobile)
@@ -154,7 +154,6 @@ describe('Sidebar Components', () => {
         document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`
       })
     
-    // Set up default sidebar context mock
     const mockUseSidebar = vi.mocked(useSidebar)
     mockUseSidebar.mockReturnValue({
       state: 'expanded' as const,
@@ -174,7 +173,7 @@ describe('Sidebar Components', () => {
   describe('useSidebar hook', () => {
     it.skip('throws error when used outside SidebarProvider', () => {
       // Temporarily mock useSidebar to test the actual hook behavior
-      const mockedUseSidebar = useSidebar as any
+      const mockedUseSidebar = useSidebar as vi.Mock
       mockedUseSidebar.mockImplementation(() => {
         throw new Error('useSidebar must be used within a SidebarProvider.')
       })
@@ -206,7 +205,7 @@ describe('Sidebar Components', () => {
       const mockedUseSidebar = vi.mocked(useSidebar)
       mockedUseSidebar.mockReturnValue(mockContext)
       
-      let capturedContext: any = null
+      let capturedContext: { state: "expanded" | "collapsed"; open: boolean; setOpen: (open: boolean) => void; openMobile: boolean; setOpenMobile: (open: boolean) => void; isMobile: boolean; toggleSidebar: () => void; } | null = null
       
       const TestComponent = () => {
         capturedContext = useSidebar()
@@ -682,7 +681,7 @@ describe('Sidebar Components', () => {
     beforeEach(() => {
       mockUseIsMobile.mockReturnValue(false)
       // Mock useSidebar for component tests
-      ;(useSidebar as any).mockReturnValue(mockSidebarContext)
+      vi.mocked(useSidebar).mockReturnValue(mockSidebarContext)
     })
 
     it('renders with default props', () => {
@@ -751,7 +750,7 @@ describe('Sidebar Components', () => {
     beforeEach(() => {
       mockUseIsMobile.mockReturnValue(false)
       // Mock useSidebar for component tests
-      ;(useSidebar as any).mockReturnValue(mockSidebarContext)
+      vi.mocked(useSidebar).mockReturnValue(mockSidebarContext)
     })
 
     it('renders with default props', () => {
@@ -1149,7 +1148,7 @@ describe('Sidebar Components', () => {
     beforeEach(() => {
       mockUseIsMobile.mockReturnValue(false)
       // Mock useSidebar for component tests
-      ;(useSidebar as any).mockReturnValue(mockSidebarContext)
+      vi.mocked(useSidebar).mockReturnValue(mockSidebarContext)
     })
 
     it('renders with default props', () => {
@@ -1242,7 +1241,7 @@ describe('Sidebar Components', () => {
     it('renders tooltip when provided and collapsed', () => {
       // Mock collapsed state for this test
       const collapsedContext = { ...mockSidebarContext, state: 'collapsed' as const }
-      ;(useSidebar as any).mockReturnValueOnce(collapsedContext)
+      vi.mocked(useSidebar).mockReturnValueOnce(collapsedContext)
 
       render(
         <SidebarProvider open={false}>
@@ -1271,7 +1270,7 @@ describe('Sidebar Components', () => {
     it('renders tooltip on mobile even when expanded', () => {
       // Mock mobile state for this test
       const mobileContext = { ...mockSidebarContext, isMobile: true }
-      ;(useSidebar as any).mockReturnValueOnce(mobileContext)
+      vi.mocked(useSidebar).mockReturnValueOnce(mobileContext)
 
       render(
         <SidebarProvider open={true}>
@@ -1287,7 +1286,7 @@ describe('Sidebar Components', () => {
     it('renders custom tooltip component', () => {
       // Mock collapsed state for this test
       const collapsedContext = { ...mockSidebarContext, state: 'collapsed' as const }
-      ;(useSidebar as any).mockReturnValueOnce(collapsedContext)
+      vi.mocked(useSidebar).mockReturnValueOnce(collapsedContext)
 
       const customTooltip = <span data-testid="custom-tooltip">Custom</span>
 

@@ -83,6 +83,19 @@ describe('api service', () => {
 
       await expect(get('/test')).rejects.toThrow(ApiError);
     });
+
+    it('should include Authorization header when token is set', async () => {
+      const mockData = { id: 1, name: 'Test' };
+      mock.onGet('/test').reply(config => {
+        expect(config.headers.Authorization).toBe('Bearer test-token');
+        return [200, mockData];
+      });
+
+      setAuthToken('test-token');
+      const result = await get('/test');
+      expect(result).toEqual(mockData);
+      setAuthToken(null); // Clean up
+    });
   });
 
   describe('post', () => {

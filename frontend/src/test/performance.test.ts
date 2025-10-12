@@ -317,7 +317,7 @@ describe('getPerformanceMetrics', () => {
 
   it('should return null when window is undefined', () => {
     const originalWindow = global.window;
-    // @ts-ignore
+    // @ts-expect-error Deleting window property for testing
     delete global.window;
 
     const result = getPerformanceMetrics();
@@ -329,7 +329,7 @@ describe('getPerformanceMetrics', () => {
 
   it('should return null when performance is not available', () => {
     const originalPerformance = window.performance;
-    // @ts-ignore
+    // @ts-expect-error Deleting performance property for testing
     delete window.performance;
 
     const result = getPerformanceMetrics();
@@ -446,7 +446,7 @@ describe('reportPerformanceMetrics', () => {
     process.env.NODE_ENV = 'development';
 
     const originalPerformance = window.performance;
-    // @ts-ignore
+    // @ts-expect-error Deleting performance property for testing
     delete window.performance;
 
     reportPerformanceMetrics();

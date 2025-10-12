@@ -53,7 +53,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     // Log error to console in development
-    if ((import.meta as any).env?.DEV) {
+    if (import.meta.env.DEV) {
       console.error('ErrorBoundary caught an error:', error, errorInfo);
     }
 
@@ -102,7 +102,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
               </AlertDescription>
             </Alert>
 
-            {(import.meta as any).env?.DEV && this.state.errorInfo && (
+            {import.meta.env.DEV && this.state.errorInfo && (
               <details className="rounded-lg border p-4 text-sm">
                 <summary className="cursor-pointer font-medium">
                   Error Details (Development Only)

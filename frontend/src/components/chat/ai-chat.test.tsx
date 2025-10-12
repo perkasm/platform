@@ -5,22 +5,22 @@ import { AIChat } from './ai-chat';
 
 // Mock UI components
 vi.mock('@/components/ui/card', () => ({
-  Card: ({ children, className, ...props }: any) => (
+  Card: ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
     <div data-testid="card" className={className} {...props}>{children}</div>
   ),
-  CardContent: ({ children, className, ...props }: any) => (
+  CardContent: ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
     <div data-testid="card-content" className={className} {...props}>{children}</div>
   ),
-  CardHeader: ({ children, className, ...props }: any) => (
+  CardHeader: ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
     <div data-testid="card-header" className={className} {...props}>{children}</div>
   ),
-  CardTitle: ({ children, className, ...props }: any) => (
+  CardTitle: ({ children, className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h3 data-testid="card-title" className={className} {...props}>{children}</h3>
   ),
 }));
 
 vi.mock('@/components/ui/button', () => ({
-  Button: ({ children, onClick, disabled, className, ...props }: any) => (
+  Button: ({ children, onClick, disabled, className, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
     <button 
       data-testid="button" 
       onClick={onClick} 
@@ -34,7 +34,7 @@ vi.mock('@/components/ui/button', () => ({
 }));
 
 vi.mock('@/components/ui/input', () => ({
-  Input: ({ value, onChange, onKeyPress, placeholder, ...props }: any) => (
+  Input: ({ value, onChange, onKeyPress, placeholder, ...props }: React.InputHTMLAttributes<HTMLInputElement>) => (
     <input
       data-testid="input"
       value={value}
@@ -47,13 +47,13 @@ vi.mock('@/components/ui/input', () => ({
 }));
 
 vi.mock('@/components/ui/scroll-area', () => ({
-  ScrollArea: ({ children, className, ...props }: any) => (
+  ScrollArea: ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
     <div data-testid="scroll-area" className={className} {...props}>{children}</div>
   ),
 }));
 
 vi.mock('@/components/ui/badge', () => ({
-  Badge: ({ children, ...props }: any) => (
+  Badge: ({ children, ...props }: React.HTMLAttributes<HTMLSpanElement>) => (
     <span data-testid="badge" {...props}>{children}</span>
   ),
 }));

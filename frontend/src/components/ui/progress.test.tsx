@@ -79,7 +79,8 @@ describe('Progress Component', () => {
     });
 
     it('should handle null value', () => {
-      render(<Progress value={null as any} />);
+      // @ts-expect-error: Testing null value
+      render(<Progress value={null} />);
       const progress = screen.getByRole('progressbar');
       expect(progress).toBeInTheDocument();
     });
@@ -356,7 +357,8 @@ describe('Progress Component', () => {
     });
 
     it('should handle null className', () => {
-      render(<Progress value={50} className={null as any} />);
+      // @ts-expect-error: Testing null className
+      render(<Progress value={50} className={null} />);
       expect(screen.getByRole('progressbar')).toBeInTheDocument();
     });
 

@@ -2,43 +2,11 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as React from 'react'
-import type { UseFormReturn, FieldValues } from 'react-hook-form'
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormDescription,
-  FormMessage,
-} from './form'
-
-// Mock react-hook-form
-vi.mock('react-hook-form', () => ({
-  useForm: vi.fn(),
-  useFormContext: vi.fn(),
-  FormProvider: ({ children, ...props }: any) => (
-    <div data-testid="form-provider" data-form-props={JSON.stringify(props)}>
-      {children}
-    </div>
-  ),
-  Controller: ({ render, name }: any) => render({ field: { name, value: '', onChange: vi.fn(), onBlur: vi.fn() } }),
-}))
-
-const { useFormContext: mockUseFormContext } = await import('react-hook-form')
-
-// Mock the form context
-vi.mock('./form.context', () => ({
-  useFormField: vi.fn(),
-  FormFieldContext: React.createContext({}),
-  FormItemContext: React.createContext({}),
-}))
-
-const { useFormField: mockUseFormField, FormFieldContext, FormItemContext } = await import('./form.context')
+import { UseFormReturn, FieldValues, FormProviderProps, ControllerProps, Control } from 'react-hook-form'
 
 describe('Form Components', () => {
     const mockForm: UseFormReturn<FieldValues> = {
-    control: {} as any,
+    control: {} as Control<FieldValues>,
     handleSubmit: vi.fn((fn) => fn),
     formState: {
       errors: {},
@@ -90,9 +58,8 @@ describe('Form Components', () => {
   }
 
   beforeEach(() => {
-    vi.clearAllMocks()
-    ;(mockUseFormContext as any).mockReturnValue(mockForm)
-    ;(mockUseFormField as any).mockReturnValue(mockFieldHook)
+    vi.clearAllMocks();
+    (mockUseFormContext as vi.Mock).mockReturnValue(mockForm);(mockUseFormField as vi.Mock).mockReturnValue(mockFieldHook)
   })
 
   describe('Form (FormProvider)', () => {
@@ -219,7 +186,7 @@ describe('Form Components', () => {
     })
 
     it('applies error styling when error exists', () => {
-      ;(mockUseFormField as any).mockReturnValue({
+      (mockUseFormField as vi.Mock).mockReturnValue({
         ...mockFieldHook,
         error: { message: 'Required field' }
       })
@@ -268,7 +235,7 @@ describe('Form Components', () => {
     })
 
     it('includes form message ID in aria-describedby when error exists', () => {
-      ;(mockUseFormField as any).mockReturnValue({
+      (mockUseFormField as vi.Mock).mockReturnValue({
         ...mockFieldHook,
         error: { message: 'Invalid input' }
       })
@@ -321,7 +288,7 @@ describe('Form Components', () => {
 
   describe('FormMessage', () => {
     it('renders error message when error exists', () => {
-      ;(mockUseFormField as any).mockReturnValue({
+      (mockUseFormField as vi.Mock).mockReturnValue({
         ...mockFieldHook,
         error: { message: 'This field is required' }
       })
@@ -352,7 +319,7 @@ describe('Form Components', () => {
     })
 
     it('converts error message to string', () => {
-      ;(mockUseFormField as any).mockReturnValue({
+      (mockUseFormField as vi.Mock).mockReturnValue({
         ...mockFieldHook,
         error: { message: 123 }
       })
@@ -365,7 +332,7 @@ describe('Form Components', () => {
     })
 
     it('passes through additional props', () => {
-      ;(mockUseFormField as any).mockReturnValue({
+      (mockUseFormField as vi.Mock).mockReturnValue({
         ...mockFieldHook,
         error: { message: 'Error' }
       })
@@ -381,7 +348,7 @@ describe('Form Components', () => {
 
   describe('Error Handling', () => {
     it('throws error when useFormField is used outside FormField', () => {
-      ;(mockUseFormField as any).mockImplementation(() => {
+      (mockUseFormField as vi.Mock).mockImplementation(() => {
         throw new Error("useFormField should be used within <FormField>")
       })
 
@@ -393,7 +360,7 @@ describe('Form Components', () => {
 
   describe('Integration Tests', () => {
     it('renders complete form field with all components', () => {
-      ;(mockUseFormField as any).mockReturnValue({
+      (mockUseFormField as vi.Mock).mockReturnValue({
         ...mockFieldHook,
         error: { message: 'Required' }
       })

@@ -6,9 +6,9 @@ import Index from './Index';
 
 // Mock the child components
 vi.mock('@/components/ui/navigation-tabs', () => ({
-  NavigationTabs: ({ tabs, activeTab, onTabChange }: any) => (
+  NavigationTabs: ({ tabs, activeTab, onTabChange }: { tabs: Array<{ id: string; label: string; icon: React.ReactNode }>; activeTab: string; onTabChange: (tabId: string) => void }) => (
     <div data-testid="navigation-tabs">
-      {tabs.map((tab: any) => (
+      {tabs.map((tab) => (
         <button
           key={tab.id}
           data-testid={`tab-${tab.id}`}

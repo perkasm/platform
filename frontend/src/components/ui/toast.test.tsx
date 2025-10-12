@@ -16,16 +16,16 @@ describe('Toast Component', () => {
   beforeAll(() => {
     // Radix expects these DOM methods in some environments (pointer capture & scrollIntoView)
     // Provide no-op implementations so tests in jsdom don't throw.
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+
+    // @ts-expect-error: JSDOM doesn't support these methods, but Radix does
     if (typeof HTMLElement !== 'undefined') {
-      // @ts-ignore
+      // @ts-expect-error: JSDOM doesn't support these methods, but Radix does
       HTMLElement.prototype.hasPointerCapture = HTMLElement.prototype.hasPointerCapture || function () { return false }
-      // @ts-ignore
+      // @ts-expect-error: JSDOM doesn't support these methods, but Radix does
       HTMLElement.prototype.setPointerCapture = HTMLElement.prototype.setPointerCapture || function () {}
-      // @ts-ignore
+      // @ts-expect-error: JSDOM doesn't support these methods, but Radix does
       HTMLElement.prototype.releasePointerCapture = HTMLElement.prototype.releasePointerCapture || function () {}
-      // @ts-ignore
+      // @ts-expect-error: JSDOM doesn't support these methods, but Radix does
       HTMLElement.prototype.scrollIntoView = HTMLElement.prototype.scrollIntoView || function () {}
     }
   })

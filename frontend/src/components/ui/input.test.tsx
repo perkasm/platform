@@ -453,7 +453,8 @@ describe('Input Component', () => {
     });
 
     it('should handle null className', () => {
-      render(<Input className={null as any} />);
+      // @ts-expect-error: Testing null className
+      render(<Input className={null} />);
       expect(screen.getByRole('textbox')).toBeInTheDocument();
     });
 

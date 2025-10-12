@@ -4,25 +4,25 @@ import { MainDashboard } from './main-dashboard';
 
 // Mock UI components
 vi.mock('@/components/ui/card', () => ({
-  Card: ({ children, className, ...props }: any) => (
+  Card: ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
     <div data-testid="card" className={className} {...props}>{children}</div>
   ),
-  CardContent: ({ children, className, ...props }: any) => (
+  CardContent: ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
     <div data-testid="card-content" className={className} {...props}>{children}</div>
   ),
-  CardHeader: ({ children, className, ...props }: any) => (
+  CardHeader: ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
     <div data-testid="card-header" className={className} {...props}>{children}</div>
   ),
-  CardTitle: ({ children, className, ...props }: any) => (
+  CardTitle: ({ children, className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h3 data-testid="card-title" className={className} {...props}>{children}</h3>
   ),
 }));
 
 vi.mock('@/components/ui/alert', () => ({
-  Alert: ({ children, className, ...props }: any) => (
+  Alert: ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
     <div data-testid="alert" className={className} {...props}>{children}</div>
   ),
-  AlertDescription: ({ children, ...props }: any) => (
+  AlertDescription: ({ children, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
     <div data-testid="alert-description" {...props}>{children}</div>
   ),
 }));

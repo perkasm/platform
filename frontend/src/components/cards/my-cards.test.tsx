@@ -5,34 +5,34 @@ import { MyCards } from './my-cards';
 
 // Mock UI components
 vi.mock('@/components/ui/card', () => ({
-  Card: ({ children, className, ...props }: any) => (
+  Card: ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
     <div data-testid="card" className={className} {...props}>{children}</div>
   ),
-  CardContent: ({ children, className, ...props }: any) => (
+  CardContent: ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
     <div data-testid="card-content" className={className} {...props}>{children}</div>
   ),
-  CardHeader: ({ children, className, ...props }: any) => (
+  CardHeader: ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
     <div data-testid="card-header" className={className} {...props}>{children}</div>
   ),
-  CardTitle: ({ children, className, ...props }: any) => (
+  CardTitle: ({ children, className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h3 data-testid="card-title" className={className} {...props}>{children}</h3>
   ),
 }));
 
 vi.mock('@/components/ui/badge', () => ({
-  Badge: ({ children, ...props }: any) => (
+  Badge: ({ children, ...props }: React.HTMLAttributes<HTMLSpanElement>) => (
     <span data-testid="badge" {...props}>{children}</span>
   ),
 }));
 
 vi.mock('@/components/ui/progress', () => ({
-  Progress: ({ value, className }: any) => (
+  Progress: ({ value, className }: { value: number; className: string }) => (
     <div data-testid="progress" data-value={value} className={className} />
   ),
 }));
 
 vi.mock('@/components/ui/button', () => ({
-  Button: ({ children, onClick, ...props }: any) => (
+  Button: ({ children, onClick, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
     <button data-testid="button" onClick={onClick} {...props}>{children}</button>
   ),
 }));

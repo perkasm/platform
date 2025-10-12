@@ -1,5 +1,4 @@
 /// <reference types="vitest" />
-/// <reference types="@testing-library/jest-dom" />
 
 // Augment the Vitest expect with jest-dom matchers
 import '@testing-library/jest-dom';

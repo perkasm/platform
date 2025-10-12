@@ -6,6 +6,8 @@ const AIChat = lazy(() => import("@/components/chat/ai-chat").then((mod) => ({ d
 import { CardRecommendations } from "@/components/recommendations/card-recommendations";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { LayoutDashboard, CreditCard, Bot, Star } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const tabs = [
   {
@@ -32,6 +34,13 @@ const tabs = [
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -80,6 +89,7 @@ const Index = () => {
               <div className="w-8 h-8 bg-gradient-premium rounded-full flex items-center justify-center">
                 <span className="text-sm font-bold text-premium-foreground">JS</span>
               </div>
+              <button onClick={handleLogout}>Logout</button>
             </div>
           </div>
         </div>

@@ -4,24 +4,31 @@ import userEvent from '@testing-library/user-event'
 import * as React from 'react'
 import { ToggleGroup, ToggleGroupItem, ToggleGroupContext } from './toggle-group'
 
+// Extend global for test properties
+declare global {
+  var __toggleGroupOnValueChange: ((value: string | string[]) => void) | undefined;
+  var __toggleGroupType: 'single' | 'multiple' | undefined;
+  var __toggleGroupCurrentValue: string | string[] | undefined;
+}
+
 // Mock Radix UI primitives
 vi.mock('@radix-ui/react-toggle-group', () => ({
-  Root: vi.fn(({ children, onValueChange, type, value, ...props }) => {
+  Root: vi.fn(({ children, onValueChange, type, value, ...props }: { children: React.ReactNode; onValueChange?: (value: string | string[]) => void; type: 'single' | 'multiple'; value?: string | string[]; }) => {
     // Store the callback and current state for testing
     if (onValueChange) {
-      (global as any).__toggleGroupOnValueChange = onValueChange
-      ;(global as any).__toggleGroupType = type
-      ;(global as any).__toggleGroupCurrentValue = value
+      global.__toggleGroupOnValueChange = onValueChange;
+      global.__toggleGroupType = type;
+      global.__toggleGroupCurrentValue = value;
     }
     return React.createElement('div', { 'data-testid': 'toggle-group-root', ...props }, children)
   }),
-  Item: vi.fn(({ children, value, onClick, ...props }) => {
+  Item: vi.fn(({ children, value, onClick, ...props }: { children: React.ReactNode; value: string; onClick?: (e: React.MouseEvent) => void; }) => {
     const handleClick = (e: React.MouseEvent) => {
       if (onClick) onClick(e)
       // Simulate Radix UI behavior - call the stored callback
-      const callback = (global as any).__toggleGroupOnValueChange
-      const type = (global as any).__toggleGroupType
-      const currentValue = (global as any).__toggleGroupCurrentValue
+      const callback = global.__toggleGroupOnValueChange;
+      const type = global.__toggleGroupType;
+      const currentValue = global.__toggleGroupCurrentValue;
 
       if (callback) {
         if (type === 'single') {
@@ -34,7 +41,7 @@ vi.mock('@radix-ui/react-toggle-group', () => ({
             : [...currentArray, value]
           callback(newValue)
           // Update the current value for subsequent calls
-          ;(global as any).__toggleGroupCurrentValue = newValue
+          global.__toggleGroupCurrentValue = newValue;
         }
       }
     }
@@ -64,8 +71,8 @@ const { cn: mockCn } = await import('@/lib/utils')
 describe('ToggleGroup Components', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    ;(mockToggleVariants as any).mockReturnValue('mock-toggle-classes')
-    ;(mockCn as any).mockImplementation((...classes: string[]) => classes.filter(Boolean).join(' '))
+    ;(mockToggleVariants as any).mockReturnValue('mock-toggle-classes') // Mock return value for testing
+    ;(mockCn as any).mockImplementation((...classes: string[]) => classes.filter(Boolean).join(' ')) // Mock implementation for testing
   })
 
   describe('ToggleGroup', () => {
@@ -501,6 +508,7 @@ describe('ToggleGroup Components', () => {
     it('handles falsy children', () => {
       render(
         <ToggleGroup type="single">
+      {/* eslint-disable-next-line no-constant-binary-expression */}
           {false && <ToggleGroupItem value="hidden">Hidden</ToggleGroupItem>}
           <ToggleGroupItem value="test">Test</ToggleGroupItem>
         </ToggleGroup>

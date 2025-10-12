@@ -33,7 +33,7 @@ describe('Toaster Component', () => {
   })
 
   it('should default to system theme when theme is undefined', () => {
-    mockUseTheme.mockReturnValue({ theme: undefined as any })
+    mockUseTheme.mockReturnValue({ theme: undefined })
     render(<Toaster />)
 
     const sonnerProps = JSON.parse(screen.getByTestId('sonner-toaster').getAttribute('data-props') || '{}')
@@ -41,7 +41,7 @@ describe('Toaster Component', () => {
   })
 
   it('should handle null theme value', () => {
-    mockUseTheme.mockReturnValue({ theme: null as any })
+    mockUseTheme.mockReturnValue({ theme: null })
     render(<Toaster />)
 
     const sonnerProps = JSON.parse(screen.getByTestId('sonner-toaster').getAttribute('data-props') || '{}')
@@ -158,7 +158,7 @@ describe('Toaster Component', () => {
 
   it('should handle theme destructuring edge case', () => {
     // Test when useTheme returns an object without theme property
-    mockUseTheme.mockReturnValue({} as any)
+    mockUseTheme.mockReturnValue({})
     render(<Toaster />)
 
     const sonnerProps = JSON.parse(screen.getByTestId('sonner-toaster').getAttribute('data-props') || '{}')

@@ -7,7 +7,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from './inpu
 vi.mock('input-otp', () => ({
   OTPInput: React.forwardRef<
     HTMLDivElement,
-    any
+    { containerClassName?: string; className?: string; children?: React.ReactNode; }
   >(({ containerClassName, className, children, ...props }, ref) => (
     <div
       ref={ref}
@@ -31,8 +31,8 @@ vi.mock('input-otp', () => ({
 }))
 
 // Create a mock provider for testing
-const OTPInputProvider = ({ children, value }: { children: React.ReactNode; value: any }) => {
-  const { OTPInputContext } = require('input-otp')
+const OTPInputProvider = ({ children, value }: { children: React.ReactNode; value: { slots: { char: string; hasFakeCaret: boolean; isActive: boolean; }[] } }) => {
+  const { OTPInputContext } = vi.mocked(await import('input-otp'))
   return (
     <OTPInputContext.Provider value={value}>
       {children}

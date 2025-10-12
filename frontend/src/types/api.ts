@@ -120,11 +120,23 @@ export interface RecommendationsResponse {
   generated_at: string;
 }
 
+export interface User {
+  id: number;
+  email: string;
+  full_name?: string;
+  is_active: boolean;
+  is_superuser: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface ChatMessage {
-  id: string;
+  id: number;
   role: 'user' | 'assistant' | 'system';
   content: string;
   timestamp: string;
+  conversation_id: string;
+  tokens_used?: number;
 }
 
 export interface ChatRequest {
