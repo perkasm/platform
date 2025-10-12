@@ -195,6 +195,7 @@ The system SHALL provide...
 If multiple capabilities are affected, create multiple delta files under `changes/[change-id]/specs/<capability>/spec.md`—one per capability.
 
 4. **Create tasks.md:**
+** IMPORTANT: Follow the format below when creating the tasks.md file **
 ```markdown
 ## 1. Implementation
 - [ ] 1.1 Create database schema
