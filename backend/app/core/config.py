@@ -1,14 +1,13 @@
 from typing import List, Union
 from pydantic_settings import BaseSettings
-from pydantic import AnyHttpUrl
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "Perkasm Platform API"
     VERSION: str = "1.0.0"
     API_V1_STR: str = "/api/v1"
-    
+
     # Back-end CORS origins
-    BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = []
+    BACKEND_CORS_ORIGINS: List[str] = []
     
     # Database settings
     POSTGRES_SERVER: str = "localhost"
@@ -29,6 +28,11 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_ID: str = ""
     GOOGLE_CLIENT_SECRET: str = ""
     GOOGLE_REDIRECT_URI: str = "http://localhost:8001/api/v1/auth/google/callback"
+
+    # Teller.io settings
+    TELLER_APPLICATION_ID: str = ""
+    TELLER_CERT_PATH: str = "teller_cert.pem"
+    TELLER_KEY_PATH: str = "teller_private_key.pem"
     
     class Config:
         case_sensitive = True

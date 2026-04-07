@@ -21,10 +21,12 @@ def google_login():
     return RedirectResponse(authorization_url)
 
 @router.get("/google/callback")
-def google_callback(code: str, db: Session = Depends(get_db)):
+def google_callback(code: str, redirect_uri: str = None, db: Session = Depends(get_db)):
     """Handle Google OAuth2 callback"""
     google_oauth2 = GoogleOAuth2()
-    
+    if redirect_uri:
+        google_oauth2.redirect_uri = redirect_uri
+
     # Exchange code for token
     token_response = google_oauth2.exchange_code_for_token(code)
     

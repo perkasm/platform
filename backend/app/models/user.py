@@ -19,6 +19,7 @@ class User(Base):
     # Relationships
     credit_cards = relationship("CreditCard", back_populates="user", cascade="all, delete-orphan")
     transactions = relationship("Transaction", back_populates="user", cascade="all, delete-orphan")
+    teller_enrollments = relationship("TellerEnrollment", back_populates="user", cascade="all, delete-orphan")
     
     def __repr__(self):
         return f"<User(email='{self.email}', full_name='{self.full_name}')>"

@@ -4,11 +4,14 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import * as Sentry from "@sentry/react";
+import Landing from "./pages/Landing";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import GoogleCallback from "./pages/GoogleCallback";
 import { AuthProvider } from "./contexts/AuthContext";
+import { EditProvider } from "./contexts/EditContext";
+import { TellerDataProvider } from "./contexts/TellerDataContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
@@ -43,17 +46,24 @@ const App = () => (
         <Toaster />
         <Sonner />
         <AuthProvider>
+          <EditProvider>
+          <TellerDataProvider>
           <BrowserRouter>
             <SentryRoutes>
-              <Route path="/login" element={<Login />} />
+              {/* Public routes */}
+              <Route path="/" element={<Landing />} />
+              <Route path="/auth" element={<Login />} />
               <Route path="/auth/google/callback" element={<GoogleCallback />} />
+              {/* Protected routes */}
               <Route element={<ProtectedRoute />}>
-                <Route path="/" element={<Index />} />
+                <Route path="/dashboard" element={<Index />} />
               </Route>
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </SentryRoutes>
           </BrowserRouter>
+          </TellerDataProvider>
+          </EditProvider>
         </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>
@@ -61,4 +71,3 @@ const App = () => (
 );
 
 export default App;
-

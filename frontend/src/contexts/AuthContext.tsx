@@ -12,21 +12,25 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(() => {
+    const stored = localStorage.getItem('access_token');
+    if (stored) setAuthToken(stored);
+    return stored;
+  });
   const [user, setUser] = useState<User | null>(null);
 
   const login = (newToken: string, newUser: User) => {
     setToken(newToken);
     setUser(newUser);
     setAuthToken(newToken);
-    // In a real app, you'd also persist the token (e.g., in localStorage)
+    localStorage.setItem('access_token', newToken);
   };
 
   const logout = () => {
     setToken(null);
     setUser(null);
     setAuthToken(null);
-    // In a real app, you'd also clear the persisted token
+    localStorage.removeItem('access_token');
   };
 
   return (

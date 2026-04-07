@@ -8,6 +8,7 @@ from app.core.database import Base, engine
 from app.models.user import User
 from app.models.card import CreditCard
 from app.models.transaction import Transaction
+from app.models.teller import TellerEnrollment
 
 def init_db():
     # Create all tables

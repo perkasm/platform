@@ -44,4 +44,4 @@ pytest_cache/
 
 # Misc
 *.bak
-*.tmp
+*.tmpcerts/*.pem

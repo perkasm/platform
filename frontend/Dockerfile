@@ -12,7 +12,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies with clean install for reproducible builds
-RUN npm ci --only=production=false
+RUN npm install
 
 # Copy source code
 COPY . .
@@ -20,10 +20,14 @@ COPY . .
 # Build arguments for environment-specific builds
 ARG VITE_API_URL
 ARG VITE_ENVIRONMENT=production
+ARG VITE_GOOGLE_CLIENT_ID
+ARG VITE_TELLER_APPLICATION_ID
 
 # Set environment variables for build
 ENV VITE_API_URL=${VITE_API_URL}
 ENV VITE_ENVIRONMENT=${VITE_ENVIRONMENT}
+ENV VITE_GOOGLE_CLIENT_ID=${VITE_GOOGLE_CLIENT_ID}
+ENV VITE_TELLER_APPLICATION_ID=${VITE_TELLER_APPLICATION_ID}
 
 # Build the application
 RUN npm run build

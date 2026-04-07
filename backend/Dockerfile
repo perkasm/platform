@@ -41,5 +41,5 @@ EXPOSE 8001
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
     CMD curl -f http://localhost:8001/docs || exit 1
 
-# Command to run the application
-CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8001"]
+# Command to run the application (init_db creates any missing tables before starting)
+CMD ["sh", "-c", "uv run python app/init_db.py && uv run uvicorn app.main:app --host 0.0.0.0 --port 8001"]

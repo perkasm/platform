@@ -38,6 +38,12 @@ services:
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
       - GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI:-http://localhost:8001/api/v1/auth/google/callback}
+      - BACKEND_CORS_ORIGINS=${BACKEND_CORS_ORIGINS:-["http://localhost:8080","http://localhost:8082","http://localhost:5173","http://localhost:3000"]}
+      - TELLER_APPLICATION_ID=${TELLER_APPLICATION_ID:-app_pq736cdlb572k1h1sm000}
+      - TELLER_CERT_PATH=/app/certs/teller_cert.pem
+      - TELLER_KEY_PATH=/app/certs/teller_private_key.pem
+    volumes:
+      - ./backend/certs:/app/certs:ro
     depends_on:
       postgres:
         condition: service_healthy
@@ -56,8 +62,10 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: ${VITE_API_URL:-http://localhost:8001}
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8001/api/v1}
         VITE_ENVIRONMENT: ${VITE_ENVIRONMENT:-production}
+        VITE_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+        VITE_TELLER_APPLICATION_ID: ${TELLER_APPLICATION_ID:-}
     container_name: perkasm-frontend
     ports:
       - "8080:8080"
