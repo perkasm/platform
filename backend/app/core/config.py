@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Optional, Union
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
@@ -9,14 +9,17 @@ class Settings(BaseSettings):
     # Back-end CORS origins
     BACKEND_CORS_ORIGINS: List[str] = []
     
-    # Database settings
+    # Database settings — set DATABASE_URL directly for hosted DBs (e.g. Supabase)
+    DATABASE_URL: Optional[str] = None
     POSTGRES_SERVER: str = "localhost"
     POSTGRES_USER: str = "perkasm"
     POSTGRES_PASSWORD: str = "password"
     POSTGRES_DB: str = "perkasm"
-    
+
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> str:
+        if self.DATABASE_URL:
+            return self.DATABASE_URL
         return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_SERVER}/{self.POSTGRES_DB}"
     
     # JWT settings

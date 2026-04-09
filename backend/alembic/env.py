@@ -20,7 +20,11 @@ from app.models.user import User
 from app.models.card import CreditCard
 from app.models.transaction import Transaction
 from app.core.database import Base
+from app.core.config import settings
 target_metadata = Base.metadata
+
+# Override sqlalchemy.url from app settings so .env is the single source of truth
+config.set_main_option("sqlalchemy.url", settings.SQLALCHEMY_DATABASE_URI)
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
