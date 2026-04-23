@@ -13,36 +13,30 @@ const GoogleCallback: React.FC = () => {
     hasRun.current = true;
 
     const searchParams = new URLSearchParams(location.search);
-    const code = searchParams.get('code');
+    const accessToken = searchParams.get('access_token');
+    const error = searchParams.get('error');
 
-    if (code) {
-      const backendUrl = `${import.meta.env.VITE_API_URL}/auth/google/callback`;
-      const redirectUri = `${window.location.origin}/auth/google/callback`;
+    if (error) {
+      console.error('Google OAuth error:', error);
+      navigate('/auth');
+      return;
+    }
 
-      fetch(`${backendUrl}?code=${code}&redirect_uri=${encodeURIComponent(redirectUri)}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
+    if (accessToken) {
+      fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
+        headers: { 'Authorization': `Bearer ${accessToken}` },
       })
-        .then(response => response.json())
-        .then(data => {
-          if (data.access_token) {
-            return fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
-              headers: { 'Authorization': `Bearer ${data.access_token}` },
-            })
-              .then(res => res.json())
-              .then(user => {
-                login(data.access_token, user);
-                navigate('/dashboard');
-              });
-          } else {
-            console.error('No token in response:', data);
-            navigate('/auth');
-          }
+        .then(res => res.json())
+        .then(user => {
+          login(accessToken, user);
+          navigate('/dashboard');
         })
         .catch(error => {
-          console.error('Error during Google login:', error);
+          console.error('Error fetching user info:', error);
           navigate('/auth');
         });
+    } else {
+      navigate('/auth');
     }
   }, [location, navigate, login]);
 

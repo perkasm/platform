@@ -73,6 +73,19 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Dark luxury fintech tokens
+				luxury: {
+					bg: 'hsl(var(--bg-primary))',
+					surface: 'hsl(var(--bg-surface))',
+					elevated: 'hsl(var(--bg-elevated))',
+					border: 'hsl(var(--border))',
+					'accent-indigo': 'hsl(var(--accent-primary))',
+					'accent-mint': 'hsl(var(--accent-green))',
+					'accent-amber': 'hsl(var(--accent-amber))',
+					'text-primary': 'hsl(var(--text-primary))',
+					'text-secondary': 'hsl(var(--text-secondary))',
+					'text-muted': 'hsl(var(--text-muted))',
 				}
 			},
 			borderRadius: {
@@ -96,7 +109,11 @@ export default {
 				slideUp: {
 					'0%': { opacity: '0', transform: 'translateY(20px)' },
 					'100%': { opacity: '1', transform: 'translateY(0)' }
-				}
+				},
+				shimmer: {
+					'0%': { backgroundPosition: '-200% 0' },
+					'100%': { backgroundPosition: '200% 0' },
+				},
 			},
 			backgroundImage: {
 				'gradient-primary': 'var(--gradient-primary)',
@@ -108,6 +125,8 @@ export default {
 				'premium': 'var(--shadow-premium)',
 				'card': 'var(--shadow-card)',
 				'success': 'var(--shadow-success)',
+				'glow-indigo': '0 0 24px -4px hsl(244 100% 70% / 0.35)',
+				'glow-mint': '0 0 24px -4px hsl(163 100% 41% / 0.30)',
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
@@ -115,10 +134,9 @@ export default {
 				'fade-in': 'fadeIn 0.5s ease-out',
 				'slide-up': 'slideUp 0.4s ease-out',
 				'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+				'shimmer': 'shimmer 2s linear infinite',
 			},
-			// keyframes consolidated above
 		}
 	},
 	plugins: [animatePlugin],
 } satisfies Config;
-

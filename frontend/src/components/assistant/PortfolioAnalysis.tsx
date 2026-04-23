@@ -111,25 +111,25 @@ export function PortfolioAnalysis() {
     : null;
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700/50 overflow-hidden mb-4">
+    <div className="bg-luxury-surface border border-luxury-border rounded-2xl overflow-hidden mb-4">
       {/* Header */}
       <button
         onClick={() => setIsExpanded((v) => !v)}
-        className="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 dark:hover:bg-slate-700/40 transition-colors"
+        className="w-full flex items-center justify-between px-5 py-4 hover:bg-luxury-elevated/60 transition-colors"
       >
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#0071E3] to-[#5AC8FA] flex items-center justify-center flex-shrink-0">
+          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-luxury-accent-indigo to-purple-600 flex items-center justify-center flex-shrink-0">
             <Sparkles className="h-3.5 w-3.5 text-white" />
           </div>
           <div className="text-left">
-            <p className="text-sm font-semibold text-[#1D1D1F] dark:text-slate-100">
+            <p className="text-sm font-semibold text-luxury-text-primary font-ui">
               Portfolio Analysis
             </p>
             {timeAgo && !isStreaming && (
-              <p className="text-[11px] text-[#6E6E73] dark:text-slate-400">Generated {timeAgo}</p>
+              <p className="text-[11px] text-luxury-text-muted font-ui">Generated {timeAgo}</p>
             )}
             {isStreaming && (
-              <p className="text-[11px] text-[#0071E3] dark:text-blue-400">Analyzing your cards…</p>
+              <p className="text-[11px] text-luxury-accent-indigo font-ui">Analyzing your cards…</p>
             )}
           </div>
         </div>
@@ -137,41 +137,41 @@ export function PortfolioAnalysis() {
           {!isStreaming && analysis && (
             <button
               onClick={(e) => { e.stopPropagation(); hasRunRef.current = false; generate(); }}
-              className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-slate-600 transition-colors text-[#6E6E73] dark:text-slate-400 hover:text-[#0071E3] dark:hover:text-blue-400"
+              className="p-1.5 rounded-full hover:bg-luxury-elevated transition-colors text-luxury-text-muted hover:text-luxury-accent-indigo"
               title="Refresh analysis"
             >
               <RefreshCw className="h-3.5 w-3.5" />
             </button>
           )}
           {isExpanded
-            ? <ChevronUp className="h-4 w-4 text-[#6E6E73] dark:text-slate-400" />
-            : <ChevronDown className="h-4 w-4 text-[#6E6E73] dark:text-slate-400" />
+            ? <ChevronUp className="h-4 w-4 text-luxury-text-muted" />
+            : <ChevronDown className="h-4 w-4 text-luxury-text-muted" />
           }
         </div>
       </button>
 
       {/* Content */}
       {isExpanded && (
-        <div className="px-5 pb-5 border-t border-gray-50 dark:border-slate-700/50">
+        <div className="px-5 pb-5 border-t border-luxury-border">
           {!analysis && isStreaming && (
             <div className="pt-4 space-y-2">
               {[...Array(5)].map((_, i) => (
-                <div key={i} className={`h-3 bg-gray-100 dark:bg-slate-700 rounded-full animate-pulse ${i === 4 ? "w-1/2" : "w-full"}`} />
+                <div key={i} className={`h-3 bg-gradient-to-r from-luxury-elevated via-luxury-border/40 to-luxury-elevated bg-[length:200%_100%] animate-shimmer rounded-full ${i === 4 ? "w-1/2" : "w-full"}`} />
               ))}
             </div>
           )}
           {analysis && (
-            <div className="pt-4 text-sm leading-relaxed prose prose-sm dark:prose-invert max-w-none
+            <div className="pt-4 text-sm leading-relaxed prose prose-sm prose-invert max-w-none
               prose-p:my-1.5 prose-p:leading-relaxed
               prose-headings:font-semibold prose-h2:text-base prose-h2:mt-4 prose-h2:mb-2 prose-h3:text-sm prose-h3:mt-3 prose-h3:mb-1
               prose-strong:font-semibold
               prose-ul:my-1.5 prose-ul:pl-4 prose-li:my-0.5
               prose-ol:my-1.5 prose-ol:pl-4
-              prose-hr:my-4 prose-hr:border-gray-200 dark:prose-hr:border-slate-600
-              prose-th:bg-gray-50 dark:prose-th:bg-slate-700 prose-th:px-2.5 prose-th:py-2 prose-th:text-left prose-th:font-semibold
-              prose-td:px-2.5 prose-td:py-2 prose-td:border-b prose-td:border-gray-100 dark:prose-td:border-slate-600/50
-              [&_table]:border-collapse [&_table]:w-full [&_table]:overflow-x-auto [&_table]:block [&_table]:max-w-full [&_table]:rounded-lg [&_table]:border [&_table]:border-gray-100 dark:[&_table]:border-slate-700
-              [&_thead]:bg-gray-50 dark:[&_thead]:bg-slate-700/50
+              prose-hr:my-4 prose-hr:border-luxury-border
+              prose-th:bg-luxury-bg prose-th:px-2.5 prose-th:py-2 prose-th:text-left prose-th:font-semibold
+              prose-td:px-2.5 prose-td:py-2 prose-td:border-b prose-td:border-luxury-border
+              [&_table]:border-collapse [&_table]:w-full [&_table]:overflow-x-auto [&_table]:block [&_table]:max-w-full [&_table]:rounded-lg [&_table]:border [&_table]:border-luxury-border
+              [&_thead]:bg-luxury-bg
               [&_tr:last-child_td]:border-b-0
             ">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>

@@ -18,6 +18,15 @@ except Exception as e:
     Base = declarative_base()
     database_available = False
 
+def create_tables():
+    """Create all tables if they don't exist."""
+    if database_available and engine is not None:
+        from app.models.user import User  # noqa: F401
+        from app.models.card import CreditCard  # noqa: F401
+        from app.models.transaction import Transaction  # noqa: F401
+        from app.models.teller import TellerEnrollment  # noqa: F401
+        Base.metadata.create_all(bind=engine)
+
 def get_db() -> Generator:
     if database_available and SessionLocal:
         db = SessionLocal()

@@ -21,49 +21,44 @@ def google_login():
     return RedirectResponse(authorization_url)
 
 @router.get("/google/callback")
-def google_callback(code: str, redirect_uri: str = None, db: Session = Depends(get_db)):
+def google_callback(code: str, db: Session = Depends(get_db)):
     """Handle Google OAuth2 callback"""
     google_oauth2 = GoogleOAuth2()
-    if redirect_uri:
-        google_oauth2.redirect_uri = redirect_uri
 
-    # Exchange code for token
+    # Exchange code for token using the backend's registered redirect URI
     token_response = google_oauth2.exchange_code_for_token(code)
-    
+
     if "error" in token_response:
-        raise HTTPException(status_code=400, detail="Failed to authenticate with Google")
-    
+        error_detail = token_response.get("error_description", token_response.get("error", "unknown"))
+        return RedirectResponse(f"{settings.FRONTEND_URL}/auth?error={error_detail}")
+
     access_token = token_response.get("access_token")
-    
+
     # Get user info from Google
     user_info = google_oauth2.get_user_info(access_token)
-    
+
     # Check if user exists in our database
     db_user = get_user_by_google_id(db, google_id=user_info.get("id"))
-    
+
     if not db_user:
         # Check if user exists with the same email
         db_user = get_user_by_email(db, email=user_info.get("email"))
         if db_user and not getattr(db_user, 'google_id', None):
             # Update existing user with Google ID
             db_user.google_id = user_info.get("id")
-            # In memory mode, we would update the user object directly
-            if db is None:
-                # For in-memory storage, we need to handle this differently
-                pass
-            else:
+            if db is not None:
                 db.commit()
         else:
             # Create new user
             db_user = create_user_from_google(db, user_info)
-    
+
     # Create access token
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
+    jwt_token = create_access_token(
         data={"sub": db_user.email}, expires_delta=access_token_expires
     )
-    
-    return {"access_token": access_token, "token_type": "bearer"}
+
+    return RedirectResponse(f"{settings.FRONTEND_URL}/auth/google/callback?access_token={jwt_token}")
 
 @router.get("/me", response_model=User)
 def read_users_me(current_user: User = Depends(get_current_active_user)):

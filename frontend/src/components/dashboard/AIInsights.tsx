@@ -98,23 +98,23 @@ function BenefitRow({
       onClick={onToggle}
       className={`w-full flex items-start gap-3 p-3 rounded-xl text-left transition-colors duration-150 ${
         checked
-          ? "bg-emerald-50 dark:bg-emerald-900/15"
-          : "bg-[#F5F5F7] dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700"
+          ? "bg-luxury-accent-mint/10 border border-luxury-accent-mint/20"
+          : "bg-luxury-elevated hover:bg-luxury-bg border border-luxury-border"
       }`}
     >
       <div className="flex-shrink-0 mt-0.5">
         {checked ? (
-          <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+          <CheckCircle2 className="h-4 w-4 text-luxury-accent-mint" />
         ) : (
-          <Circle className="h-4 w-4 text-slate-300 dark:text-slate-500" />
+          <Circle className="h-4 w-4 text-luxury-text-muted" />
         )}
       </div>
       <div className="flex-1 min-w-0">
         <p
           className={`text-xs leading-relaxed ${
             checked
-              ? "line-through text-[#6E6E73] dark:text-slate-500"
-              : "text-[#1D1D1F] dark:text-slate-100"
+              ? "line-through text-luxury-text-muted"
+              : "text-luxury-text-primary"
           }`}
         >
           {benefit.label}
@@ -156,8 +156,8 @@ function CardBenefitGroup({
       {/* Card header */}
       <div className="flex items-center gap-2 mb-2">
         <div className="w-4 h-2.5 rounded-sm flex-shrink-0" style={{ backgroundColor: card.color }} />
-        <p className="text-xs font-semibold text-[#1D1D1F] dark:text-slate-100 truncate flex-1">{card.name}</p>
-        <span className="text-[10px] text-[#6E6E73] dark:text-slate-400 flex-shrink-0">
+        <p className="text-xs font-semibold text-luxury-text-primary truncate flex-1">{card.name}</p>
+        <span className="text-[10px] text-luxury-text-secondary flex-shrink-0">
           {checkedCount}/{benefits.length} claimed
         </span>
       </div>
@@ -194,14 +194,14 @@ function SummaryPill({
   const yearlyDone = yearly.filter((b) => checked[makeItemId(card.id, b.key, b.frequency)]).length;
 
   return (
-    <div className="flex items-center gap-2.5 border border-slate-200 dark:border-slate-700 rounded-full px-4 py-2 flex-shrink-0 bg-white dark:bg-slate-800">
+    <div className="flex items-center gap-2.5 border border-luxury-border rounded-full px-4 py-2 flex-shrink-0 bg-luxury-elevated">
       <div className="w-3 h-2 rounded-sm flex-shrink-0" style={{ backgroundColor: card.color }} />
-      <p className="text-[#1D1D1F] dark:text-slate-100 text-xs font-medium truncate max-w-[120px]">{card.name}</p>
+      <p className="text-luxury-text-primary text-xs font-medium truncate max-w-[120px]">{card.name}</p>
       {monthly.length > 0 && (
         <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
           monthlyDone === monthly.length
-            ? "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400"
-            : "bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400"
+            ? "bg-luxury-accent-mint/15 text-luxury-accent-mint"
+            : "bg-luxury-accent-amber/15 text-luxury-accent-amber"
         }`}>
           {monthlyDone}/{monthly.length} mo
         </span>
@@ -209,8 +209,8 @@ function SummaryPill({
       {yearly.length > 0 && (
         <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
           yearlyDone === yearly.length
-            ? "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400"
-            : "bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-400"
+            ? "bg-luxury-accent-mint/15 text-luxury-accent-mint"
+            : "bg-luxury-accent-indigo/15 text-luxury-accent-indigo"
         }`}>
           {yearlyDone}/{yearly.length} yr
         </span>
@@ -265,7 +265,7 @@ export function AIInsights() {
   const CollapsedContent = (
     <div className="px-6 pb-4 space-y-2">
       {cardBenefits.length === 0 ? (
-        <p className="text-[#6E6E73] dark:text-slate-400 text-xs py-1">
+        <p className="text-luxury-text-secondary text-xs py-1">
           Add cards to see your benefits checklist.
         </p>
       ) : (
@@ -281,15 +281,15 @@ export function AIInsights() {
   const ExpandedContent = (
     <div className="px-6 pb-6 space-y-5">
       {/* Tab switcher */}
-      <div className="flex items-center gap-1 bg-[#F5F5F7] dark:bg-slate-700/50 rounded-xl p-1">
+      <div className="flex items-center gap-1 bg-luxury-elevated border border-luxury-border rounded-xl p-1">
         {(["monthly", "yearly"] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
             className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
               tab === t
-                ? "bg-white dark:bg-slate-600 text-[#1D1D1F] dark:text-slate-100 shadow-sm"
-                : "text-[#6E6E73] dark:text-slate-400 hover:text-[#1D1D1F] dark:hover:text-slate-200"
+                ? "bg-luxury-bg text-luxury-text-primary shadow-sm"
+                : "text-luxury-text-secondary hover:text-luxury-text-primary"
             }`}
           >
             {t === "monthly" ? `Monthly · ${monthLabel}` : `Annual · ${yearLabel}`}
@@ -299,7 +299,7 @@ export function AIInsights() {
 
       {/* Checklist */}
       {filteredGroups.length === 0 ? (
-        <p className="text-[#6E6E73] dark:text-slate-400 text-sm text-center py-4">
+        <p className="text-luxury-text-secondary text-sm text-center py-4">
           {cardBenefits.length === 0
             ? "Add cards to see your benefits checklist."
             : `No ${tab} benefits found for your cards.`}
@@ -327,7 +327,7 @@ export function AIInsights() {
       )}
 
       {filteredGroups.length > 0 && (
-        <p className="text-[10px] text-[#6E6E73] dark:text-slate-500 text-center">
+        <p className="text-[10px] text-luxury-text-muted text-center">
           Checks reset automatically each {tab === "monthly" ? "month" : "year"}
         </p>
       )}
@@ -338,10 +338,9 @@ export function AIInsights() {
     <ExpandableSection
       title="Benefits Checklist"
       badge={totalUnclaimed > 0 ? totalUnclaimed : undefined}
-      headerRight={<Sparkles className="h-4 w-4 text-indigo-400" />}
+      headerRight={<Sparkles className="h-4 w-4 text-luxury-accent-indigo" />}
       collapsedContent={CollapsedContent}
       expandedContent={ExpandedContent}
-      className="bg-gradient-to-br from-blue-50/60 to-indigo-50/40 dark:from-transparent dark:to-transparent"
     />
   );
 }

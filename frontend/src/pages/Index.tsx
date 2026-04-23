@@ -6,14 +6,16 @@ import { MyCards } from "@/components/dashboard/MyCards";
 import { RecentTransactions } from "@/components/dashboard/RecentTransactions";
 import { PointValues } from "@/components/dashboard/PointValues";
 import { AIInsights } from "@/components/dashboard/AIInsights";
+import { SpendingInsights } from "@/components/dashboard/SpendingInsights";
 import { ChatInterface } from "@/components/assistant/ChatInterface";
 import { PortfolioAnalysis } from "@/components/assistant/PortfolioAnalysis";
+import { TravelTab } from "@/components/travel/TravelTab";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50/50 to-blue-50/40 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950">
+    <div className="min-h-screen bg-background">
       <Navbar />
       <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
 
@@ -26,15 +28,18 @@ const Index = () => {
             <PointValues />
             <AIInsights />
           </div>
+          <SpendingInsights />
         </main>
+      )}
+
+      {activeTab === "travel" && (
+        <TravelTab />
       )}
 
       {activeTab === "assistant" && (
         <div className="max-w-3xl mx-auto px-4 sm:px-6 mt-4" style={{ maxWidth: "768px" }}>
           <PortfolioAnalysis />
-          <div className="bg-white dark:bg-transparent rounded-2xl dark:rounded-none shadow-sm dark:shadow-none overflow-hidden">
-            <ChatInterface />
-          </div>
+          <ChatInterface />
         </div>
       )}
     </div>

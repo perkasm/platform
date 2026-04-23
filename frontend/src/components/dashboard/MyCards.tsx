@@ -61,7 +61,7 @@ function CardDetail({
   const cashBack = isCashBackCard(card);
 
   return (
-    <div className="border border-gray-100 dark:border-slate-700 rounded-xl p-5 relative group/detail">
+    <div className="border border-luxury-border rounded-xl p-5 relative group/detail">
       <button
         onClick={() => onRemove(card.id)}
         className="absolute top-3 right-3 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-all opacity-0 group-hover/detail:opacity-100 scale-75 group-hover/detail:scale-100"
@@ -78,29 +78,29 @@ function CardDetail({
               type="text"
               value={card.name}
               onChange={(e) => onUpdate(card.id, { name: e.target.value })}
-              className="text-sm font-semibold w-full bg-[#F5F5F7] dark:bg-slate-700 text-[#1D1D1F] dark:text-slate-100 rounded-lg px-2 py-0.5 border border-transparent focus:border-[#0071E3] focus:outline-none"
+              className="text-sm font-semibold w-full bg-luxury-elevated text-luxury-text-primary rounded-lg px-2 py-0.5 border border-luxury-border focus:border-luxury-accent-indigo focus:outline-none"
             />
           ) : (
-            <p className="text-[#1D1D1F] dark:text-slate-100 font-semibold text-sm truncate">{card.name}</p>
+            <p className="text-luxury-text-primary font-semibold text-sm truncate">{card.name}</p>
           )}
-          <p className="text-[#6E6E73] dark:text-slate-400 text-xs">•••• {card.last4} · {card.network}</p>
+          <p className="text-luxury-text-secondary text-xs font-mono-data">•••• {card.last4} · {card.network}</p>
         </div>
       </div>
 
       {/* Stats row */}
       <div className="grid grid-cols-2 gap-3 mb-4">
-        <div className="bg-[#F5F5F7] dark:bg-slate-700/60 rounded-xl p-3">
-          <p className="text-[#6E6E73] dark:text-slate-400 text-xs mb-0.5">
+        <div className="bg-luxury-bg/60 border border-luxury-border rounded-xl p-3">
+          <p className="text-luxury-text-secondary font-ui text-xs mb-0.5">
             {cashBack ? "Rewards Type" : "Point Balance"}
           </p>
           {cashBack ? (
-            <p className="text-[#1D1D1F] dark:text-slate-100 font-semibold text-sm">Cash Back</p>
+            <p className="text-luxury-text-primary font-mono-data font-semibold text-sm">Cash Back</p>
           ) : isEditMode ? (
             <input
               type="number"
               value={card.balance}
               onChange={(e) => onUpdate(card.id, { balance: Number(e.target.value) })}
-              className="text-sm font-semibold w-full bg-white dark:bg-slate-600 text-[#1D1D1F] dark:text-slate-100 rounded-lg px-2 py-0.5 border border-transparent focus:border-[#0071E3] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              className="text-sm font-mono-data font-semibold w-full bg-luxury-bg border border-luxury-border text-luxury-text-primary rounded-lg px-2 py-0.5 focus:border-luxury-accent-indigo focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
           ) : editingBalance ? (
             <input
@@ -113,12 +113,12 @@ function CardDetail({
                 if (e.key === "Escape") setEditingBalance(false);
               }}
               autoFocus
-              className="text-sm font-semibold w-full bg-white dark:bg-slate-600 text-[#1D1D1F] dark:text-slate-100 rounded-lg px-2 py-0.5 border border-[#0071E3] outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              className="text-sm font-mono-data font-semibold w-full bg-luxury-bg border border-luxury-accent-indigo text-luxury-text-primary rounded-lg px-2 py-0.5 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
           ) : (
             <button
               onClick={() => { setLocalBalance(card.balance); setEditingBalance(true); }}
-              className="text-[#1D1D1F] dark:text-slate-100 font-semibold hover:text-[#0071E3] transition-colors text-left group/bal flex items-center gap-1 w-full"
+              className="text-luxury-text-primary font-mono-data font-semibold hover:text-luxury-accent-indigo transition-colors text-left group/bal flex items-center gap-1 w-full"
               title="Click to update balance"
             >
               {card.balance > 0 ? card.balance.toLocaleString() : "0"}
@@ -126,47 +126,47 @@ function CardDetail({
             </button>
           )}
         </div>
-        <div className="bg-[#F5F5F7] dark:bg-slate-700/60 rounded-xl p-3">
-          <p className="text-[#6E6E73] dark:text-slate-400 text-xs mb-0.5">Earned This Month</p>
+        <div className="bg-luxury-bg/60 border border-luxury-border rounded-xl p-3">
+          <p className="text-luxury-text-secondary font-ui text-xs mb-0.5">Earned This Month</p>
           {isEditMode ? (
             <input
               type="number"
               value={card.monthlyEarned}
               onChange={(e) => onUpdate(card.id, { monthlyEarned: Number(e.target.value) })}
-              className="text-sm font-semibold w-full bg-white dark:bg-slate-600 text-[#1D1D1F] dark:text-slate-100 rounded-lg px-2 py-0.5 border border-transparent focus:border-[#0071E3] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              className="text-sm font-mono-data font-semibold w-full bg-luxury-bg border border-luxury-border text-luxury-text-primary rounded-lg px-2 py-0.5 focus:border-luxury-accent-indigo focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
           ) : (
-            <p className="text-[#1D1D1F] dark:text-slate-100 font-semibold">
+            <p className="text-luxury-text-primary font-mono-data font-semibold">
               {card.primaryReward === "Cash Back" ? `$${card.monthlyEarned}` : `${card.monthlyEarned.toLocaleString()} pts`}
             </p>
           )}
         </div>
-        <div className="bg-[#F5F5F7] dark:bg-slate-700/60 rounded-xl p-3">
-          <p className="text-[#6E6E73] dark:text-slate-400 text-xs mb-0.5">Annual Fee</p>
+        <div className="bg-luxury-bg/60 border border-luxury-border rounded-xl p-3">
+          <p className="text-luxury-text-secondary font-ui text-xs mb-0.5">Annual Fee</p>
           {isEditMode ? (
             <input
               type="number"
               value={card.annualFee}
               onChange={(e) => onUpdate(card.id, { annualFee: Number(e.target.value) })}
-              className="text-sm font-semibold w-full bg-white dark:bg-slate-600 text-[#1D1D1F] dark:text-slate-100 rounded-lg px-2 py-0.5 border border-transparent focus:border-[#0071E3] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              className="text-sm font-mono-data font-semibold w-full bg-luxury-bg border border-luxury-border text-luxury-text-primary rounded-lg px-2 py-0.5 focus:border-luxury-accent-indigo focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
           ) : (
-            <p className="text-[#1D1D1F] dark:text-slate-100 font-semibold">
+            <p className="text-luxury-text-primary font-mono-data font-semibold">
               {card.annualFee === 0 ? "None" : `$${card.annualFee}`}
             </p>
           )}
         </div>
-        <div className="bg-[#F5F5F7] dark:bg-slate-700/60 rounded-xl p-3">
-          <p className="text-[#6E6E73] dark:text-slate-400 text-xs mb-0.5">Next Fee Date</p>
+        <div className="bg-luxury-bg/60 border border-luxury-border rounded-xl p-3">
+          <p className="text-luxury-text-secondary font-ui text-xs mb-0.5">Next Fee Date</p>
           {isEditMode ? (
             <input
               type="date"
               value={card.nextFeeDate ?? ""}
               onChange={(e) => onUpdate(card.id, { nextFeeDate: e.target.value || null })}
-              className="text-xs font-semibold w-full bg-white dark:bg-slate-600 text-[#1D1D1F] dark:text-slate-100 rounded-lg px-2 py-0.5 border border-transparent focus:border-[#0071E3] focus:outline-none"
+              className="text-xs font-semibold w-full bg-luxury-elevated text-luxury-text-primary rounded-lg px-2 py-0.5 border border-luxury-border focus:border-luxury-accent-indigo focus:outline-none"
             />
           ) : (
-            <p className="text-[#1D1D1F] dark:text-slate-100 font-semibold">
+            <p className="text-luxury-text-primary font-mono-data font-semibold">
               {card.nextFeeDate
                 ? new Date(card.nextFeeDate).toLocaleDateString("en-US", { month: "short", year: "numeric" })
                 : "N/A"}
@@ -177,10 +177,10 @@ function CardDetail({
 
       {/* Spending categories */}
       <div className="mb-4">
-        <p className="text-[#6E6E73] text-xs font-medium mb-2">Earn Rates</p>
+        <p className="text-luxury-text-secondary font-ui text-xs font-medium mb-2">Earn Rates</p>
         <div className="flex flex-wrap gap-1.5">
           {card.categories.map((cat) => (
-            <span key={cat.name} className="text-xs bg-[#EBF3FD] text-[#0071E3] px-2.5 py-1 rounded-full font-medium">
+            <span key={cat.name} className="text-xs bg-luxury-accent-indigo/15 text-luxury-accent-indigo px-2.5 py-1 rounded-full font-medium">
               {cat.multiplier}x {cat.name}
             </span>
           ))}
@@ -190,7 +190,7 @@ function CardDetail({
       {/* Perks toggle */}
       <button
         onClick={() => setPerksOpen(!perksOpen)}
-        className="flex items-center gap-1.5 text-[#0071E3] text-sm font-medium hover:opacity-75 transition-opacity duration-200"
+        className="flex items-center gap-1.5 text-luxury-accent-indigo text-sm font-medium hover:opacity-75 transition-opacity duration-200"
       >
         <motion.div animate={{ rotate: perksOpen ? 90 : 0 }} transition={{ duration: 0.15 }}>
           <ChevronRight className="h-4 w-4" />
@@ -209,8 +209,8 @@ function CardDetail({
             className="mt-2 space-y-1"
           >
             {card.perks.map((perk) => (
-              <li key={perk} className="text-sm text-[#6E6E73] flex items-start gap-2">
-                <span className="text-[#0071E3] mt-0.5">·</span>
+              <li key={perk} className="text-sm text-luxury-text-secondary flex items-start gap-2">
+                <span className="text-luxury-accent-indigo mt-0.5">·</span>
                 {perk}
               </li>
             ))}
@@ -246,23 +246,23 @@ function CatalogPicker({
   });
 
   return (
-    <div className="border border-dashed border-blue-300 dark:border-blue-700 rounded-xl p-4 space-y-3 bg-blue-50/50 dark:bg-blue-900/10">
+    <div className="border border-luxury-border rounded-xl p-4 space-y-3 bg-luxury-elevated">
       <div className="flex items-center justify-between">
-        <p className="text-sm font-semibold text-[#1D1D1F] dark:text-slate-100">Add Card</p>
-        <button onClick={onCancel} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
+        <p className="text-sm font-semibold text-luxury-text-primary">Add Card</p>
+        <button onClick={onCancel} className="text-luxury-text-muted hover:text-luxury-text-primary transition-colors">
           <X size={16} />
         </button>
       </div>
 
       {/* Search */}
       <div className="relative">
-        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-luxury-text-muted" />
         <input
           type="text"
           placeholder="Search cards..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-8 pr-3 py-2 text-sm bg-white dark:bg-slate-700 text-[#1D1D1F] dark:text-slate-100 rounded-lg border border-slate-200 dark:border-slate-600 focus:border-[#0071E3] focus:outline-none"
+          className="w-full pl-8 pr-3 py-2 text-sm bg-luxury-bg text-luxury-text-primary rounded-lg border border-luxury-border focus:border-luxury-accent-indigo focus:outline-none placeholder:text-luxury-text-muted"
         />
       </div>
 
@@ -275,9 +275,9 @@ function CatalogPicker({
             className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
               issuerFilter === issuer
                 ? "text-white"
-                : "bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600 hover:border-slate-400"
+                : "bg-luxury-bg text-luxury-text-secondary border border-luxury-border hover:border-luxury-accent-indigo/50"
             }`}
-            style={issuerFilter === issuer ? { backgroundColor: issuer === "All" ? "#0071E3" : issuerColors[issuer] } : {}}
+            style={issuerFilter === issuer ? { backgroundColor: issuer === "All" ? "hsl(244,100%,70%)" : issuerColors[issuer] } : {}}
           >
             {issuer}
           </button>
@@ -290,34 +290,34 @@ function CatalogPicker({
           <button
             key={template.name}
             onClick={() => onSelect(template)}
-            className="w-full flex items-center gap-3 p-2.5 rounded-lg bg-white dark:bg-slate-700/80 border border-slate-100 dark:border-slate-600 hover:border-blue-300 dark:hover:border-blue-500 transition-colors text-left group"
+            className="w-full flex items-center gap-3 p-2.5 rounded-lg bg-luxury-bg border border-luxury-border hover:border-luxury-accent-indigo/50 transition-colors text-left group"
           >
             <div
               className="w-8 h-5 rounded flex-shrink-0 shadow-sm"
               style={{ backgroundColor: template.color }}
             />
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-[#1D1D1F] dark:text-slate-100 truncate">{template.name}</p>
-              <p className="text-[10px] text-[#6E6E73] dark:text-slate-400">{template.primaryCategory} · {template.annualFee === 0 ? "No annual fee" : `$${template.annualFee}/yr`}</p>
+              <p className="text-xs font-semibold text-luxury-text-primary truncate">{template.name}</p>
+              <p className="text-[10px] text-luxury-text-secondary font-mono-data">{template.primaryCategory} · {template.annualFee === 0 ? "No annual fee" : `$${template.annualFee}/yr`}</p>
             </div>
-            <ChevronRight size={14} className="text-slate-300 group-hover:text-blue-400 transition-colors flex-shrink-0" />
+            <ChevronRight size={14} className="text-luxury-text-muted group-hover:text-luxury-accent-indigo transition-colors flex-shrink-0" />
           </button>
         ))}
         {filtered.length === 0 && (
-          <p className="text-center text-xs text-slate-400 py-4">No cards match your search</p>
+          <p className="text-center text-xs text-luxury-text-muted py-4">No cards match your search</p>
         )}
       </div>
 
       <button
         onClick={onConnectBank}
-        className="w-full py-2 rounded-lg text-xs font-medium text-blue-600 dark:text-blue-400 border border-blue-300 dark:border-blue-700 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors flex items-center justify-center gap-1.5"
+        className="w-full py-2 rounded-lg text-xs font-medium text-luxury-accent-indigo border border-luxury-accent-indigo/30 bg-luxury-accent-indigo/10 hover:bg-luxury-accent-indigo/20 transition-colors flex items-center justify-center gap-1.5"
       >
         <Building2 size={13} />
         Connect bank account
       </button>
       <button
         onClick={onCustom}
-        className="w-full py-2 rounded-lg text-xs font-medium text-slate-500 dark:text-slate-400 border border-dashed border-slate-300 dark:border-slate-600 hover:border-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
+        className="w-full py-2 rounded-lg text-xs font-medium text-luxury-text-secondary border border-dashed border-luxury-border hover:border-luxury-accent-indigo hover:text-luxury-accent-indigo transition-colors"
       >
         + Add custom card
       </button>
@@ -379,15 +379,15 @@ function CardEntryForm({
   };
 
   return (
-    <div className="border border-dashed border-blue-300 dark:border-blue-700 rounded-xl p-4 space-y-3 bg-blue-50/50 dark:bg-blue-900/10">
+    <div className="border border-luxury-border rounded-xl p-4 space-y-3 bg-luxury-elevated">
       <div className="flex items-center gap-2">
-        <button onClick={onBack} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
+        <button onClick={onBack} className="text-luxury-text-muted hover:text-luxury-text-primary transition-colors">
           <ChevronLeft size={16} />
         </button>
-        <p className="text-sm font-semibold text-[#1D1D1F] dark:text-slate-100 flex-1 truncate">
+        <p className="text-sm font-semibold text-luxury-text-primary font-ui flex-1 truncate">
           {template ? template.name : "Custom Card"}
         </p>
-        <button onClick={onCancel} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
+        <button onClick={onCancel} className="text-luxury-text-muted hover:text-luxury-text-primary transition-colors">
           <X size={16} />
         </button>
       </div>
@@ -408,16 +408,16 @@ function CardEntryForm({
       {/* Earn rates preview */}
       {template && (
         <div>
-          <p className="text-[10px] font-semibold text-[#6E6E73] dark:text-slate-400 uppercase tracking-wide mb-1.5">Earn Rates</p>
+          <p className="text-[10px] font-semibold text-luxury-text-secondary uppercase tracking-wide mb-1.5">Earn Rates</p>
           <div className="flex flex-wrap gap-1">
             {template.categories.map((cat) => (
-              <span key={cat.name} className="text-[10px] bg-[#EBF3FD] text-[#0071E3] px-2 py-0.5 rounded-full font-medium">
+              <span key={cat.name} className="text-[10px] bg-luxury-accent-indigo/15 text-luxury-accent-indigo px-2 py-0.5 rounded-full font-medium">
                 {cat.multiplier}x {cat.name}
               </span>
             ))}
           </div>
           {template.annualFeeNote && (
-            <p className="text-[10px] text-slate-400 mt-1">* {template.annualFeeNote}</p>
+            <p className="text-[10px] text-luxury-text-muted mt-1">* {template.annualFeeNote}</p>
           )}
         </div>
       )}
@@ -427,7 +427,7 @@ function CardEntryForm({
         <div>
           <button
             onClick={() => setPerksOpen(!perksOpen)}
-            className="flex items-center gap-1 text-[10px] font-semibold text-[#0071E3] uppercase tracking-wide"
+            className="flex items-center gap-1 text-[10px] font-semibold text-luxury-accent-indigo uppercase tracking-wide"
           >
             <motion.div animate={{ rotate: perksOpen ? 90 : 0 }} transition={{ duration: 0.15 }}>
               <ChevronRight size={12} />
@@ -445,8 +445,8 @@ function CardEntryForm({
                 className="mt-1.5 space-y-1"
               >
                 {template.perks.map((perk) => (
-                  <li key={perk} className="text-[10px] text-[#6E6E73] flex items-start gap-1.5">
-                    <Check size={10} className="text-[#0071E3] mt-0.5 flex-shrink-0" />
+                  <li key={perk} className="text-[10px] text-luxury-text-secondary flex items-start gap-1.5">
+                    <Check size={10} className="text-luxury-accent-indigo mt-0.5 flex-shrink-0" />
                     {perk}
                   </li>
                 ))}
@@ -458,8 +458,8 @@ function CardEntryForm({
 
       {/* Chosen category picker */}
       {needsCategory && (
-        <div className="border border-amber-200 dark:border-amber-700 bg-amber-50/60 dark:bg-amber-900/10 rounded-xl p-3 space-y-2">
-          <p className="text-[10px] font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wide">
+        <div className="border border-luxury-accent-amber/30 bg-luxury-accent-amber/10 rounded-xl p-3 space-y-2">
+          <p className="text-[10px] font-semibold text-luxury-accent-amber uppercase tracking-wide">
             Which category did you choose for 3%?
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -470,8 +470,8 @@ function CardEntryForm({
                 onClick={() => setChosenCategory(opt)}
                 className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
                   chosenCategory === opt
-                    ? "bg-[#0071E3] text-white"
-                    : "bg-white dark:bg-slate-700 text-[#6E6E73] dark:text-slate-300 border border-slate-200 dark:border-slate-600 hover:border-blue-300"
+                    ? "bg-luxury-accent-indigo text-white"
+                    : "bg-luxury-bg text-luxury-text-secondary border border-luxury-border hover:border-luxury-accent-indigo/50"
                 }`}
               >
                 {opt}
@@ -481,15 +481,15 @@ function CardEntryForm({
         </div>
       )}
 
-      <div className="border-t border-slate-200 dark:border-slate-600 pt-3 space-y-2">
-        <p className="text-[10px] font-semibold text-[#6E6E73] dark:text-slate-400 uppercase tracking-wide">Your Card Details</p>
+      <div className="border-t border-luxury-border pt-3 space-y-2">
+        <p className="text-[10px] font-semibold text-luxury-text-secondary uppercase tracking-wide">Your Card Details</p>
         {!template && (
           <input
             type="text"
             placeholder="Card name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full text-sm bg-white dark:bg-slate-700 text-[#1D1D1F] dark:text-slate-100 rounded-lg px-3 py-2 border border-slate-200 dark:border-slate-600 focus:border-[#0071E3] focus:outline-none"
+            className="w-full text-sm bg-luxury-bg text-luxury-text-primary rounded-lg px-3 py-2 border border-luxury-border focus:border-luxury-accent-indigo focus:outline-none placeholder:text-luxury-text-muted"
           />
         )}
         <div className={cashBack ? "" : "grid grid-cols-2 gap-2"}>
@@ -499,7 +499,7 @@ function CardEntryForm({
             maxLength={4}
             value={last4}
             onChange={(e) => setLast4(e.target.value.replace(/\D/g, ""))}
-            className="text-sm bg-white dark:bg-slate-700 text-[#1D1D1F] dark:text-slate-100 rounded-lg px-3 py-2 border border-slate-200 dark:border-slate-600 focus:border-[#0071E3] focus:outline-none font-mono w-full"
+            className="text-sm bg-luxury-bg text-luxury-text-primary rounded-lg px-3 py-2 border border-luxury-border focus:border-luxury-accent-indigo focus:outline-none font-mono-data w-full placeholder:text-luxury-text-muted"
           />
           {!cashBack && (
             <input
@@ -507,12 +507,12 @@ function CardEntryForm({
               placeholder="Current point balance"
               value={balance || ""}
               onChange={(e) => setBalance(Number(e.target.value))}
-              className="text-sm bg-white dark:bg-slate-700 text-[#1D1D1F] dark:text-slate-100 rounded-lg px-3 py-2 border border-slate-200 dark:border-slate-600 focus:border-[#0071E3] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              className="text-sm bg-luxury-bg text-luxury-text-primary rounded-lg px-3 py-2 border border-luxury-border focus:border-luxury-accent-indigo focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none placeholder:text-luxury-text-muted"
             />
           )}
         </div>
         {cashBack && (
-          <p className="text-[10px] text-slate-400 dark:text-slate-500">Cash back cards don't need a point balance.</p>
+          <p className="text-[10px] text-luxury-text-muted">Cash back cards don't need a point balance.</p>
         )}
         {!template && (
           <input
@@ -520,7 +520,7 @@ function CardEntryForm({
             placeholder="Annual fee"
             value={annualFee || ""}
             onChange={(e) => setAnnualFee(Number(e.target.value))}
-            className="w-full text-sm bg-white dark:bg-slate-700 text-[#1D1D1F] dark:text-slate-100 rounded-lg px-3 py-2 border border-slate-200 dark:border-slate-600 focus:border-[#0071E3] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            className="w-full text-sm bg-luxury-bg text-luxury-text-primary rounded-lg px-3 py-2 border border-luxury-border focus:border-luxury-accent-indigo focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none placeholder:text-luxury-text-muted"
           />
         )}
       </div>
@@ -528,14 +528,14 @@ function CardEntryForm({
       <div className="flex gap-2">
         <button
           onClick={onCancel}
-          className="flex-1 py-2 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+          className="flex-1 py-2 rounded-lg text-xs font-medium text-luxury-text-primary border border-luxury-border hover:bg-luxury-elevated transition-colors"
         >
           Cancel
         </button>
         <button
           onClick={handleSubmit}
           disabled={!last4 || last4.length < 4 || (!template && !name) || (needsCategory && !chosenCategory)}
-          className="flex-1 py-2 rounded-lg text-xs font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-700 hover:opacity-90 transition-opacity disabled:opacity-40"
+          className="flex-1 py-2 rounded-lg text-xs font-medium text-white bg-gradient-to-r from-luxury-accent-indigo to-purple-600 hover:opacity-90 transition-opacity disabled:opacity-40"
         >
           Add to Garage
         </button>
@@ -603,7 +603,7 @@ export function MyCards() {
         {!showAddForm && (
           <button
             onClick={() => setShowAddForm(true)}
-            className="flex-shrink-0 w-52 h-32 rounded-2xl border-2 border-dashed border-blue-300 dark:border-blue-700 flex flex-col items-center justify-center gap-2 text-blue-400 hover:border-blue-500 hover:text-blue-500 transition-colors"
+            className="flex-shrink-0 w-52 h-32 rounded-2xl border-2 border-dashed border-luxury-border flex flex-col items-center justify-center gap-2 text-luxury-text-muted hover:border-luxury-accent-indigo hover:text-luxury-accent-indigo transition-colors"
           >
             <Plus size={20} />
             <span className="text-xs font-medium">Add Card</span>
@@ -624,7 +624,7 @@ export function MyCards() {
       {!showAddForm && (
         <button
           onClick={() => setShowAddForm(true)}
-          className="w-full py-3 rounded-xl border-2 border-dashed border-blue-300 dark:border-blue-700 flex items-center justify-center gap-2 text-blue-500 hover:border-blue-500 transition-colors text-sm font-medium"
+          className="w-full py-3 rounded-xl border-2 border-dashed border-luxury-border flex items-center justify-center gap-2 text-luxury-text-muted hover:border-luxury-accent-indigo hover:text-luxury-accent-indigo transition-colors text-sm font-medium"
         >
           <Plus size={16} />
           Add Card

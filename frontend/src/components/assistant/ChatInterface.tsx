@@ -225,10 +225,10 @@ export function ChatInterface() {
     <div className="flex flex-col" style={{ height: "calc(100vh - 130px)" }}>
       {/* Header */}
       <div className="text-center pt-8 pb-4 flex-shrink-0">
-        <h1 className="text-[#1D1D1F] dark:text-slate-100 text-2xl font-semibold">
+        <h1 className="text-luxury-text-primary font-display text-2xl font-semibold">
           Perkasm Assistant
         </h1>
-        <p className="text-[#6E6E73] dark:text-slate-400 text-sm mt-1">
+        <p className="text-luxury-text-secondary font-ui text-sm mt-1">
           Ask anything about your rewards, cards, or redemption strategy.
         </p>
       </div>
@@ -241,8 +241,8 @@ export function ChatInterface() {
             onClick={startNewChat}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium flex-shrink-0 transition-all duration-150 border ${
               activeSessionId === null
-                ? "bg-[#0071E3] text-white border-[#0071E3]"
-                : "bg-transparent text-[#6E6E73] dark:text-slate-400 border-gray-200 dark:border-slate-700 hover:border-[#0071E3] hover:text-[#0071E3] dark:hover:text-[#0071E3]"
+                ? "bg-luxury-accent-indigo/20 text-luxury-accent-indigo border-luxury-accent-indigo/40"
+                : "bg-transparent text-luxury-text-secondary border-luxury-border hover:border-luxury-accent-indigo/40 hover:text-luxury-accent-indigo"
             }`}
           >
             <Plus className="h-3 w-3" />
@@ -256,8 +256,8 @@ export function ChatInterface() {
               onClick={() => loadSession(session)}
               className={`px-3 py-1.5 rounded-full text-xs font-medium flex-shrink-0 max-w-[180px] truncate transition-all duration-150 border ${
                 activeSessionId === session.id
-                  ? "bg-[#0071E3] text-white border-[#0071E3]"
-                  : "bg-transparent text-[#6E6E73] dark:text-slate-400 border-gray-200 dark:border-slate-700 hover:border-[#0071E3] hover:text-[#0071E3] dark:hover:text-[#0071E3]"
+                  ? "bg-luxury-accent-indigo/20 text-luxury-accent-indigo border-luxury-accent-indigo/40"
+                  : "bg-transparent text-luxury-text-secondary border-luxury-border hover:border-luxury-accent-indigo/40 hover:text-luxury-accent-indigo"
               }`}
             >
               {session.title}
@@ -278,7 +278,7 @@ export function ChatInterface() {
       {/* Messages area */}
       <div className="flex-1 overflow-y-auto px-4 space-y-4 pb-4">
         {messages.length === 0 && !showPrompts && (
-          <p className="text-center text-[#6E6E73] dark:text-slate-500 text-sm mt-12">
+          <p className="text-center text-luxury-text-muted font-ui text-sm mt-12">
             Start a conversation above.
           </p>
         )}
@@ -286,7 +286,7 @@ export function ChatInterface() {
           <MessageBubble key={msg.id} message={msg} />
         ))}
         {error && (
-          <div className="flex items-center gap-2 text-red-500 dark:text-red-400 text-sm px-2">
+          <div className="flex items-center gap-2 text-red-400 text-sm px-2">
             <AlertCircle className="h-4 w-4 flex-shrink-0" />
             <span>{error}</span>
           </div>
@@ -295,8 +295,8 @@ export function ChatInterface() {
       </div>
 
       {/* Sticky input bar */}
-      <div className="flex-shrink-0 px-4 pb-4 pt-2 border-t border-gray-100 dark:border-slate-700/50 bg-white dark:bg-transparent">
-        <div className="flex items-end gap-2 bg-[#F5F5F7] dark:bg-slate-800 rounded-2xl px-4 py-3 border dark:border-slate-700/60">
+      <div className="flex-shrink-0 px-4 pb-4 pt-2 border-t border-luxury-border">
+        <div className="flex items-end gap-2 bg-luxury-elevated border border-luxury-border rounded-2xl px-4 py-3">
           <textarea
             ref={inputRef}
             value={input}
@@ -305,18 +305,18 @@ export function ChatInterface() {
             placeholder="Ask about your rewards..."
             rows={1}
             disabled={isStreaming}
-            className="flex-1 bg-transparent text-sm text-[#1D1D1F] dark:text-slate-100 placeholder-[#6E6E73] dark:placeholder-slate-500 resize-none outline-none leading-relaxed max-h-32 disabled:opacity-50"
+            className="flex-1 bg-transparent text-sm text-luxury-text-primary placeholder:text-luxury-text-muted resize-none outline-none leading-relaxed max-h-32 disabled:opacity-50"
             style={{ scrollbarWidth: "none" }}
           />
           <button
             onClick={() => sendMessage(input)}
             disabled={!input.trim() || isStreaming}
-            className="w-8 h-8 flex-shrink-0 bg-[#0071E3] disabled:bg-[#C7C7CC] rounded-full flex items-center justify-center transition-all duration-200 hover:bg-[#0077ED] disabled:cursor-not-allowed"
+            className="w-8 h-8 flex-shrink-0 bg-luxury-accent-indigo disabled:bg-luxury-elevated disabled:text-luxury-text-muted rounded-full flex items-center justify-center transition-all duration-200 hover:bg-purple-500 disabled:cursor-not-allowed"
           >
             <ArrowUp className="h-4 w-4 text-white" />
           </button>
         </div>
-        <p className="text-center text-[#C7C7CC] dark:text-slate-600 text-[10px] mt-2">
+        <p className="text-center text-luxury-text-muted font-ui text-[10px] mt-2">
           Powered by your rewards data
         </p>
       </div>

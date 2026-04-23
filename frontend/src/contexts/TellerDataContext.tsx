@@ -1,11 +1,14 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { tellerService, TellerEnrollment, TellerAccount, TellerTransaction } from "@/services/teller.service";
+import { enrichCategories, type TxCategory } from "@/services/categorize.service";
 import { useAuth } from "./AuthContext";
 
 interface TellerDataState {
   enrollments: TellerEnrollment[];
   accounts: TellerAccount[];
   transactions: TellerTransaction[];
+  /** AI-enriched category map: transaction id → category. Available after async enrichment. */
+  categoryMap: Record<string, TxCategory>;
   loading: boolean;
   error: string | null;
   refetch: () => void;
@@ -18,6 +21,7 @@ export function TellerDataProvider({ children }: { children: React.ReactNode }) 
   const [enrollments, setEnrollments] = useState<TellerEnrollment[]>([]);
   const [accounts, setAccounts] = useState<TellerAccount[]>([]);
   const [transactions, setTransactions] = useState<TellerTransaction[]>([]);
+  const [categoryMap, setCategoryMap] = useState<Record<string, TxCategory>>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [version, setVersion] = useState(0);
@@ -25,7 +29,6 @@ export function TellerDataProvider({ children }: { children: React.ReactNode }) 
   const refetch = useCallback(() => setVersion((v) => v + 1), []);
 
   useEffect(() => {
-    // Don't fetch if not authenticated
     if (!token) {
       setLoading(false);
       return;
@@ -67,13 +70,38 @@ export function TellerDataProvider({ children }: { children: React.ReactNode }) 
 
         setAccounts(allAccounts);
         setTransactions(allTransactions);
+        setLoading(false);
+
+        // Enrich categories via AI in the background (non-blocking)
+        const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY as string | undefined;
+        if (apiKey && allTransactions.length > 0) {
+          const txMeta = allTransactions.map((tx) => {
+            const details = tx.details as Record<string, unknown> | null;
+            const counterpartyRaw = details?.["counterparty"];
+            const merchantName =
+              typeof counterpartyRaw === "object" && counterpartyRaw !== null
+                ? ((counterpartyRaw as Record<string, unknown>)["name"] as string | undefined)
+                : typeof counterpartyRaw === "string"
+                ? counterpartyRaw
+                : undefined;
+            return {
+              id: tx.id,
+              description: tx.description,
+              amount: tx.amount,
+              merchantName,
+              tellerCategory: details?.["category"] as string | undefined,
+            };
+          });
+          enrichCategories(txMeta, apiKey)
+            .then((map) => { if (!cancelled) setCategoryMap(map); })
+            .catch((err) => console.warn("[TellerDataContext] AI categorization failed:", err));
+        }
       } catch (err) {
         if (!cancelled) {
           setError("Failed to load transaction data");
           console.error(err);
+          setLoading(false);
         }
-      } finally {
-        if (!cancelled) setLoading(false);
       }
     }
 
@@ -82,7 +110,7 @@ export function TellerDataProvider({ children }: { children: React.ReactNode }) 
   }, [version, token]);
 
   return (
-    <TellerDataContext.Provider value={{ enrollments, accounts, transactions, loading, error, refetch }}>
+    <TellerDataContext.Provider value={{ enrollments, accounts, transactions, categoryMap, loading, error, refetch }}>
       {children}
     </TellerDataContext.Provider>
   );

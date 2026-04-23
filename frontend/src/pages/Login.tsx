@@ -64,10 +64,7 @@ const CardShape = ({ gradient, width, height, x, y, rotate, delay, opacity = 0.7
 
 // ─── Google OAuth helper ──────────────────────────────────────────────────────
 const buildGoogleAuthUrl = () => {
-  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-  const redirectUri = `${window.location.origin}/auth/google/callback`;
-  const scope = "openid profile email";
-  return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
+  return `${import.meta.env.VITE_API_URL}/auth/google/login`;
 };
 
 // ─── Main component ───────────────────────────────────────────────────────────

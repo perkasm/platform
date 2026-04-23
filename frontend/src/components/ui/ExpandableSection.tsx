@@ -24,16 +24,16 @@ export function ExpandableSection({
   const [expanded, setExpanded] = useState(defaultExpanded);
 
   return (
-    <div className={`bg-white dark:bg-slate-800 rounded-2xl shadow-sm overflow-hidden ${className}`}>
+    <div className={`bg-luxury-surface border border-luxury-border rounded-2xl overflow-hidden ${className}`}>
       {/* Header */}
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center justify-between px-6 py-5 text-left hover:bg-[#F5F5F7] dark:hover:bg-slate-700/60 transition-all duration-200"
+        className="w-full flex items-center justify-between px-6 py-5 text-left hover:bg-luxury-elevated/60 transition-all duration-200"
       >
         <div className="flex items-center gap-2.5">
-          <span className="text-[#1D1D1F] dark:text-slate-100 font-semibold text-base">{title}</span>
+          <span className="text-luxury-text-primary font-ui font-semibold text-base">{title}</span>
           {badge !== undefined && (
-            <span className="bg-[#F5F5F7] dark:bg-slate-700 text-[#6E6E73] dark:text-slate-400 text-xs font-medium px-2 py-0.5 rounded-full">
+            <span className="bg-luxury-elevated text-luxury-text-secondary text-xs font-medium px-2 py-0.5 rounded-full">
               {badge}
             </span>
           )}
@@ -44,7 +44,7 @@ export function ExpandableSection({
             animate={{ rotate: expanded ? 180 : 0 }}
             transition={{ duration: 0.2 }}
           >
-            <ChevronDown className="h-4 w-4 text-[#6E6E73] dark:text-slate-500" />
+            <ChevronDown className="h-4 w-4 text-luxury-text-muted" />
           </motion.div>
         </div>
       </button>

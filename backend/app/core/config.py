@@ -31,6 +31,7 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_ID: str = ""
     GOOGLE_CLIENT_SECRET: str = ""
     GOOGLE_REDIRECT_URI: str = "http://localhost:8001/api/v1/auth/google/callback"
+    FRONTEND_URL: str = "http://localhost:8080"
 
     # Teller.io settings
     TELLER_APPLICATION_ID: str = ""

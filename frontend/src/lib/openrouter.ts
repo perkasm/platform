@@ -1,5 +1,5 @@
 const BASE_URL = "https://openrouter.ai/api/v1";
-const MODEL = "nvidia/nemotron-3-super-120b-a12b:free";
+const MODEL = "openai/gpt-4o-mini";
 
 export interface ChatMessage {
   role: "system" | "user" | "assistant";
@@ -8,8 +8,12 @@ export interface ChatMessage {
 
 export async function* streamChat(
   messages: ChatMessage[],
-  apiKey: string
+  apiKey: string,
+  options?: { jsonMode?: boolean }
 ): AsyncGenerator<string> {
+  const body: Record<string, unknown> = { model: MODEL, messages, stream: true };
+  if (options?.jsonMode) body.response_format = { type: "json_object" };
+
   const response = await fetch(`${BASE_URL}/chat/completions`, {
     method: "POST",
     headers: {
@@ -18,7 +22,7 @@ export async function* streamChat(
       "HTTP-Referer": window.location.origin,
       "X-Title": "Perkasm",
     },
-    body: JSON.stringify({ model: MODEL, messages, stream: true }),
+    body: JSON.stringify(body),
   });
 
   if (!response.ok) {
