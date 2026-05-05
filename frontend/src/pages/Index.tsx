@@ -37,7 +37,7 @@ const Index = () => {
       )}
 
       {activeTab === "assistant" && (
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 mt-4" style={{ maxWidth: "768px" }}>
+        <div className="mx-auto px-4 sm:px-6 mt-4" style={{ maxWidth: "920px" }}>
           <PortfolioAnalysis />
           <ChatInterface />
         </div>

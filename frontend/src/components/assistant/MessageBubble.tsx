@@ -1,7 +1,95 @@
 import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import type { Components } from "react-markdown";
 import { normalizeMarkdown } from "@/lib/formatMarkdown";
+
+const mdComponents: Components = {
+  h1: ({ children }) => (
+    <h1 className="text-base font-bold text-luxury-text-primary mt-4 mb-2 pb-1 border-b border-luxury-border">
+      {children}
+    </h1>
+  ),
+  h2: ({ children }) => (
+    <h2 className="text-sm font-bold text-luxury-accent-indigo mt-4 mb-2 uppercase tracking-wide">
+      {children}
+    </h2>
+  ),
+  h3: ({ children }) => (
+    <h3 className="text-sm font-semibold text-luxury-text-primary mt-3 mb-1">
+      {children}
+    </h3>
+  ),
+  p: ({ children }) => (
+    <p className="text-sm leading-relaxed text-luxury-text-primary my-1.5">{children}</p>
+  ),
+  strong: ({ children }) => (
+    <strong className="font-semibold text-white">{children}</strong>
+  ),
+  em: ({ children }) => (
+    <em className="italic text-luxury-text-secondary not-italic" style={{ fontStyle: "italic" }}>{children}</em>
+  ),
+  ul: ({ children }) => (
+    <ul className="my-2 space-y-1 pl-1">{children}</ul>
+  ),
+  ol: ({ children }) => (
+    <ol className="my-2 space-y-1.5 pl-5 list-decimal">{children}</ol>
+  ),
+  li: ({ children, ...props }) => {
+    // Inside an ol the browser handles the marker; inside ul we render a custom dot
+    const isOrdered = (props as { ordered?: boolean }).ordered;
+    return isOrdered ? (
+      <li className="text-sm text-luxury-text-primary leading-relaxed pl-0.5">{children}</li>
+    ) : (
+      <li className="text-sm text-luxury-text-primary leading-relaxed flex gap-2 items-start list-none">
+        <span className="mt-[6px] flex-shrink-0 w-1.5 h-1.5 rounded-full bg-luxury-accent-indigo/70 inline-block" />
+        <span>{children}</span>
+      </li>
+    );
+  },
+  hr: () => <hr className="my-4 border-luxury-border" />,
+  blockquote: ({ children }) => (
+    <blockquote className="border-l-2 border-luxury-accent-indigo/60 pl-3 my-2 text-luxury-text-secondary italic text-sm">
+      {children}
+    </blockquote>
+  ),
+  code: ({ children, className }) => {
+    const isBlock = className?.includes("language-");
+    return isBlock ? (
+      <code className="block text-xs font-mono text-luxury-text-primary">{children}</code>
+    ) : (
+      <code className="text-xs font-mono text-luxury-accent-indigo bg-luxury-bg px-1.5 py-0.5 rounded">
+        {children}
+      </code>
+    );
+  },
+  pre: ({ children }) => (
+    <pre className="bg-luxury-bg border border-luxury-border rounded-xl p-4 my-3 overflow-x-auto text-xs leading-relaxed">
+      {children}
+    </pre>
+  ),
+  table: ({ children }) => (
+    <div className="my-3 overflow-x-auto rounded-lg border border-luxury-border">
+      <table className="w-full text-xs border-collapse">{children}</table>
+    </div>
+  ),
+  thead: ({ children }) => (
+    <thead className="bg-luxury-bg/80">{children}</thead>
+  ),
+  th: ({ children }) => (
+    <th className="px-3 py-2 text-left font-semibold text-luxury-text-secondary border-b border-luxury-border">
+      {children}
+    </th>
+  ),
+  td: ({ children }) => (
+    <td className="px-3 py-2 text-luxury-text-primary border-b border-luxury-border/50 last:border-0">
+      {children}
+    </td>
+  ),
+  tr: ({ children }) => (
+    <tr className="even:bg-luxury-bg/30">{children}</tr>
+  ),
+};
 
 export interface Message {
   id: string;
@@ -18,7 +106,7 @@ export function MessageBubble({ message }: { message: Message }) {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
-      className={`flex items-end gap-2.5 ${isUser ? "flex-row-reverse" : "flex-row"}`}
+      className={`flex items-end gap-2.5 ${isUser ? "flex-row-reverse justify-start" : "flex-row w-full"}`}
     >
       {/* Assistant avatar */}
       {!isUser && (
@@ -29,10 +117,10 @@ export function MessageBubble({ message }: { message: Message }) {
 
       {/* Bubble */}
       <div
-        className={`max-w-[80%] rounded-2xl px-4 py-3 ${
+        className={`rounded-2xl px-4 py-3 ${
           isUser
-            ? "bg-luxury-accent-indigo/90 text-white rounded-br-sm"
-            : "bg-luxury-elevated border border-luxury-border text-luxury-text-primary rounded-bl-sm"
+            ? "max-w-[72%] bg-luxury-accent-indigo/90 text-white rounded-br-sm"
+            : "w-full bg-luxury-elevated border border-luxury-border text-luxury-text-primary rounded-bl-sm"
         }`}
       >
         {message.isTyping ? (
@@ -49,21 +137,8 @@ export function MessageBubble({ message }: { message: Message }) {
         ) : isUser ? (
           <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
         ) : (
-          <div className="text-sm leading-relaxed prose prose-sm prose-invert max-w-none
-            prose-p:my-1 prose-p:leading-relaxed
-            prose-headings:font-semibold prose-h3:text-base prose-h3:mt-3 prose-h3:mb-1
-            prose-strong:font-semibold
-            prose-ul:my-1 prose-ul:pl-4 prose-li:my-0.5
-            prose-ol:my-1 prose-ol:pl-4
-            prose-hr:my-3 prose-hr:border-luxury-border
-            prose-table:text-xs prose-table:w-full
-            prose-th:bg-luxury-bg prose-th:px-2 prose-th:py-1.5 prose-th:text-left prose-th:font-semibold
-            prose-td:px-2 prose-td:py-1.5 prose-td:border-b prose-td:border-luxury-border
-            [&_table]:border-collapse [&_table]:w-full [&_table]:overflow-x-auto [&_table]:block [&_table]:max-w-full
-            [&_thead]:bg-luxury-bg
-            [&_tr]:border-b [&_tr]:border-luxury-border
-          ">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          <div className="min-w-0">
+            <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
               {normalizeMarkdown(message.content)}
             </ReactMarkdown>
           </div>

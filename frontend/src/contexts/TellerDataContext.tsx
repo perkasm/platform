@@ -98,8 +98,9 @@ export function TellerDataProvider({ children }: { children: React.ReactNode }) 
         }
       } catch (err) {
         if (!cancelled) {
-          setError("Failed to load transaction data");
-          console.error(err);
+          const msg = err instanceof Error ? err.message : String(err);
+          console.error("[TellerDataContext] fetch failed:", err);
+          setError(`Failed to load transaction data: ${msg}`);
           setLoading(false);
         }
       }

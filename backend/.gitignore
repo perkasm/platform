@@ -16,7 +16,6 @@ venv/
 # FastAPI/uv
 *.db
 *.log
-uv.lock
 .python-version
 
 # IDE/editor

@@ -8,6 +8,7 @@ from the Teller dashboard.
 
 import os
 import requests
+from pathlib import Path
 from typing import List, Optional
 from fastapi import HTTPException
 
@@ -16,11 +17,20 @@ from app.core.config import settings
 
 TELLER_BASE_URL = "https://api.teller.io"
 
+# Resolve paths relative to the backend directory (where this package lives)
+_BACKEND_DIR = Path(__file__).resolve().parents[2]
+
+
+def _resolve_path(p: str) -> str:
+    """Resolve a path relative to the backend directory if it's not absolute."""
+    resolved = Path(p) if os.path.isabs(p) else _BACKEND_DIR / p
+    return str(resolved)
+
 
 def _get_cert():
     """Return the (cert, key) tuple for mTLS, or None if paths aren't set."""
-    cert_path = settings.TELLER_CERT_PATH
-    key_path = settings.TELLER_KEY_PATH
+    cert_path = _resolve_path(settings.TELLER_CERT_PATH)
+    key_path = _resolve_path(settings.TELLER_KEY_PATH)
     if cert_path and key_path and os.path.exists(cert_path) and os.path.exists(key_path):
         return (cert_path, key_path)
     return None

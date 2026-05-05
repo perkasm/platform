@@ -276,7 +276,7 @@ export function ChatInterface() {
       </div>
 
       {/* Messages area */}
-      <div className="flex-1 overflow-y-auto px-4 space-y-4 pb-4">
+      <div className="flex-1 overflow-y-auto px-2 space-y-4 pb-4">
         {messages.length === 0 && !showPrompts && (
           <p className="text-center text-luxury-text-muted font-ui text-sm mt-12">
             Start a conversation above.
