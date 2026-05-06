@@ -44,3 +44,4 @@ pytest_cache/
 # Misc
 *.bak
 *.tmpcerts/*.pem
+.vercel
