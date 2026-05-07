@@ -45,3 +45,4 @@ pytest_cache/
 *.bak
 *.tmpcerts/*.pem
 .vercel
+.env*.local

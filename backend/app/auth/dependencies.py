@@ -1,7 +1,8 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
-from jose import JWTError, jwt
+import jwt
+from jwt import PyJWTError as JWTError
 from app.core.database import get_db
 from app.core.config import settings
 from app.services.user import get_user_by_email

@@ -1,4 +1,5 @@
 import requests
+from urllib.parse import urlencode
 from app.auth.oauth2 import OAuth2Provider
 from app.core.config import settings
 from typing import Dict, Any
@@ -24,9 +25,7 @@ class GoogleOAuth2(OAuth2Provider):
             "access_type": "offline"
         }
         
-        # Construct URL manually for simplicity
-        query_params = "&".join([f"{k}={v}" for k, v in params.items()])
-        return f"{self.auth_base_url}?{query_params}"
+        return f"{self.auth_base_url}?{urlencode(params)}"
     
     def exchange_code_for_token(self, code: str) -> Dict[str, Any]:
         """Exchange authorization code for access token"""

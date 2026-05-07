@@ -1,5 +1,12 @@
+import os
 from typing import List, Optional, Union
 from pydantic_settings import BaseSettings
+
+def _default_redirect_uri() -> str:
+    vercel_url = os.environ.get("VERCEL_URL")
+    if vercel_url:
+        return f"https://{vercel_url}/api/v1/auth/google/callback"
+    return "http://localhost:8001/api/v1/auth/google/callback"
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "Perkasm Platform API"
@@ -30,7 +37,7 @@ class Settings(BaseSettings):
     # Google OAuth2 settings
     GOOGLE_CLIENT_ID: str = ""
     GOOGLE_CLIENT_SECRET: str = ""
-    GOOGLE_REDIRECT_URI: str = "http://localhost:8001/api/v1/auth/google/callback"
+    GOOGLE_REDIRECT_URI: str = _default_redirect_uri()
     FRONTEND_URL: str = "http://localhost:8080"
 
     # Teller.io settings
